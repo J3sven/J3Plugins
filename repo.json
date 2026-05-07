@@ -1,0 +1,51 @@
+[
+  {
+    "Author": "J3",
+    "Name": "Cursor Indicator",
+    "InternalName": "CursorTrailIndicators",
+    "AssemblyVersion": "0.1.0.0",
+    "TestingAssemblyVersion": "0.1.0.0",
+    "Description": "Configurable cursor trails and a cursor ring indicators.",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/J3sven/J3Plugins",
+    "Tags": ["cursor", "overlay", "particles", "trail", "hud"],
+    "DalamudApiLevel": 15,
+    "LoadPriority": 0,
+    "IconUrl": "https://raw.githubusercontent.com/J3sven/J3Plugins/main/src/CursorIndicator/icon.png",
+    "Punchline": "Never lose your mouse cursor again!",
+    "IsHide": "False",
+    "IsTestingExclusive": "False",
+    "DownloadLinkInstall": "https://github.com/J3sven/J3Plugins/releases/download/cursor-indicator-v0.1.0.0/CursorTrailIndicators.zip",
+    "DownloadLinkTesting": "https://github.com/J3sven/J3Plugins/releases/download/cursor-indicator-v0.1.0.0/CursorTrailIndicators.zip",
+    "DownloadLinkUpdate": "https://github.com/J3sven/J3Plugins/releases/download/cursor-indicator-v0.1.0.0/CursorTrailIndicators.zip"
+  },
+  {
+    "Author": "J3",
+    "Name": "IINACT Native Overlay",
+    "InternalName": "IINACTNativeOverlay",
+    "AssemblyVersion": "0.2.1.0",
+    "TestingAssemblyVersion": "0.2.1.0",
+    "Description": "Native Dalamud DPS meter HUD for IINACT combat data. Especially useful for linux users who use tiling window managers!",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/J3sven/J3Plugins",
+    "Tags": [
+      "iinact",
+      "overlay",
+      "dps",
+      "hud",
+      "act",
+      "combat",
+      "data",
+      "parser"
+    ],
+    "DalamudApiLevel": 15,
+    "LoadPriority": 0,
+    "IconUrl": "https://raw.githubusercontent.com/J3sven/J3Plugins/main/src/IINACTNativeOverlay/Assets/icon.png",
+    "Punchline": "A native Dalamud DPS meter overlay for IINACT.",
+    "IsHide": "False",
+    "IsTestingExclusive": "False",
+    "DownloadLinkInstall": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.1.0/IINACTNativeOverlay.zip",
+    "DownloadLinkTesting": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.1.0/IINACTNativeOverlay.zip",
+    "DownloadLinkUpdate": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.1.0/IINACTNativeOverlay.zip"
+  }
+]

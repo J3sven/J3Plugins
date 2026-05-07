@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/IINACTNativeOverlay/IINACTNativeOverlay.csproj" />
+  </Folder>
+  <Folder Name="/src/CursorIndicator/">
+    <Project Path="src/CursorIndicator/CursorTrailIndicators.csproj" />
+  </Folder>
+</Solution>

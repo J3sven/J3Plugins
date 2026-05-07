@@ -1,0 +1,16 @@
+{
+  "Author": "J3",
+  "Name": "IINACT Native Overlay",
+  "Punchline": "A native Dalamud DPS meter overlay for IINACT.",
+  "Description": "Renders an internal Dalamud DPS meter HUD from IINACT combat data using the IINACT WebSocket stream with IPC fallback.",
+  "InternalName": "IINACTNativeOverlay",
+  "ApplicableVersion": "any",
+  "RepoUrl": "https://github.com/J3sven/J3Plugins",
+  "IconUrl": "https://raw.githubusercontent.com/J3sven/J3Plugins/main/src/IINACTNativeOverlay/Assets/icon.png",
+  "Tags": [
+    "iinact",
+    "overlay",
+    "dps",
+    "hud"
+  ]
+}

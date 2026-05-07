@@ -1,0 +1,17 @@
+{
+  "Author": "J3",
+  "Name": "Cursor Indicator",
+  "Punchline": "Adds cursor indicators in game.",
+  "Description": "Renders configurable cursor trails and a cursor ring as a native Dalamud overlay.",
+  "InternalName": "CursorTrailIndicators",
+  "ApplicableVersion": "any",
+  "RepoUrl": "https://github.com/J3sven/J3Plugins",
+  "IconUrl": "https://raw.githubusercontent.com/J3sven/J3Plugins/main/src/CursorIndicator/icon.png",
+  "Tags": [
+    "cursor",
+    "overlay",
+    "particles",
+    "trail",
+    "hud"
+  ]
+}
