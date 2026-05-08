@@ -87,7 +87,12 @@ their cue time arrives.
 static fallback callout can be derived, using IINACT's primary-player event to
 avoid firing personal markers for the whole party.
 
-Dynamic output text, role checks, state collectors, geometry solvers, and
-complex timeline behavior such as jumps/resync windows are still reported or
-handled conservatively so missing encounter coverage can be tackled as Chocobot
-grows those systems.
+Simple boolean cactbot state such as `data.foo = true` and
+`condition: (data) => data.foo` is imported as silent state updates and runtime
+state conditions. Paired effect state is inferred generically when cactbot
+clears a boolean on `LosesEffect` and sets that same boolean true elsewhere in
+the same zone. State-gated ability triggers can inherit additional matching
+ability IDs from cactbot timeline entries in the same zone. Dynamic output text,
+role checks, collectors, geometry solvers, and complex timeline behavior such
+as jumps/resync windows are still reported or handled conservatively so missing
+encounter coverage can be tackled as Chocobot grows those systems.

@@ -26,6 +26,15 @@ internal sealed class TriggerDefinition
     [JsonProperty("targetSelf")]
     public bool TargetSelf { get; set; }
 
+    [JsonProperty("stateConditions")]
+    public Dictionary<string, bool> StateConditions { get; set; } = [];
+
+    [JsonProperty("stateUpdates")]
+    public Dictionary<string, bool> StateUpdates { get; set; } = [];
+
+    [JsonProperty("silent")]
+    public bool Silent { get; set; }
+
     [JsonProperty("info")]
     public string? InfoText { get; set; }
 
@@ -64,7 +73,10 @@ internal sealed class TriggerDefinition
 
     [JsonIgnore]
     public bool HasStructuredCriteria =>
-        !string.IsNullOrWhiteSpace(EventType) || NormalizedIds.Count > 0 || TargetSelf;
+        !string.IsNullOrWhiteSpace(EventType)
+        || NormalizedIds.Count > 0
+        || TargetSelf
+        || StateConditions.Count > 0;
 
     public bool Compile(out string? error)
     {

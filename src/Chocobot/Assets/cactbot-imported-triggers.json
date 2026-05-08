@@ -22,6 +22,19 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-carnivale-s06-a1-2-blind-gain",
+    "zone": "All's Well That Starts Well",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["23B"],
+    "pattern": "\\b23B\\b",
+    "targetSelf": true,
+    "stateUpdates": {"blind": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-carnivale-s07-a3-gladiatorial-node-low-voltage",
     "zone": "All's Well That Starts Well",
     "source": "LogLine",
@@ -363,6 +376,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-carnivale-s21-a2-act-start",
+    "zone": "All's Well That Starts Well",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["1961"],
+    "pattern": "\\b1961\\b",
+    "stateUpdates": {"act2": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 999999
+  },
+  {
     "id": "cactbot-carnivale-s21-a2-apademak-the-ram-s-voice",
     "zone": "All's Well That Starts Well",
     "source": "LogLine",
@@ -394,6 +419,18 @@
     "alert": "Interrupt",
     "duration": 5,
     "suppress": 8
+  },
+  {
+    "id": "cactbot-carnivale-s22-a2-act-start",
+    "zone": "All's Well That Starts Well",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["1963"],
+    "pattern": "\\b1963\\b",
+    "stateUpdates": {"act2": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 999999
   },
   {
     "id": "cactbot-carnivale-s22-a2-the-forefather-sap",
@@ -872,6 +909,58 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-angra-mainyu-gain-sullen",
+    "zone": "The World of Darkness",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["27C"],
+    "pattern": "\\b27C\\b",
+    "targetSelf": true,
+    "stateUpdates": {"sullenDebuff": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-angra-mainyu-lose-sullen",
+    "zone": "The World of Darkness",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["27C"],
+    "pattern": "\\b27C\\b",
+    "targetSelf": true,
+    "stateUpdates": {"sullenDebuff": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-angra-mainyu-gain-ireful",
+    "zone": "The World of Darkness",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["27D"],
+    "pattern": "\\b27D\\b",
+    "targetSelf": true,
+    "stateUpdates": {"irefulDebuff": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-angra-mainyu-lose-ireful",
+    "zone": "The World of Darkness",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["27D"],
+    "pattern": "\\b27D\\b",
+    "targetSelf": true,
+    "stateUpdates": {"irefulDebuff": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-angra-mainyu-mortal-gaze",
     "zone": "The World of Darkness",
     "source": "LogLine",
@@ -1192,6 +1281,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-t1-initiated",
+    "zone": "The Binding Coil of Bahamut - Turn 1",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4B8"],
+    "pattern": "\\b4B8\\b",
+    "stateUpdates": {"started": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-t1-slime-timer-first",
     "zone": "The Binding Coil of Bahamut - Turn 1",
     "source": "LogLine",
@@ -1276,6 +1377,8 @@
     "eventType": "Ability",
     "ids": ["B6F"],
     "pattern": "\\bB6F\\b",
+    "stateConditions": {"beganMonitoringHp": false},
+    "stateUpdates": {"beganMonitoringHp": true},
     "alert": "Out of Middle",
     "duration": 5,
     "suppress": 8
@@ -1355,6 +1458,7 @@
     "ids": ["14D"],
     "pattern": "\\b14D\\b",
     "targetSelf": true,
+    "stateUpdates": {"rot": true},
     "alert": "Pass Rot",
     "duration": 5,
     "countdown": 11,
@@ -1429,6 +1533,45 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-t6-phase-2",
+    "zone": "The Second Coil of Bahamut - Turn 1",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["797"],
+    "pattern": "\\b797\\b",
+    "stateConditions": {"beganMonitoringHp": false},
+    "stateUpdates": {"beganMonitoringHp": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-t6-honey-on",
+    "zone": "The Second Coil of Bahamut - Turn 1",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["1BE"],
+    "pattern": "\\b1BE\\b",
+    "targetSelf": true,
+    "stateUpdates": {"honey": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-t6-phase-3",
+    "zone": "The Second Coil of Bahamut - Turn 1",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["79E"],
+    "pattern": "\\b79E\\b",
+    "stateConditions": {"seenLeafstorm": false},
+    "stateUpdates": {"seenLeafstorm": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-t6-swarm-stack",
     "zone": "The Second Coil of Bahamut - Turn 1",
     "source": "LogLine",
@@ -1436,6 +1579,18 @@
     "ids": ["86C"],
     "pattern": "\\b86C\\b",
     "alert": "Stack for Acid",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-t7-meluseine-phase-change-watcher",
+    "zone": "The Second Coil of Bahamut - Turn 2",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["7A8"],
+    "pattern": "\\b7A8\\b",
+    "stateUpdates": {"monitoringHP": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -1519,6 +1674,19 @@
     "suppress": 5
   },
   {
+    "id": "cactbot-t9-phase-2",
+    "zone": "The Second Coil of Bahamut - Turn 4",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["7D5"],
+    "pattern": "\\b7D5\\b",
+    "stateConditions": {"beganMonitoringHp": false},
+    "stateUpdates": {"beganMonitoringHp": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-t9-earthshock",
     "zone": "The Second Coil of Bahamut - Turn 4",
     "source": "LogLine",
@@ -1541,14 +1709,40 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-t9-garotte-twist-gain",
+    "zone": "The Second Coil of Bahamut - Turn 4",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["1CE"],
+    "pattern": "\\b1CE\\b",
+    "stateUpdates": {"garotte": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-t9-ghost-death",
     "zone": "The Second Coil of Bahamut - Turn 4",
     "source": "LogLine",
     "eventType": "Ability",
     "ids": ["7FA"],
     "pattern": "\\b7FA\\b",
+    "stateConditions": {"garotte": true},
     "alert": "Cleanse Garotte",
     "duration": 6,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-t9-final-phase",
+    "zone": "The Second Coil of Bahamut - Turn 4",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["7E6"],
+    "pattern": "\\b7E6\\b",
+    "stateConditions": {"seenFinalPhase": false},
+    "stateUpdates": {"seenFinalPhase": true},
+    "silent": true,
+    "duration": 5,
     "suppress": 8
   },
   {
@@ -1572,6 +1766,43 @@
     "alert": "Attack Tail Only",
     "duration": 5,
     "suppress": 9999
+  },
+  {
+    "id": "cactbot-shivaex-staff-phase",
+    "zone": "The Akh Afah Amphitheatre (Extreme)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["995"],
+    "pattern": "\\b995\\b",
+    "stateUpdates": {"soonAfterWeaponChange": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-shivaex-sword-phase",
+    "zone": "The Akh Afah Amphitheatre (Extreme)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["993"],
+    "pattern": "\\b993\\b",
+    "stateUpdates": {"soonAfterWeaponChange": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-shivaex-weapon-change-delayed",
+    "zone": "The Akh Afah Amphitheatre (Extreme)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["993", "995"],
+    "pattern": "\\b(?:993|995)\\b",
+    "stateUpdates": {"soonAfterWeaponChange": false},
+    "silent": true,
+    "duration": 5,
+    "countdown": 30,
+    "suppress": 8
   },
   {
     "id": "cactbot-shivaex-hailstorm-marker",
@@ -1604,6 +1835,18 @@
     "ids": ["BEC"],
     "pattern": "\\bBEC\\b",
     "alert": "Get in",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-shivaex-diamond-dust",
+    "zone": "The Akh Afah Amphitheatre (Extreme)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["98A"],
+    "pattern": "\\b98A\\b",
+    "stateUpdates": {"seenDiamondDust": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -1979,6 +2222,8 @@
     "eventType": "SystemLogMessage",
     "ids": ["7DC"],
     "pattern": "\\b7DC\\b",
+    "stateConditions": {"arachneStarted": true},
+    "stateUpdates": {"arachneStarted": true},
     "alert": "Spread",
     "duration": 5,
     "suppress": 10
@@ -2079,6 +2324,7 @@
     "eventType": "HeadMarker",
     "ids": ["003E"],
     "pattern": "\\b003E\\b",
+    "stateConditions": {"ozmaStarted": true},
     "alert": "Stack",
     "duration": 5,
     "suppress": 5
@@ -3093,6 +3339,19 @@
     "suppress": 5
   },
   {
+    "id": "cactbot-the-vault-knights-activation",
+    "zone": "The Vault",
+    "source": "LogLine",
+    "eventType": "HeadMarker",
+    "ids": ["0061"],
+    "pattern": "\\b0061\\b",
+    "stateConditions": {"knightsActive": false},
+    "stateUpdates": {"knightsActive": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-xelphatol-long-burst",
     "zone": "Xelphatol",
     "source": "LogLine",
@@ -3461,6 +3720,19 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-a12n-aggravated-assault",
+    "zone": "Alexander - The Soul of the Creator",
+    "source": "LogLine",
+    "eventType": "HeadMarker",
+    "ids": ["0010"],
+    "pattern": "\\b0010\\b",
+    "targetSelf": true,
+    "stateUpdates": {"assault": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-a12n-laser-sacrament",
     "zone": "Alexander - The Soul of the Creator",
     "source": "LogLine",
@@ -3570,6 +3842,19 @@
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 2
+  },
+  {
+    "id": "cactbot-a2s-bangyzoom",
+    "zone": "Alexander - The Cuff of the Father (Savage)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["FD9"],
+    "pattern": "\\bFD9\\b",
+    "stateConditions": {"bangyzoom": false},
+    "stateUpdates": {"bangyzoom": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 1
   },
   {
     "id": "cactbot-a3n-cascade",
@@ -3794,6 +4079,32 @@
     "suppress": 5
   },
   {
+    "id": "cactbot-a6s-magic-vulnerability-gain",
+    "zone": "Alexander - The Cuff of the Son (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["292"],
+    "pattern": "\\b292\\b",
+    "targetSelf": true,
+    "stateUpdates": {"magicVulnerability": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-a6s-magic-vulnerability-loss",
+    "zone": "Alexander - The Cuff of the Son (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["292"],
+    "pattern": "\\b292\\b",
+    "targetSelf": true,
+    "stateUpdates": {"magicVulnerability": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-a6s-mind-blast",
     "zone": "Alexander - The Cuff of the Son (Savage)",
     "source": "LogLine",
@@ -3849,6 +4160,32 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-a6s-compressed-water-initial",
+    "zone": "Alexander - The Cuff of the Son (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["3FF"],
+    "pattern": "\\b3FF\\b",
+    "targetSelf": true,
+    "stateUpdates": {"haveWater": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-a6s-compressed-water-lose",
+    "zone": "Alexander - The Cuff of the Son (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["3FF"],
+    "pattern": "\\b3FF\\b",
+    "targetSelf": true,
+    "stateUpdates": {"haveWater": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-a6s-compressed-water-explode",
     "zone": "Alexander - The Cuff of the Son (Savage)",
     "source": "LogLine",
@@ -3857,6 +4194,32 @@
     "pattern": "\\b3FF\\b",
     "targetSelf": true,
     "alert": "Drop Water Soon",
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-a6s-compressed-lightning-initial",
+    "zone": "Alexander - The Cuff of the Son (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["400"],
+    "pattern": "\\b400\\b",
+    "targetSelf": true,
+    "stateUpdates": {"haveLightning": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-a6s-compressed-lightning-lose",
+    "zone": "Alexander - The Cuff of the Son (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["400"],
+    "pattern": "\\b400\\b",
+    "targetSelf": true,
+    "stateUpdates": {"haveLightning": false},
+    "silent": true,
     "duration": 5,
     "suppress": 5
   },
@@ -4099,9 +4462,22 @@
     "eventType": "Ability",
     "ids": ["165E"],
     "pattern": "\\b165E\\b",
+    "stateConditions": {"seenLinkUp": false},
     "alert": "Get Mines",
     "duration": 5,
     "suppress": 10
+  },
+  {
+    "id": "cactbot-a8s-link-up",
+    "zone": "Alexander - The Burden of the Son (Savage)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["1673"],
+    "pattern": "\\b1673\\b",
+    "stateUpdates": {"seenLinkUp": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
   },
   {
     "id": "cactbot-a8s-verdict-max-hp-provoke",
@@ -4374,6 +4750,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-zurvanex-phase-tracker",
+    "zone": "Containment Bay Z1T9 (Extreme)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["1C50"],
+    "pattern": "\\b1C50\\b",
+    "stateUpdates": {"isPhaseOne": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-zurvanex-flaming-halberd",
     "zone": "Containment Bay Z1T9 (Extreme)",
     "source": "LogLine",
@@ -4530,12 +4918,26 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-orbonne-agrias-vacuum",
+    "zone": "The Orbonne Monastery",
+    "source": "LogLine",
+    "eventType": "HeadMarker",
+    "ids": ["00A5"],
+    "pattern": "\\b00A5\\b",
+    "targetSelf": true,
+    "stateUpdates": {"agriasGhostCleanse": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-orbonne-agrias-consecration",
     "zone": "The Orbonne Monastery",
     "source": "LogLine",
     "eventType": "StartsUsing",
     "ids": ["3850"],
     "pattern": "\\b3850\\b",
+    "stateConditions": {"agriasGhostCleanse": false},
     "alert": "Pick up swords",
     "duration": 5,
     "suppress": 8
@@ -4908,6 +5310,7 @@
     "ids": ["008A"],
     "pattern": "\\b008A\\b",
     "targetSelf": true,
+    "stateUpdates": {"accelerateSpreadOnMe": true},
     "alert": "Spread",
     "duration": 5,
     "suppress": 5
@@ -5166,6 +5569,30 @@
     "ids": ["2622"],
     "pattern": "\\b2622\\b",
     "alert": "Get Towers",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-rab-argath-mask-of-truth",
+    "zone": "The Royal City of Rabanastre",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["261A"],
+    "pattern": "\\b261A\\b",
+    "stateUpdates": {"maskValue": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-rab-argath-mask-of-lies",
+    "zone": "The Royal City of Rabanastre",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["2619"],
+    "pattern": "\\b2619\\b",
+    "stateUpdates": {"maskValue": false},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -5644,6 +6071,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-bardam-s-mettle-dead-bardam",
+    "zone": "Bardam's Mettle",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["367"],
+    "pattern": "\\b367\\b",
+    "stateUpdates": {"deadBardam": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 99999
+  },
+  {
     "id": "cactbot-bardam-s-mettle-empty-gaze",
     "zone": "Bardam's Mettle",
     "source": "LogLine",
@@ -5738,8 +6177,23 @@
     "eventType": "StartsUsing",
     "ids": ["1F16"],
     "pattern": "\\b1F16\\b",
+    "stateUpdates": {"calledUseCannon": false},
     "alert": "Raidwide AoE",
     "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-castrumabania-magna-roader-wild-speed",
+    "zone": "Castrum Abania",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["207E"],
+    "pattern": "\\b207E\\b",
+    "stateConditions": {"calledWildSpeed": false},
+    "stateUpdates": {"calledWildSpeed": true},
+    "silent": true,
+    "duration": 5,
+    "countdown": 6,
     "suppress": 8
   },
   {
@@ -5807,6 +6261,18 @@
     "ids": ["2088", "2089"],
     "pattern": "\\b(?:2088|2089)\\b",
     "alert": "Small comet knockback",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-doma-castle-magitek-hexadrone-magitek-missiles",
+    "zone": "Doma Castle",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["20A4"],
+    "pattern": "\\b20A4\\b",
+    "stateUpdates": {"seenTowers": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -6661,6 +7127,30 @@
     "suppress": 5
   },
   {
+    "id": "cactbot-swallows-compass-both-ends-collect",
+    "zone": "The Swallow's Compass",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["2BA9", "2BAF"],
+    "pattern": "\\b(?:2BA9|2BAF)\\b",
+    "stateUpdates": {"dynamo": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-swallows-compass-intermission-tracking",
+    "zone": "The Swallow's Compass",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["2CC7"],
+    "pattern": "\\b2CC7\\b",
+    "stateUpdates": {"seenIntermission": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-temple-electric-burst-sruti",
     "zone": "The Temple of the Fist",
     "source": "LogLine",
@@ -6744,6 +7234,7 @@
     "eventType": "HeadMarker",
     "ids": ["0002"],
     "pattern": "\\b0002\\b",
+    "stateConditions": {"hedetet": false},
     "alert": "Hide behind crystal",
     "duration": 5,
     "suppress": 5
@@ -6767,6 +7258,19 @@
     "ids": ["3192"],
     "pattern": "\\b3192\\b",
     "alert": "Get under",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-the-burn-dead-hedetet",
+    "zone": "The Burn",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["368"],
+    "pattern": "\\b368\\b",
+    "stateConditions": {"hedetet": false},
+    "stateUpdates": {"hedetet": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -6959,6 +7463,30 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-ba-seal",
+    "zone": "The Forbidden Land, Eureka Hydatos",
+    "source": "LogLine",
+    "eventType": "SystemLogMessage",
+    "ids": ["7DC"],
+    "pattern": "\\b7DC\\b",
+    "stateUpdates": {"sealed": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-ba-art-mythcall",
+    "zone": "The Forbidden Land, Eureka Hydatos",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["3927"],
+    "pattern": "\\b3927\\b",
+    "stateUpdates": {"mythcall": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-ba-art-tankbuster",
     "zone": "The Forbidden Land, Eureka Hydatos",
     "source": "LogLine",
@@ -7077,6 +7605,7 @@
     "eventType": "StartsUsing",
     "ids": ["387B"],
     "pattern": "\\b387B\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -7099,6 +7628,7 @@
     "eventType": "StartsUsing",
     "ids": ["3868"],
     "pattern": "\\b3868\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -7110,6 +7640,7 @@
     "eventType": "StartsUsing",
     "ids": ["386A"],
     "pattern": "\\b386A\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Get under",
     "duration": 5,
     "suppress": 8
@@ -7121,6 +7652,7 @@
     "eventType": "StartsUsing",
     "ids": ["387C"],
     "pattern": "\\b387C\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -7132,7 +7664,21 @@
     "eventType": "StartsUsing",
     "ids": ["379A"],
     "pattern": "\\b379A\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Tank buster",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-ba-av-eidos-hostile-aspect",
+    "zone": "The Forbidden Land, Eureka Hydatos",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["378B"],
+    "pattern": "\\b378B\\b",
+    "stateConditions": {"sealed": true},
+    "stateUpdates": {"seenHostile": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -7143,6 +7689,7 @@
     "eventType": "Ability",
     "ids": ["3790"],
     "pattern": "\\b3790\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Orbs to Opposite Colors",
     "duration": 5,
     "suppress": 8
@@ -7152,8 +7699,9 @@
     "zone": "The Forbidden Land, Eureka Hydatos",
     "source": "LogLine",
     "eventType": "Ability",
-    "ids": ["37A4"],
-    "pattern": "\\b37A4\\b",
+    "ids": ["37A4", "800"],
+    "pattern": "\\b(?:37A4|800)\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Off the Platform",
     "duration": 5,
     "suppress": 8
@@ -7165,6 +7713,7 @@
     "eventType": "Ability",
     "ids": ["37A4"],
     "pattern": "\\b37A4\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Spread for Bleed",
     "duration": 5,
     "countdown": 9,
@@ -7175,8 +7724,9 @@
     "zone": "The Forbidden Land, Eureka Hydatos",
     "source": "LogLine",
     "eventType": "Ability",
-    "ids": ["37B2"],
-    "pattern": "\\b37B2\\b",
+    "ids": ["37B2", "800"],
+    "pattern": "\\b(?:37B2|800)\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Go Far",
     "duration": 5,
     "suppress": 8
@@ -7186,8 +7736,9 @@
     "zone": "The Forbidden Land, Eureka Hydatos",
     "source": "LogLine",
     "eventType": "Ability",
-    "ids": ["379E"],
-    "pattern": "\\b379E\\b",
+    "ids": ["379E", "800"],
+    "pattern": "\\b(?:379E|800)\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Get Close",
     "duration": 5,
     "suppress": 8
@@ -7199,6 +7750,7 @@
     "eventType": "Ability",
     "ids": ["37A4"],
     "pattern": "\\b37A4\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Get Off",
     "duration": 5,
     "suppress": 1
@@ -7210,6 +7762,7 @@
     "eventType": "Ability",
     "ids": ["37B2"],
     "pattern": "\\b37B2\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Get Close",
     "duration": 5,
     "suppress": 1
@@ -7221,6 +7774,7 @@
     "eventType": "Ability",
     "ids": ["379E"],
     "pattern": "\\b379E\\b",
+    "stateConditions": {"sealed": true},
     "alert": "Go Far",
     "duration": 5,
     "suppress": 1
@@ -7243,6 +7797,7 @@
     "eventType": "StartsUsing",
     "ids": ["1FFE"],
     "pattern": "\\b1FFE\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -7254,6 +7809,7 @@
     "eventType": "StartsUsing",
     "ids": ["1FFF"],
     "pattern": "\\b1FFF\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -7334,6 +7890,18 @@
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
+  },
+  {
+    "id": "cactbot-shifting-altars-of-uznair-altar-totem-flames-of-fury-collect",
+    "zone": "The Shifting Altars of Uznair",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["366"],
+    "pattern": "\\b366\\b",
+    "stateUpdates": {"altarTotem": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 999999
   },
   {
     "id": "cactbot-shifting-altars-of-uznair-altar-totem-flames-of-fury",
@@ -7579,6 +8147,30 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-o10n-horizontal-spin-1",
+    "zone": "Alphascape V2.0",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["31C7"],
+    "pattern": "\\b31C7\\b",
+    "stateUpdates": {"lastSpinWasHorizontal": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-o10n-vertical-spin-1",
+    "zone": "Alphascape V2.0",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["31C8"],
+    "pattern": "\\b31C8\\b",
+    "stateUpdates": {"lastSpinWasHorizontal": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-o10n-earth-shaker",
     "zone": "Alphascape V2.0",
     "source": "LogLine",
@@ -7647,6 +8239,30 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-o10s-horizontal-spin-1",
+    "zone": "Alphascape V2.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["31AC"],
+    "pattern": "\\b31AC\\b",
+    "stateUpdates": {"lastSpinWasHorizontal": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-o10s-vertical-spin-1",
+    "zone": "Alphascape V2.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["31AD"],
+    "pattern": "\\b31AD\\b",
+    "stateUpdates": {"lastSpinWasHorizontal": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-o11n-atomic-ray",
     "zone": "Alphascape V3.0",
     "source": "LogLine",
@@ -7665,6 +8281,30 @@
     "ids": ["3287"],
     "pattern": "\\b3287\\b",
     "alert": "Tank buster",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-o11n-starboard-cannon-1",
+    "zone": "Alphascape V3.0",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["328"],
+    "pattern": "\\b328\\b",
+    "stateUpdates": {"lastWasStarboard": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-o11n-larboard-cannon-1",
+    "zone": "Alphascape V3.0",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["328"],
+    "pattern": "\\b328\\b",
+    "stateUpdates": {"lastWasStarboard": false},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -7688,6 +8328,30 @@
     "ids": ["326D"],
     "pattern": "\\b326D\\b",
     "alert": "Tank buster",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-o11s-starboard-cannon-1",
+    "zone": "Alphascape V3.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["326"],
+    "pattern": "\\b326\\b",
+    "stateUpdates": {"lastWasStarboard": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-o11s-larboard-cannon-1",
+    "zone": "Alphascape V3.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["326"],
+    "pattern": "\\b326\\b",
+    "stateUpdates": {"lastWasStarboard": false},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -7955,8 +8619,23 @@
     "eventType": "HeadMarker",
     "ids": ["003E"],
     "pattern": "\\b003E\\b",
+    "stateConditions": {"isFinalOmega": false},
     "alert": "Stack Groups",
     "duration": 5,
+    "suppress": 1
+  },
+  {
+    "id": "cactbot-o12s-hello-world-no-marker",
+    "zone": "Alphascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["680", "681", "682", "686"],
+    "pattern": "\\b(?:680|681|682|686)\\b",
+    "stateConditions": {"calledHelloNoMarker": false},
+    "stateUpdates": {"calledHelloNoMarker": true},
+    "silent": true,
+    "duration": 5,
+    "countdown": 0.3,
     "suppress": 1
   },
   {
@@ -8136,6 +8815,32 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-o2n-levitation-gain",
+    "zone": "Deltascape V2.0",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["556"],
+    "pattern": "\\b556\\b",
+    "targetSelf": true,
+    "stateUpdates": {"levitating": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o2n-levitation-lose",
+    "zone": "Deltascape V2.0",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["556"],
+    "pattern": "\\b556\\b",
+    "targetSelf": true,
+    "stateUpdates": {"levitating": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-o2n-gravitational-manipulation-float",
     "zone": "Deltascape V2.0",
     "source": "LogLine",
@@ -8204,6 +8909,32 @@
     "suppress": 10
   },
   {
+    "id": "cactbot-o2s-levitation-gain",
+    "zone": "Deltascape V2.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["556"],
+    "pattern": "\\b556\\b",
+    "targetSelf": true,
+    "stateUpdates": {"levitating": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o2s-levitation-lose",
+    "zone": "Deltascape V2.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["556"],
+    "pattern": "\\b556\\b",
+    "targetSelf": true,
+    "stateUpdates": {"levitating": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-o2s-evilsphere",
     "zone": "Deltascape V2.0 (Savage)",
     "source": "LogLine",
@@ -8246,6 +8977,32 @@
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
+  },
+  {
+    "id": "cactbot-o2s-6-fulms-under-gain",
+    "zone": "Deltascape V2.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["237"],
+    "pattern": "\\b237\\b",
+    "stateUpdates": {"under": true},
+    "silent": true,
+    "duration": 5,
+    "countdown": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o2s-6-fulms-under-lose",
+    "zone": "Deltascape V2.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["237"],
+    "pattern": "\\b237\\b",
+    "targetSelf": true,
+    "stateUpdates": {"under": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
   },
   {
     "id": "cactbot-o3n-spellblade-holy-cave",
@@ -8580,6 +9337,122 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-o4s-neo-neverwhere-tracker",
+    "zone": "Deltascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["2426"],
+    "pattern": "\\b2426\\b",
+    "stateUpdates": {"finalphase": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-o4s-neo-white-wound-gain",
+    "zone": "Deltascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["564"],
+    "pattern": "\\b564\\b",
+    "targetSelf": true,
+    "stateUpdates": {"whiteWound": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o4s-neo-white-wound-lost",
+    "zone": "Deltascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["564"],
+    "pattern": "\\b564\\b",
+    "targetSelf": true,
+    "stateUpdates": {"whiteWound": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o4s-neo-black-wound-gain",
+    "zone": "Deltascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["565"],
+    "pattern": "\\b565\\b",
+    "targetSelf": true,
+    "stateUpdates": {"blackWound": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o4s-neo-black-wound-lost",
+    "zone": "Deltascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["565"],
+    "pattern": "\\b565\\b",
+    "targetSelf": true,
+    "stateUpdates": {"blackWound": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o4s-neo-beyond-death-gain",
+    "zone": "Deltascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["566"],
+    "pattern": "\\b566\\b",
+    "targetSelf": true,
+    "stateUpdates": {"beyondDeath": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o4s-neo-beyond-death-lost",
+    "zone": "Deltascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["566"],
+    "pattern": "\\b566\\b",
+    "targetSelf": true,
+    "stateUpdates": {"beyondDeath": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o4s-neo-allagan-field-gain",
+    "zone": "Deltascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["1C6"],
+    "pattern": "\\b1C6\\b",
+    "targetSelf": true,
+    "stateUpdates": {"allaganField": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o4s-neo-allagan-field-lost",
+    "zone": "Deltascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["1C6"],
+    "pattern": "\\b1C6\\b",
+    "targetSelf": true,
+    "stateUpdates": {"allaganField": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-o4s-neo-flood-of-naught-inside",
     "zone": "Deltascape V4.0 (Savage)",
     "source": "LogLine",
@@ -8904,6 +9777,44 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-o7s-aether-rot-gain",
+    "zone": "Sigmascape V3.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["5C3"],
+    "pattern": "\\b5C3\\b",
+    "targetSelf": true,
+    "stateUpdates": {"rot": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o7s-aether-rot-lose",
+    "zone": "Sigmascape V3.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["5C3"],
+    "pattern": "\\b5C3\\b",
+    "targetSelf": true,
+    "stateUpdates": {"rot": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-o7s-virus-tracker",
+    "zone": "Sigmascape V3.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["5D5"],
+    "pattern": "\\b5D5\\b",
+    "stateUpdates": {"seenVirus": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-o7s-magitek-ray",
     "zone": "Sigmascape V3.0 (Savage)",
     "source": "LogLine",
@@ -9204,6 +10115,30 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-o8s-jester-s-antics",
+    "zone": "Sigmascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["5CE"],
+    "pattern": "\\b5CE\\b",
+    "stateUpdates": {"antics": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 1
+  },
+  {
+    "id": "cactbot-o8s-jester-s-truths",
+    "zone": "Sigmascape V4.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["5CF"],
+    "pattern": "\\b5CF\\b",
+    "stateUpdates": {"truths": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 1
+  },
+  {
     "id": "cactbot-o8s-fire-spread",
     "zone": "Sigmascape V4.0 (Savage)",
     "source": "LogLine",
@@ -9428,6 +10363,18 @@
     "suppress": 5
   },
   {
+    "id": "cactbot-o9s-primordial-crust",
+    "zone": "Alphascape V1.0 (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["645"],
+    "pattern": "\\b645\\b",
+    "stateUpdates": {"primordialCrust": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-o9s-earth-stack-marker",
     "zone": "Alphascape V1.0 (Savage)",
     "source": "LogLine",
@@ -9561,6 +10508,30 @@
     "suppress": 5
   },
   {
+    "id": "cactbot-lakshmiex-chanchala-gain",
+    "zone": "Emanation (Extreme)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["2148"],
+    "pattern": "\\b2148\\b",
+    "stateUpdates": {"chanchala": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-lakshmiex-chanchala-lose",
+    "zone": "Emanation (Extreme)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["582"],
+    "pattern": "\\b582\\b",
+    "stateUpdates": {"chanchala": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-lakshmiex-pull-of-light-tank",
     "zone": "Emanation (Extreme)",
     "source": "LogLine",
@@ -9609,8 +10580,9 @@
     "zone": "Emanation (Extreme)",
     "source": "LogLine",
     "eventType": "StartsUsing",
-    "ids": ["2147"],
-    "pattern": "\\b2147\\b",
+    "ids": ["2147", "249D"],
+    "pattern": "\\b(?:2147|249D)\\b",
+    "stateConditions": {"chanchala": true},
     "alert": "Vrill for AOE",
     "duration": 5,
     "suppress": 8
@@ -9648,6 +10620,30 @@
     "pattern": "\\b006D\\b",
     "targetSelf": true,
     "alert": "Flower Marker",
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-lakshmi-chanchala-gain",
+    "zone": "Emanation",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["582"],
+    "pattern": "\\b582\\b",
+    "stateUpdates": {"chanchala": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-lakshmi-chanchala-lose",
+    "zone": "Emanation",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["582"],
+    "pattern": "\\b582\\b",
+    "stateUpdates": {"chanchala": false},
+    "silent": true,
     "duration": 5,
     "suppress": 5
   },
@@ -9875,6 +10871,18 @@
     "suppress": 1
   },
   {
+    "id": "cactbot-seiryuex-aramitama-tracking",
+    "zone": "The Wreath of Snakes (Extreme)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["37E4"],
+    "pattern": "\\b37E4\\b",
+    "stateUpdates": {"blazing": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-seiryuex-infirm-soul",
     "zone": "The Wreath of Snakes (Extreme)",
     "source": "LogLine",
@@ -9896,6 +10904,18 @@
     "alert": "Stack for Puddle AOEs",
     "duration": 5,
     "countdown": 1,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-seiryuex-find-sneks",
+    "zone": "The Wreath of Snakes (Extreme)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["37F7"],
+    "pattern": "\\b37F7\\b",
+    "stateUpdates": {"withForce": true},
+    "silent": true,
+    "duration": 6,
     "suppress": 8
   },
   {
@@ -10181,6 +11201,32 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-shinryuex-final-left-wing",
+    "zone": "The Minstrel's Ballad: Shinryu's Domain",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["2718"],
+    "pattern": "\\b2718\\b",
+    "stateConditions": {"finalWing": false},
+    "stateUpdates": {"finalWing": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-shinryuex-final-right-wing",
+    "zone": "The Minstrel's Ballad: Shinryu's Domain",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["2719"],
+    "pattern": "\\b2719\\b",
+    "stateConditions": {"finalWing": false},
+    "stateUpdates": {"finalWing": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-shinryuex-tethers",
     "zone": "The Minstrel's Ballad: Shinryu's Domain",
     "source": "LogLine",
@@ -10306,6 +11352,19 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-shinryu-normal-akh-rai-activation",
+    "zone": "The Royal Menagerie",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["1FF4"],
+    "pattern": "\\b1FF4\\b",
+    "stateConditions": {"finalPhase": false},
+    "stateUpdates": {"finalPhase": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-shinryu-normal-divebomb",
     "zone": "The Royal Menagerie",
     "source": "LogLine",
@@ -10327,6 +11386,44 @@
     "alert": "Break chains",
     "duration": 5,
     "countdown": 3.8,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-susex-thundercloud-cleanup",
+    "zone": "The Pool of Tribute (Extreme)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["2041"],
+    "pattern": "\\b2041\\b",
+    "stateUpdates": {"cloud": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-susex-churning-gain",
+    "zone": "The Pool of Tribute (Extreme)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["4F6"],
+    "pattern": "\\b4F6\\b",
+    "stateConditions": {"churning": false},
+    "stateUpdates": {"churning": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-susex-churning-lose",
+    "zone": "The Pool of Tribute (Extreme)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["4F6"],
+    "pattern": "\\b4F6\\b",
+    "stateConditions": {"churning": true},
+    "stateUpdates": {"churning": false},
+    "silent": true,
+    "duration": 5,
     "suppress": 5
   },
   {
@@ -10497,6 +11594,30 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-tsukuyomiex-full-moon",
+    "zone": "The Minstrel's Ballad: Tsukuyomi's Pain",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["5FF"],
+    "pattern": "\\b5FF\\b",
+    "stateUpdates": {"moonIsOut": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-tsukuyomiex-new-moon",
+    "zone": "The Minstrel's Ballad: Tsukuyomi's Pain",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["600"],
+    "pattern": "\\b600\\b",
+    "stateUpdates": {"moonIsOut": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-tsukuyomiex-lunacy",
     "zone": "The Minstrel's Ballad: Tsukuyomi's Pain",
     "source": "LogLine",
@@ -10632,6 +11753,30 @@
     "suppress": 5
   },
   {
+    "id": "cactbot-uwu-garuda-woken",
+    "zone": "The Weapon's Refrain (Ultimate)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["5F9"],
+    "pattern": "\\b5F9\\b",
+    "stateUpdates": {"garudaAwoken": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-uwu-ifrit-woken",
+    "zone": "The Weapon's Refrain (Ultimate)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["5F9"],
+    "pattern": "\\b5F9\\b",
+    "stateUpdates": {"ifritAwoken": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-uwu-garuda-slipstream",
     "zone": "The Weapon's Refrain (Ultimate)",
     "source": "LogLine",
@@ -10696,6 +11841,18 @@
     "alert": "Stack",
     "duration": 5,
     "suppress": 5
+  },
+  {
+    "id": "cactbot-uwu-titan-gaol-granite-impact",
+    "zone": "The Weapon's Refrain (Ultimate)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["2B6D"],
+    "pattern": "\\b2B6D\\b",
+    "stateUpdates": {"seenTitanGaols": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
   },
   {
     "id": "cactbot-uwu-healer-lb",
@@ -10808,6 +11965,58 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-ucu-firescorched-gain",
+    "zone": "The Unending Coil of Bahamut (Ultimate)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["1D0"],
+    "pattern": "\\b1D0\\b",
+    "targetSelf": true,
+    "stateUpdates": {"fireDebuff": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-ucu-firescorched-lose",
+    "zone": "The Unending Coil of Bahamut (Ultimate)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["1D0"],
+    "pattern": "\\b1D0\\b",
+    "targetSelf": true,
+    "stateUpdates": {"fireDebuff": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-ucu-icebitten-gain",
+    "zone": "The Unending Coil of Bahamut (Ultimate)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["1D1"],
+    "pattern": "\\b1D1\\b",
+    "targetSelf": true,
+    "stateUpdates": {"iceDebuff": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-ucu-icebitten-lose",
+    "zone": "The Unending Coil of Bahamut (Ultimate)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["1D1"],
+    "pattern": "\\b1D1\\b",
+    "targetSelf": true,
+    "stateUpdates": {"iceDebuff": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-ucu-twisters",
     "zone": "The Unending Coil of Bahamut (Ultimate)",
     "source": "LogLine",
@@ -10826,6 +12035,18 @@
     "ids": ["26A9"],
     "pattern": "\\b26A9\\b",
     "alert": "Tank buster: swap",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-ucu-twintania-phase-change-watcher",
+    "zone": "The Unending Coil of Bahamut (Ultimate)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["26A"],
+    "pattern": "\\b26A\\b",
+    "stateUpdates": {"monitoringHP": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -11642,6 +12863,19 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-paradigm-copied-knave-lunge",
+    "zone": "The Tower at Paradigm's Breach",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["5EB1"],
+    "pattern": "\\b5EB1\\b",
+    "stateConditions": {"cloneLunge": false},
+    "stateUpdates": {"cloneLunge": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-paradigm-copied-knave-lunge-get-middle",
     "zone": "The Tower at Paradigm's Breach",
     "source": "LogLine",
@@ -11716,6 +12950,30 @@
     "ids": ["601"],
     "pattern": "\\b601\\b",
     "alert": "Raidwide AoE",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-paradigm-red-sphere-wave-white",
+    "zone": "The Tower at Paradigm's Breach",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["618D"],
+    "pattern": "\\b618D\\b",
+    "stateUpdates": {"seenSphere": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-paradigm-red-sphere-wave-black",
+    "zone": "The Tower at Paradigm's Breach",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["618E"],
+    "pattern": "\\b618E\\b",
+    "stateUpdates": {"seenSphere": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -13295,12 +14553,26 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-bozja-south-castrum-bottom-check",
+    "zone": "The Bozjan Southern Front",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["51FD"],
+    "pattern": "\\b51FD\\b",
+    "targetSelf": true,
+    "stateUpdates": {"helldiver": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-bozja-south-castrum-helldiver-mrv-missile",
     "zone": "The Bozjan Southern Front",
     "source": "LogLine",
     "eventType": "StartsUsing",
-    "ids": ["51FC"],
-    "pattern": "\\b51FC\\b",
+    "ids": ["51FC", "51FD"],
+    "pattern": "\\b(?:51FC|51FD)\\b",
+    "stateConditions": {"helldiver": true},
     "alert": "Stand in dive charge",
     "duration": 5,
     "countdown": 6,
@@ -13532,6 +14804,18 @@
     "suppress": 1
   },
   {
+    "id": "cactbot-delubrum-dahu-feral-howl",
+    "zone": "Delubrum Reginae",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["5755"],
+    "pattern": "\\b5755\\b",
+    "stateUpdates": {"seenFeralHowl": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-delubrum-dahu-hot-charge",
     "zone": "Delubrum Reginae",
     "source": "LogLine",
@@ -13561,6 +14845,18 @@
     "ids": ["575D"],
     "pattern": "\\b575D\\b",
     "alert": "Avoid front",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-delubrum-guard-secrets-revealed",
+    "zone": "Delubrum Reginae",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["5B6E"],
+    "pattern": "\\b5B6E\\b",
+    "stateUpdates": {"seenSecretsRevealed": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -13616,6 +14912,18 @@
     "ids": ["5810"],
     "pattern": "\\b5810\\b",
     "alert": "Raidwide AoE",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-delubrum-guard-reversal-of-forces",
+    "zone": "Delubrum Reginae",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["57FF"],
+    "pattern": "\\b57FF\\b",
+    "stateUpdates": {"reversalOfForces": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -13793,6 +15101,18 @@
     "ids": ["59DE"],
     "pattern": "\\b59DE\\b",
     "alert": "Avoid Laser Bounces",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-delubrum-queen-reversal-of-forces",
+    "zone": "Delubrum Reginae",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["59D4"],
+    "pattern": "\\b59D4\\b",
+    "stateUpdates": {"reversalOfForces": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -14097,6 +15417,42 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-delubrumsav-guard-queen-bombslinger",
+    "zone": "Delubrum Reginae (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["5AFE", "5B3F"],
+    "pattern": "\\b(?:5AFE|5B3F)\\b",
+    "stateUpdates": {"tetherIsBombslinger": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-delubrumsav-guard-queen-bomb-reversal",
+    "zone": "Delubrum Reginae (Savage)",
+    "source": "LogLine",
+    "eventType": "Tether",
+    "ids": ["0010"],
+    "pattern": "\\b0010\\b",
+    "stateUpdates": {"tetherOnBomb": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 1
+  },
+  {
+    "id": "cactbot-delubrumsav-guard-queen-personal-reversal",
+    "zone": "Delubrum Reginae (Savage)",
+    "source": "LogLine",
+    "eventType": "Tether",
+    "ids": ["0087"],
+    "pattern": "\\b0087\\b",
+    "stateUpdates": {"tetherOnSelf": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-delubrumsav-guard-above-board-warning",
     "zone": "Delubrum Reginae (Savage)",
     "source": "LogLine",
@@ -14320,6 +15676,18 @@
     "duration": 5,
     "countdown": 3,
     "suppress": 1
+  },
+  {
+    "id": "cactbot-zadnor-feeling-analysis",
+    "zone": "Zadnor",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["5C37"],
+    "pattern": "\\b5C37\\b",
+    "stateUpdates": {"feelingAnalysis": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
   },
   {
     "id": "cactbot-zadnor-grave-devour-soul",
@@ -15207,6 +16575,7 @@
     "eventType": "StartsUsing",
     "ids": ["4663"],
     "pattern": "\\b4663\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -15218,6 +16587,7 @@
     "eventType": "StartsUsing",
     "ids": ["4666"],
     "pattern": "\\b4666\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15229,6 +16599,7 @@
     "eventType": "StartsUsing",
     "ids": ["4668"],
     "pattern": "\\b4668\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15240,6 +16611,7 @@
     "eventType": "StartsUsing",
     "ids": ["465F"],
     "pattern": "\\b465F\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15251,6 +16623,7 @@
     "eventType": "StartsUsing",
     "ids": ["4662"],
     "pattern": "\\b4662\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Out of melee",
     "duration": 5,
     "suppress": 8
@@ -15262,6 +16635,7 @@
     "eventType": "StartsUsing",
     "ids": ["466A"],
     "pattern": "\\b466A\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank cleave",
     "duration": 5,
     "suppress": 8
@@ -15273,6 +16647,7 @@
     "eventType": "StartsUsing",
     "ids": ["466F"],
     "pattern": "\\b466F\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -15284,6 +16659,7 @@
     "eventType": "StartsUsing",
     "ids": ["466B"],
     "pattern": "\\b466B\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15295,6 +16671,7 @@
     "eventType": "StartsUsing",
     "ids": ["466E"],
     "pattern": "\\b466E\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -15306,6 +16683,7 @@
     "eventType": "StartsUsing",
     "ids": ["4667"],
     "pattern": "\\b4667\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get under",
     "duration": 5,
     "suppress": 8
@@ -15317,6 +16695,7 @@
     "eventType": "Ability",
     "ids": ["4667"],
     "pattern": "\\b4667\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 1
@@ -15328,6 +16707,7 @@
     "eventType": "StartsUsing",
     "ids": ["41BE"],
     "pattern": "\\b41BE\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15339,6 +16719,7 @@
     "eventType": "StartsUsing",
     "ids": ["41C0"],
     "pattern": "\\b41C0\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15350,6 +16731,7 @@
     "eventType": "StartsUsing",
     "ids": ["41C1"],
     "pattern": "\\b41C1\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -15361,6 +16743,7 @@
     "eventType": "StartsUsing",
     "ids": ["41BA"],
     "pattern": "\\b41BA\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -15372,6 +16755,7 @@
     "eventType": "StartsUsing",
     "ids": ["41BB"],
     "pattern": "\\b41BB\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get under",
     "duration": 5,
     "suppress": 8
@@ -15383,6 +16767,7 @@
     "eventType": "StartsUsing",
     "ids": ["4688"],
     "pattern": "\\b4688\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Knockback",
     "duration": 5,
     "suppress": 8
@@ -15394,6 +16779,7 @@
     "eventType": "StartsUsing",
     "ids": ["41B3"],
     "pattern": "\\b41B3\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get in",
     "duration": 5,
     "suppress": 8
@@ -15405,6 +16791,7 @@
     "eventType": "StartsUsing",
     "ids": ["41B8"],
     "pattern": "\\b41B8\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -15416,9 +16803,22 @@
     "eventType": "StartsUsing",
     "ids": ["4450"],
     "pattern": "\\b4450\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
+  },
+  {
+    "id": "cactbot-hunt-lil-murderer-goblin-slash",
+    "zone": "Kholusia",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4454"],
+    "pattern": "\\b4454\\b",
+    "stateUpdates": {"seenFirstThunder": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 10
   },
   {
     "id": "cactbot-hunt-huracan-summer-heat",
@@ -15427,6 +16827,7 @@
     "eventType": "StartsUsing",
     "ids": ["445B"],
     "pattern": "\\b445B\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -15438,6 +16839,7 @@
     "eventType": "StartsUsing",
     "ids": ["445A"],
     "pattern": "\\b445A\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "In => Sides",
     "duration": 5,
     "suppress": 8
@@ -15449,6 +16851,7 @@
     "eventType": "StartsUsing",
     "ids": ["4457"],
     "pattern": "\\b4457\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Sides => Sides (again)",
     "duration": 5,
     "suppress": 8
@@ -15460,6 +16863,7 @@
     "eventType": "StartsUsing",
     "ids": ["4623"],
     "pattern": "\\b4623\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Look away",
     "duration": 5,
     "suppress": 8
@@ -15471,6 +16875,7 @@
     "eventType": "StartsUsing",
     "ids": ["4422"],
     "pattern": "\\b4422\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -15482,6 +16887,7 @@
     "eventType": "StartsUsing",
     "ids": ["4423"],
     "pattern": "\\b4423\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -15493,6 +16899,7 @@
     "eventType": "StartsUsing",
     "ids": ["4420"],
     "pattern": "\\b4420\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank cleave",
     "duration": 5,
     "suppress": 8
@@ -15504,9 +16911,34 @@
     "eventType": "StartsUsing",
     "ids": ["4421"],
     "pattern": "\\b4421\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
+  },
+  {
+    "id": "cactbot-hunt-nariphon-piercing-resistance-down-ii-gain",
+    "zone": "Lakeland",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["59B"],
+    "pattern": "\\b59B\\b",
+    "stateUpdates": {"allergen": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-hunt-nariphon-piercing-resistance-down-ii-lose",
+    "zone": "Lakeland",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["59B"],
+    "pattern": "\\b59B\\b",
+    "stateUpdates": {"allergen": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
   },
   {
     "id": "cactbot-hunt-nariphon-odious-miasma",
@@ -15515,6 +16947,7 @@
     "eventType": "StartsUsing",
     "ids": ["424A"],
     "pattern": "\\b424A\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15526,6 +16959,7 @@
     "eventType": "StartsUsing",
     "ids": ["4244"],
     "pattern": "\\b4244\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -15548,6 +16982,7 @@
     "eventType": "StartsUsing",
     "ids": ["4247"],
     "pattern": "\\b4247\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Away from Dash",
     "duration": 5,
     "suppress": 8
@@ -15559,6 +16994,7 @@
     "eventType": "StartsUsing",
     "ids": ["423F"],
     "pattern": "\\b423F\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Go Back/Right",
     "duration": 5,
     "suppress": 8
@@ -15570,6 +17006,7 @@
     "eventType": "StartsUsing",
     "ids": ["423D"],
     "pattern": "\\b423D\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15581,6 +17018,7 @@
     "eventType": "StartsUsing",
     "ids": ["423E"],
     "pattern": "\\b423E\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Go Back/Left",
     "duration": 5,
     "suppress": 8
@@ -15592,6 +17030,7 @@
     "eventType": "StartsUsing",
     "ids": ["44BD"],
     "pattern": "\\b44BD\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -15603,6 +17042,7 @@
     "eventType": "StartsUsing",
     "ids": ["44C1"],
     "pattern": "\\b44C1\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get under",
     "duration": 5,
     "suppress": 8
@@ -15614,6 +17054,7 @@
     "eventType": "StartsUsing",
     "ids": ["44C2"],
     "pattern": "\\b44C2\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15625,6 +17066,7 @@
     "eventType": "StartsUsing",
     "ids": ["45C3"],
     "pattern": "\\b45C3\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -15636,6 +17078,7 @@
     "eventType": "StartsUsing",
     "ids": ["45C4"],
     "pattern": "\\b45C4\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -15647,6 +17090,7 @@
     "eventType": "StartsUsing",
     "ids": ["45C6"],
     "pattern": "\\b45C6\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15669,6 +17113,7 @@
     "eventType": "StartsUsing",
     "ids": ["45C0"],
     "pattern": "\\b45C0\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Look away",
     "duration": 5,
     "suppress": 8
@@ -15680,6 +17125,7 @@
     "eventType": "StartsUsing",
     "ids": ["45B8"],
     "pattern": "\\b45B8\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank cleave",
     "duration": 5,
     "suppress": 8
@@ -15691,6 +17137,7 @@
     "eventType": "StartsUsing",
     "ids": ["45B9"],
     "pattern": "\\b45B9\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -15707,12 +17154,51 @@
     "suppress": 1
   },
   {
+    "id": "cactbot-hunt-ixtab-archaic-dualcast",
+    "zone": "The Rak'tika Greatwood",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["469D"],
+    "pattern": "\\b469D\\b",
+    "stateUpdates": {"ixtabDualcast": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-hunt-ixtab-tartarean-thunder",
+    "zone": "The Rak'tika Greatwood",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["45B3"],
+    "pattern": "\\b45B3\\b",
+    "stateConditions": {"inCombat": true},
+    "stateUpdates": {"ixtabDualcast": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-hunt-ixtab-tartarean-flame",
+    "zone": "The Rak'tika Greatwood",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["464F"],
+    "pattern": "\\b464F\\b",
+    "stateConditions": {"inCombat": true},
+    "stateUpdates": {"ixtabDualcast": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-hunt-baal-sewer-water-front",
     "zone": "The Tempest",
     "source": "LogLine",
     "eventType": "StartsUsing",
     "ids": ["4624"],
     "pattern": "\\b4624\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15724,6 +17210,7 @@
     "eventType": "StartsUsing",
     "ids": ["43D6"],
     "pattern": "\\b43D6\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Draw-in",
     "duration": 5,
     "suppress": 8
@@ -15735,6 +17222,7 @@
     "eventType": "Ability",
     "ids": ["43D6"],
     "pattern": "\\b43D6\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 1
@@ -15746,6 +17234,7 @@
     "eventType": "StartsUsing",
     "ids": ["43CC"],
     "pattern": "\\b43CC\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -15757,6 +17246,7 @@
     "eventType": "StartsUsing",
     "ids": ["43CD"],
     "pattern": "\\b43CD\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -15768,9 +17258,34 @@
     "eventType": "StartsUsing",
     "ids": ["43CE"],
     "pattern": "\\b43CE\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
+  },
+  {
+    "id": "cactbot-hunt-gunitt-swivel-gun-vuln-gain",
+    "zone": "The Tempest",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["472"],
+    "pattern": "\\b472\\b",
+    "stateUpdates": {"swivelGunVuln": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-hunt-gunitt-swivel-gun-vuln-lose",
+    "zone": "The Tempest",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["472"],
+    "pattern": "\\b472\\b",
+    "stateUpdates": {"swivelGunVuln": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
   },
   {
     "id": "cactbot-hunt-gunitt-coin-toss",
@@ -15779,6 +17294,7 @@
     "eventType": "StartsUsing",
     "ids": ["43D0"],
     "pattern": "\\b43D0\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Look away",
     "duration": 5,
     "suppress": 8
@@ -16271,6 +17787,18 @@
     "suppress": 1
   },
   {
+    "id": "cactbot-e10s-shadow-cleave",
+    "zone": "Eden's Promise: Litany (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["5718"],
+    "pattern": "\\b5718\\b",
+    "stateUpdates": {"clones": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-e10s-dualspell-1",
     "zone": "Eden's Promise: Litany (Savage)",
     "source": "LogLine",
@@ -16415,6 +17943,18 @@
     "alert": "Towers first, then cleaves",
     "duration": 5,
     "countdown": 23.3,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-e10s-pitch-bog",
+    "zone": "Eden's Promise: Litany (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["5721"],
+    "pattern": "\\b5721\\b",
+    "stateUpdates": {"seenPitchBog": true},
+    "silent": true,
+    "duration": 5,
     "suppress": 8
   },
   {
@@ -16737,6 +18277,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-e12n-intermission-completion",
+    "zone": "Eden's Promise: Eternity",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4B48"],
+    "pattern": "\\b4B48\\b",
+    "stateUpdates": {"seenIntermission": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-e12n-maleficium",
     "zone": "Eden's Promise: Eternity",
     "source": "LogLine",
@@ -16824,6 +18376,30 @@
     "pattern": "\\b58B5\\b",
     "alert": "SW Knockback",
     "duration": 10,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-e12s-promise-rapturous-reach-left",
+    "zone": "Eden's Promise: Eternity (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["58AD"],
+    "pattern": "\\b58AD\\b",
+    "stateUpdates": {"isDoorBoss": true},
+    "silent": true,
+    "duration": 6,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-e12s-promise-rapturous-reach-right",
+    "zone": "Eden's Promise: Eternity (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["58AE"],
+    "pattern": "\\b58AE\\b",
+    "stateUpdates": {"isDoorBoss": true},
+    "silent": true,
+    "duration": 6,
     "suppress": 8
   },
   {
@@ -17026,6 +18602,30 @@
     "duration": 5,
     "countdown": 4.5,
     "suppress": 8
+  },
+  {
+    "id": "cactbot-e1s-paradise-regained",
+    "zone": "Eden's Gate: Resurrection (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["7B6"],
+    "pattern": "\\b7B6\\b",
+    "stateUpdates": {"paradise": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-e1s-paradise-regained-but-lost",
+    "zone": "Eden's Gate: Resurrection (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["7B6"],
+    "pattern": "\\b7B6\\b",
+    "stateUpdates": {"paradise": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
   },
   {
     "id": "cactbot-e1s-eden-s-gravity",
@@ -17273,6 +18873,30 @@
     "suppress": 5
   },
   {
+    "id": "cactbot-e2s-spell-in-waiting-gain",
+    "zone": "Eden's Gate: Descent (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["710"],
+    "pattern": "\\b710\\b",
+    "stateUpdates": {"waiting": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-e2s-spell-in-waiting-lose",
+    "zone": "Eden's Gate: Descent (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["710"],
+    "pattern": "\\b710\\b",
+    "stateUpdates": {"waiting": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-e2s-entropy",
     "zone": "Eden's Gate: Descent (Savage)",
     "source": "LogLine",
@@ -17471,6 +19095,18 @@
     "alert": "Flare aoes",
     "duration": 5,
     "suppress": 10
+  },
+  {
+    "id": "cactbot-e2s-hell-wind-no-waiting",
+    "zone": "Eden's Gate: Descent (Savage)",
+    "source": "LogLine",
+    "eventType": "HeadMarker",
+    "ids": ["001E"],
+    "pattern": "\\b001E\\b",
+    "stateUpdates": {"hellWind": true},
+    "silent": true,
+    "duration": 6,
+    "suppress": 5
   },
   {
     "id": "cactbot-e2s-hell-wind-waiting",
@@ -17803,6 +19439,18 @@
     "suppress": 1
   },
   {
+    "id": "cactbot-e3s-refreshed",
+    "zone": "Eden's Gate: Inundation (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["400F"],
+    "pattern": "\\b400F\\b",
+    "stateUpdates": {"refreshed": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-e3s-front-left-temporary-current",
     "zone": "Eden's Gate: Inundation (Savage)",
     "source": "LogLine",
@@ -17831,6 +19479,7 @@
     "eventType": "StartsUsing",
     "ids": ["3FEA"],
     "pattern": "\\b3FEA\\b",
+    "stateConditions": {"refreshed": true},
     "alert": "Front left / Back right",
     "duration": 5,
     "countdown": 6.2,
@@ -17843,6 +19492,7 @@
     "eventType": "StartsUsing",
     "ids": ["3FEB"],
     "pattern": "\\b3FEB\\b",
+    "stateConditions": {"refreshed": true},
     "alert": "Front right / Back left",
     "duration": 5,
     "countdown": 6.2,
@@ -18092,6 +19742,32 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-e5n-surge-protection-gain",
+    "zone": "Eden's Verse: Fulmination",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["8B4"],
+    "pattern": "\\b8B4\\b",
+    "targetSelf": true,
+    "stateUpdates": {"surgeProtection": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-e5n-surge-protection-lose",
+    "zone": "Eden's Verse: Fulmination",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["8B4"],
+    "pattern": "\\b8B4\\b",
+    "targetSelf": true,
+    "stateUpdates": {"surgeProtection": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-e5n-crippling-blow",
     "zone": "Eden's Verse: Fulmination",
     "source": "LogLine",
@@ -18152,11 +19828,88 @@
     "zone": "Eden's Verse: Fulmination",
     "source": "LogLine",
     "eventType": "StartsUsing",
-    "ids": ["4B9A"],
-    "pattern": "\\b4B9A\\b",
+    "ids": ["4B98", "4B9A", "4E62"],
+    "pattern": "\\b(?:4B98|4B9A|4E62)\\b",
+    "stateConditions": {"surgeProtection": false},
     "alert": "Grab an orb",
     "duration": 5,
     "suppress": 8
+  },
+  {
+    "id": "cactbot-e5s-surge-protection-gain",
+    "zone": "Eden's Verse: Fulmination (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["8B4"],
+    "pattern": "\\b8B4\\b",
+    "targetSelf": true,
+    "stateUpdates": {"surgeProtection": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-e5s-surge-protection-loss",
+    "zone": "Eden's Verse: Fulmination (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["8B4"],
+    "pattern": "\\b8B4\\b",
+    "targetSelf": true,
+    "stateUpdates": {"surgeProtection": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-e5s-stratospear-summons",
+    "zone": "Eden's Verse: Fulmination (Savage)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4BA5"],
+    "pattern": "\\b4BA5\\b",
+    "stateConditions": {"seenFirstSpear": false},
+    "stateUpdates": {"seenFirstSpear": true},
+    "silent": true,
+    "duration": 5,
+    "countdown": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-e5s-tribunal-summons",
+    "zone": "Eden's Verse: Fulmination (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["4BAC"],
+    "pattern": "\\b4BAC\\b",
+    "stateUpdates": {"seenFirstAdd": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-e5s-fury-s-bolt-gain",
+    "zone": "Eden's Verse: Fulmination (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["8B7"],
+    "pattern": "\\b8B7\\b",
+    "stateUpdates": {"furysBoltActive": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-e5s-fury-s-bolt-lose",
+    "zone": "Eden's Verse: Fulmination (Savage)",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["8B7"],
+    "pattern": "\\b8B7\\b",
+    "stateUpdates": {"furysBoltActive": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
   },
   {
     "id": "cactbot-e5s-judgment-volts",
@@ -18176,9 +19929,22 @@
     "eventType": "StartsUsing",
     "ids": ["4BC6"],
     "pattern": "\\b4BC6\\b",
+    "stateConditions": {"furysBoltActive": false},
     "alert": "Move away",
     "duration": 5,
     "countdown": 3,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-e5s-stepped-leader-cast",
+    "zone": "Eden's Verse: Fulmination (Savage)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4BC6"],
+    "pattern": "\\b4BC6\\b",
+    "stateUpdates": {"steppedLeaderNext": false},
+    "silent": true,
+    "duration": 5,
     "suppress": 8
   },
   {
@@ -18270,6 +20036,30 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-e6n-hands-of-flame-start",
+    "zone": "Eden's Verse: Furor",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["4CFE"],
+    "pattern": "\\b4CFE\\b",
+    "stateUpdates": {"handsOfFlame": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-e6n-hands-of-flame-cast",
+    "zone": "Eden's Verse: Furor",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4BE9"],
+    "pattern": "\\b4BE9\\b",
+    "stateUpdates": {"handsOfFlame": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 1
+  },
+  {
     "id": "cactbot-e6n-instant-incineration",
     "zone": "Eden's Verse: Furor",
     "source": "LogLine",
@@ -18277,6 +20067,19 @@
     "ids": ["4BED"],
     "pattern": "\\b4BED\\b",
     "alert": "Tank buster",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-e6n-strike-spark",
+    "zone": "Eden's Verse: Furor",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4BD3", "4F98"],
+    "pattern": "\\b(?:4BD3|4F98)\\b",
+    "stateConditions": {"seenSpark": false},
+    "stateUpdates": {"seenSpark": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -18323,6 +20126,30 @@
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
+  },
+  {
+    "id": "cactbot-e6s-hands-of-flame-start",
+    "zone": "Eden's Verse: Furor (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["4D00"],
+    "pattern": "\\b4D00\\b",
+    "stateUpdates": {"handsOfFlame": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-e6s-hands-of-flame-cast",
+    "zone": "Eden's Verse: Furor (Savage)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4D00"],
+    "pattern": "\\b4D00\\b",
+    "stateUpdates": {"handsOfFlame": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 1
   },
   {
     "id": "cactbot-e6s-instant-incineration",
@@ -18548,12 +20375,25 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-e8n-mirrors-active",
+    "zone": "Eden's Verse: Refulgence",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["4DD4"],
+    "pattern": "\\b4DD4\\b",
+    "stateUpdates": {"mirrorsActive": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-e8n-biting-frost",
     "zone": "Eden's Verse: Refulgence",
     "source": "LogLine",
     "eventType": "StartsUsing",
     "ids": ["4DDB"],
     "pattern": "\\b4DDB\\b",
+    "stateConditions": {"mirrorsActive": false},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -18565,6 +20405,7 @@
     "eventType": "StartsUsing",
     "ids": ["4DDC"],
     "pattern": "\\b4DDC\\b",
+    "stateConditions": {"mirrorsActive": false},
     "alert": "Go Front / Sides",
     "duration": 5,
     "suppress": 8
@@ -18576,6 +20417,7 @@
     "eventType": "StartsUsing",
     "ids": ["4DE2"],
     "pattern": "\\b4DE2\\b",
+    "stateConditions": {"mirrorsActive": false},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -18598,6 +20440,7 @@
     "eventType": "StartsUsing",
     "ids": ["4DDB"],
     "pattern": "\\b4DDB\\b",
+    "stateConditions": {"mirrorsActive": true},
     "alert": "Get behind, then South",
     "duration": 5,
     "suppress": 8
@@ -18609,6 +20452,7 @@
     "eventType": "StartsUsing",
     "ids": ["4DDC"],
     "pattern": "\\b4DDC\\b",
+    "stateConditions": {"mirrorsActive": true},
     "alert": "Go Front / Sides, then North",
     "duration": 5,
     "suppress": 8
@@ -18623,6 +20467,19 @@
     "alert": "Close to mirrors",
     "duration": 5,
     "suppress": 3
+  },
+  {
+    "id": "cactbot-e8n-mirror-cleanup",
+    "zone": "Eden's Verse: Refulgence",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["4DFE", "4DFF", "4E00", "4E01"],
+    "pattern": "\\b(?:4DFE|4DFF|4E00|4E01)\\b",
+    "stateUpdates": {"mirrorsActive": false},
+    "silent": true,
+    "duration": 5,
+    "countdown": 5,
+    "suppress": 8
   },
   {
     "id": "cactbot-e8n-absolute-zero",
@@ -18745,6 +20602,32 @@
     "alert": "Star on YOU",
     "duration": 5,
     "suppress": 5
+  },
+  {
+    "id": "cactbot-e8s-icicle-impact",
+    "zone": "Eden's Verse: Refulgence (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsingExtra",
+    "ids": ["4DA0"],
+    "pattern": "\\b4DA0\\b",
+    "stateConditions": {"calledIcicleImpact": false},
+    "stateUpdates": {"calledIcicleImpact": true},
+    "silent": true,
+    "duration": 6,
+    "suppress": 20
+  },
+  {
+    "id": "cactbot-e8s-icicle-impact-backup",
+    "zone": "Eden's Verse: Refulgence (Savage)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4DA0"],
+    "pattern": "\\b4DA0\\b",
+    "stateConditions": {"calledIcicleImpact": false},
+    "stateUpdates": {"calledIcicleImpact": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 20
   },
   {
     "id": "cactbot-e8s-double-slap",
@@ -19150,6 +21033,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-e9s-summon",
+    "zone": "Eden's Promise: Umbra (Savage)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["5019"],
+    "pattern": "\\b5019\\b",
+    "stateUpdates": {"summon": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-diamondex-diamond-rain",
     "zone": "The Cloud Deck (Extreme)",
     "source": "LogLine",
@@ -19483,6 +21378,19 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-emeraldex-magitek-magnetism",
+    "zone": "Castrum Marinum (Extreme)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["5594"],
+    "pattern": "\\b5594\\b",
+    "stateUpdates": {"seenMines": true},
+    "silent": true,
+    "duration": 6,
+    "countdown": 9,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-emeraldex-emerald-crusher",
     "zone": "Castrum Marinum (Extreme)",
     "source": "LogLine",
@@ -19524,6 +21432,19 @@
     "pattern": "\\b(?:5555|5556|5B0F)\\b",
     "alert": "Raidwide AoE",
     "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-emerald-magitek-magnetism",
+    "zone": "Castrum Marinum",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["5B0"],
+    "pattern": "\\b5B0\\b",
+    "stateUpdates": {"seenMines": true},
+    "silent": true,
+    "duration": 6,
+    "countdown": 9,
     "suppress": 8
   },
   {
@@ -19620,12 +21541,39 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-hadesex-ancient-water-3",
+    "zone": "The Minstrel's Ballad: Hades's Elegy",
+    "source": "LogLine",
+    "eventType": "HeadMarker",
+    "ids": ["003E"],
+    "pattern": "\\b003E\\b",
+    "targetSelf": true,
+    "stateUpdates": {"waterDarkMarker": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-hadesex-ancient-darkness",
+    "zone": "The Minstrel's Ballad: Hades's Elegy",
+    "source": "LogLine",
+    "eventType": "HeadMarker",
+    "ids": ["0060"],
+    "pattern": "\\b0060\\b",
+    "targetSelf": true,
+    "stateUpdates": {"waterDarkMarker": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-hadesex-ancient-water-unmarked",
     "zone": "The Minstrel's Ballad: Hades's Elegy",
     "source": "LogLine",
     "eventType": "HeadMarker",
     "ids": ["0030", "0060"],
     "pattern": "\\b(?:0030|0060)\\b",
+    "stateConditions": {"waterDarkMarker": false},
     "alert": "Healer Stacks",
     "duration": 5,
     "countdown": 0.5,
@@ -19746,6 +21694,32 @@
     "suppress": 5
   },
   {
+    "id": "cactbot-hadesex-dark-flame",
+    "zone": "The Minstrel's Ballad: Hades's Elegy",
+    "source": "LogLine",
+    "eventType": "HeadMarker",
+    "ids": ["0064"],
+    "pattern": "\\b0064\\b",
+    "targetSelf": true,
+    "stateUpdates": {"flame": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-hadesex-dark-freeze",
+    "zone": "The Minstrel's Ballad: Hades's Elegy",
+    "source": "LogLine",
+    "eventType": "HeadMarker",
+    "ids": ["00C1"],
+    "pattern": "\\b00C1\\b",
+    "targetSelf": true,
+    "stateUpdates": {"freeze": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-hadesex-wail-of-the-lost",
     "zone": "The Minstrel's Ballad: Hades's Elegy",
     "source": "LogLine",
@@ -19757,12 +21731,26 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-hadesex-nether-blast",
+    "zone": "The Minstrel's Ballad: Hades's Elegy",
+    "source": "LogLine",
+    "eventType": "HeadMarker",
+    "ids": ["008B"],
+    "pattern": "\\b008B\\b",
+    "targetSelf": true,
+    "stateUpdates": {"netherBlast": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-hadesex-bident",
     "zone": "The Minstrel's Ballad: Hades's Elegy",
     "source": "LogLine",
     "eventType": "StartsUsing",
     "ids": ["47E3"],
     "pattern": "\\b47E3\\b",
+    "stateConditions": {"netherBlast": false},
     "alert": "Healer Stacks",
     "duration": 5,
     "suppress": 8
@@ -19835,6 +21823,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-hades-phase-tracker",
+    "zone": "The Dying Gasp",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["4180"],
+    "pattern": "\\b4180\\b",
+    "stateUpdates": {"neoHades": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-hades-broken-faith",
     "zone": "The Dying Gasp",
     "source": "LogLine",
@@ -19888,6 +21888,18 @@
     "alert": "Tank Buster Spread",
     "duration": 5,
     "suppress": 5
+  },
+  {
+    "id": "cactbot-hades-life-in-captivity",
+    "zone": "The Dying Gasp",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4175"],
+    "pattern": "\\b4175\\b",
+    "stateUpdates": {"seenLifeInCaptivity": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
   },
   {
     "id": "cactbot-hades-gaol",
@@ -20239,6 +22251,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-rubyex-liquefaction-ravensflight",
+    "zone": "Cinder Drift (Extreme)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["4AEC"],
+    "pattern": "\\b4AEC\\b",
+    "stateUpdates": {"seenFlight": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-rubyex-ruby-ray",
     "zone": "Cinder Drift (Extreme)",
     "source": "LogLine",
@@ -20497,6 +22521,43 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-shivaun-staff-phase",
+    "zone": "The Akh Afah Amphitheatre (Unreal)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["5367"],
+    "pattern": "\\b5367\\b",
+    "stateUpdates": {"soonAfterWeaponChange": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-shivaun-sword-phase",
+    "zone": "The Akh Afah Amphitheatre (Unreal)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["5366"],
+    "pattern": "\\b5366\\b",
+    "stateUpdates": {"soonAfterWeaponChange": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-shivaun-weapon-change-delayed",
+    "zone": "The Akh Afah Amphitheatre (Unreal)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["5366", "5367"],
+    "pattern": "\\b(?:5366|5367)\\b",
+    "stateUpdates": {"soonAfterWeaponChange": false},
+    "silent": true,
+    "duration": 5,
+    "countdown": 30,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-shivaun-hailstorm-marker",
     "zone": "The Akh Afah Amphitheatre (Unreal)",
     "source": "LogLine",
@@ -20527,6 +22588,18 @@
     "ids": ["5376"],
     "pattern": "\\b5376\\b",
     "alert": "Get in",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-shivaun-diamond-dust",
+    "zone": "The Akh Afah Amphitheatre (Unreal)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["536C"],
+    "pattern": "\\b536C\\b",
+    "stateUpdates": {"seenDiamondDust": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -20605,6 +22678,31 @@
     "pattern": "\\b3D4D\\b",
     "alert": "Get in",
     "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-titaniaex-mist",
+    "zone": "The Dancing Plague (Extreme)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["3D45"],
+    "pattern": "\\b3D45\\b",
+    "stateUpdates": {"seenMistRune": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-titaniaex-flame",
+    "zone": "The Dancing Plague (Extreme)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["3D47"],
+    "pattern": "\\b3D47\\b",
+    "stateUpdates": {"seenFlameRune": true},
+    "silent": true,
+    "duration": 5,
+    "countdown": 8.5,
     "suppress": 8
   },
   {
@@ -20902,6 +23000,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-varisex-clones",
+    "zone": "Memoria Misera (Extreme)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4CB3"],
+    "pattern": "\\b4CB3\\b",
+    "stateUpdates": {"clonesActive": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-varisex-altius",
     "zone": "Memoria Misera (Extreme)",
     "source": "LogLine",
@@ -21047,6 +23157,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-wolex-add-phase",
+    "zone": "The Seat of Sacrifice (Extreme)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["5151"],
+    "pattern": "\\b5151\\b",
+    "stateUpdates": {"isAddPhase": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-wolex-berserk-deep-darkside",
     "zone": "The Seat of Sacrifice (Extreme)",
     "source": "LogLine",
@@ -21075,6 +23197,7 @@
     "eventType": "StartsUsing",
     "ids": ["4F37"],
     "pattern": "\\b4F37\\b",
+    "stateUpdates": {"calledSpectral": true},
     "alert": "Black Mage + White Mage",
     "duration": 5,
     "suppress": 8
@@ -21086,6 +23209,7 @@
     "eventType": "StartsUsing",
     "ids": ["4EF"],
     "pattern": "\\b4EF\\b",
+    "stateUpdates": {"calledSpectral": true},
     "alert": "Summoner + Warrior",
     "duration": 5,
     "suppress": 8
@@ -21097,7 +23221,32 @@
     "eventType": "StartsUsing",
     "ids": ["456", "4F3"],
     "pattern": "\\b(?:456|4F3)\\b",
+    "stateUpdates": {"calledSpectral": true},
     "alert": "Dark Knight + Bard",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-wolex-spectral-ninja",
+    "zone": "The Seat of Sacrifice (Extreme)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["4EF"],
+    "pattern": "\\b4EF\\b",
+    "stateUpdates": {"calledSpectral": true, "ninja": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-wolex-spectral-tell-cleanup",
+    "zone": "The Seat of Sacrifice (Extreme)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["4F45"],
+    "pattern": "\\b4F45\\b",
+    "stateUpdates": {"calledSpectral": false},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -21123,6 +23272,18 @@
     "alert": "Stack",
     "duration": 5,
     "suppress": 2
+  },
+  {
+    "id": "cactbot-wolex-deluge-of-death-marker",
+    "zone": "The Seat of Sacrifice (Extreme)",
+    "source": "LogLine",
+    "eventType": "HeadMarker",
+    "ids": ["0057"],
+    "pattern": "\\b0057\\b",
+    "stateUpdates": {"deluge": true},
+    "silent": true,
+    "duration": 6,
+    "suppress": 5
   },
   {
     "id": "cactbot-wolex-coruscant-saber-out",
@@ -21407,6 +23568,18 @@
     "suppress": 1
   },
   {
+    "id": "cactbot-tea-gavel",
+    "zone": "The Epic of Alexander (Ultimate)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["483C"],
+    "pattern": "\\b483C\\b",
+    "stateUpdates": {"seenGavel": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-tea-brute-ray",
     "zone": "The Epic of Alexander (Ultimate)",
     "source": "LogLine",
@@ -21553,6 +23726,30 @@
     "suppress": 5
   },
   {
+    "id": "cactbot-tea-beta-optical-spread",
+    "zone": "The Epic of Alexander (Ultimate)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["48A0"],
+    "pattern": "\\b48A0\\b",
+    "stateUpdates": {"betaIsOpticalStack": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-tea-beta-optical-stack",
+    "zone": "The Epic of Alexander (Ultimate)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["48A1"],
+    "pattern": "\\b48A1\\b",
+    "stateUpdates": {"betaIsOpticalStack": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-tea-ordained-punishment",
     "zone": "The Epic of Alexander (Ultimate)",
     "source": "LogLine",
@@ -21674,6 +23871,19 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-aglaia-rhalgr-rhalgr-s-beacon",
+    "zone": "Aglaia",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["70B8"],
+    "pattern": "\\b70B8\\b",
+    "stateUpdates": {"rhalgrSeenBeacon": true},
+    "silent": true,
+    "duration": 5,
+    "countdown": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-aglaia-rhalgr-lightning-storm",
     "zone": "Aglaia",
     "source": "LogLine",
@@ -21683,6 +23893,31 @@
     "targetSelf": true,
     "alert": "Spread",
     "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-aglaia-rhalgr-broken-world",
+    "zone": "Aglaia",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["70A6"],
+    "pattern": "\\b70A6\\b",
+    "stateUpdates": {"rhalgrBrokenWorldActive": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-aglaia-rhalgr-broken-world-cleanup",
+    "zone": "Aglaia",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["70A6"],
+    "pattern": "\\b70A6\\b",
+    "stateUpdates": {"rhalgrBrokenWorldActive": false},
+    "silent": true,
+    "duration": 5,
+    "countdown": 20,
     "suppress": 8
   },
   {
@@ -22225,6 +24460,7 @@
     "eventType": "StartsUsing",
     "ids": ["8994", "8D0E"],
     "pattern": "\\b(?:8994|8D0E)\\b",
+    "stateUpdates": {"soaringMinuet": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -23647,6 +25883,7 @@
     "eventType": "StartsUsing",
     "ids": ["8AA5"],
     "pattern": "\\b8AA5\\b",
+    "stateUpdates": {"isKetuFight": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -24195,6 +26432,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-aais-statice-pinwheeling-dartboard-tracker",
+    "zone": "Another Aloalo Island (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["8CBF"],
+    "pattern": "\\b8CBF\\b",
+    "stateUpdates": {"staticeIsPinwheelingDartboard": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-aai-kiwakin-sharp-strike",
     "zone": "Another Aloalo Island",
     "source": "LogLine",
@@ -24406,6 +26655,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-aai-statice-pinwheeling-dartboard-tracker",
+    "zone": "Another Aloalo Island",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["8CBC"],
+    "pattern": "\\b8CBC\\b",
+    "stateUpdates": {"staticeIsPinwheelingDartboard": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-amrs-shishu-raiko-disciples-of-levin",
     "zone": "Another Mount Rokkon (Savage)",
     "source": "LogLine",
@@ -24457,6 +26718,18 @@
     "ids": ["866B"],
     "pattern": "\\b866B\\b",
     "alert": "Knockback",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-amrs-shishu-yuki-auto-tracker",
+    "zone": "Another Mount Rokkon (Savage)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["7A58"],
+    "pattern": "\\b7A58\\b",
+    "stateUpdates": {"seenShishuYukiAuto": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -24776,6 +27049,18 @@
     "ids": ["8659"],
     "pattern": "\\b8659\\b",
     "alert": "Knockback",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-amr-shishu-yuki-auto-tracker",
+    "zone": "Another Mount Rokkon",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["7A58"],
+    "pattern": "\\b7A58\\b",
+    "stateUpdates": {"seenShishuYukiAuto": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -25260,6 +27545,7 @@
     "ids": ["CDC"],
     "pattern": "\\bCDC\\b",
     "targetSelf": true,
+    "stateUpdates": {"hasLingering": true},
     "alert": "Move away",
     "duration": 5,
     "suppress": 5
@@ -25581,6 +27867,7 @@
     "ids": ["CDC"],
     "pattern": "\\bCDC\\b",
     "targetSelf": true,
+    "stateUpdates": {"hasLingering": true},
     "alert": "Move away",
     "duration": 5,
     "suppress": 5
@@ -25736,6 +28023,7 @@
     "eventType": "StartsUsing",
     "ids": ["651E"],
     "pattern": "\\b651E\\b",
+    "stateUpdates": {"isHermes": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -25747,6 +28035,7 @@
     "eventType": "HeadMarker",
     "ids": ["00DA"],
     "pattern": "\\b00DA\\b",
+    "stateConditions": {"isHermes": true},
     "alert": "Tank cleave",
     "duration": 5,
     "suppress": 5
@@ -26051,6 +28340,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-rokkon-moko-double-kasumi-giri-checker",
+    "zone": "Mount Rokkon",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["858", "BCDE"],
+    "pattern": "\\b(?:858|BCDE)\\b",
+    "stateUpdates": {"isDoubleKasumiGiri": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-rokkon-gorai-unenlightemnment",
     "zone": "Mount Rokkon",
     "source": "LogLine",
@@ -26239,6 +28540,58 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-smileton-face-smiley-face-gain",
+    "zone": "Smileton",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["ACB"],
+    "pattern": "\\bACB\\b",
+    "targetSelf": true,
+    "stateUpdates": {"smileyFace": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-smileton-face-smiley-face-lose",
+    "zone": "Smileton",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["ACB"],
+    "pattern": "\\bACB\\b",
+    "targetSelf": true,
+    "stateUpdates": {"smileyFace": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-smileton-face-frowny-face-gain",
+    "zone": "Smileton",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["ACC"],
+    "pattern": "\\bACC\\b",
+    "targetSelf": true,
+    "stateUpdates": {"frownyFace": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
+    "id": "cactbot-smileton-face-frowny-face-lose",
+    "zone": "Smileton",
+    "source": "LogLine",
+    "eventType": "LosesEffect",
+    "ids": ["ACC"],
+    "pattern": "\\bACC\\b",
+    "targetSelf": true,
+    "stateUpdates": {"frownyFace": false},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-smileton-frameworker-circular-saw",
     "zone": "Smileton",
     "source": "LogLine",
@@ -26358,6 +28711,18 @@
     "ids": ["63B5"],
     "pattern": "\\b63B5\\b",
     "alert": "Tank buster",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-dreamscape-last-boss",
+    "zone": "The Stigma Dreamscape",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["6435"],
+    "pattern": "\\b6435\\b",
+    "stateUpdates": {"lastBoss": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -26659,6 +29024,30 @@
     "ids": ["655D"],
     "pattern": "\\b655D\\b",
     "alert": "Tank buster",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-deadends-ra-la-loving-embrace-right",
+    "zone": "The Dead Ends",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["6557"],
+    "pattern": "\\b6557\\b",
+    "stateUpdates": {"seenLovingEmbrace": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-deadends-ra-la-loving-embrace-left",
+    "zone": "The Dead Ends",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["6558"],
+    "pattern": "\\b6558\\b",
+    "stateUpdates": {"seenLovingEmbrace": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -27018,8 +29407,22 @@
     "eventType": "StartsUsing",
     "ids": ["74C7"],
     "pattern": "\\b74C7\\b",
+    "stateUpdates": {"barrelActive": true},
     "alert": "Raidwide AoE",
     "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-sildihn-geryon-exploding-catapult-cleanup",
+    "zone": "The Sil'dihn Subterrane",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["74C7"],
+    "pattern": "\\b74C7\\b",
+    "stateUpdates": {"barrelActive": false},
+    "silent": true,
+    "duration": 5,
+    "countdown": 17,
     "suppress": 8
   },
   {
@@ -27685,6 +30088,7 @@
     "eventType": "StartsUsing",
     "ids": ["6B78"],
     "pattern": "\\b6B78\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -27707,6 +30111,7 @@
     "eventType": "StartsUsing",
     "ids": ["69BC"],
     "pattern": "\\b69BC\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -27718,6 +30123,7 @@
     "eventType": "StartsUsing",
     "ids": ["69BD"],
     "pattern": "\\b69BD\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Avoid front",
     "duration": 5,
     "suppress": 8
@@ -27729,6 +30135,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AD4"],
     "pattern": "\\b6AD4\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -27740,6 +30147,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AD8"],
     "pattern": "\\b6AD8\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get under",
     "duration": 5,
     "suppress": 8
@@ -27751,6 +30159,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AD9"],
     "pattern": "\\b6AD9\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -27762,6 +30171,7 @@
     "eventType": "StartsUsing",
     "ids": ["6ACD"],
     "pattern": "\\b6ACD\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Follow Jump => Under",
     "duration": 5,
     "suppress": 8
@@ -27773,6 +30183,7 @@
     "eventType": "StartsUsing",
     "ids": ["6ACE"],
     "pattern": "\\b6ACE\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Away From Jump",
     "duration": 5,
     "suppress": 8
@@ -27784,6 +30195,7 @@
     "eventType": "StartsUsing",
     "ids": ["6C3C"],
     "pattern": "\\b6C3C\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get Behind and Out",
     "duration": 6,
     "suppress": 8
@@ -27795,6 +30207,7 @@
     "eventType": "StartsUsing",
     "ids": ["6C40"],
     "pattern": "\\b6C40\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get Front",
     "duration": 5,
     "suppress": 8
@@ -27806,6 +30219,7 @@
     "eventType": "StartsUsing",
     "ids": ["69C1"],
     "pattern": "\\b69C1\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Avoid front",
     "duration": 5,
     "suppress": 8
@@ -27817,6 +30231,7 @@
     "eventType": "StartsUsing",
     "ids": ["69C3"],
     "pattern": "\\b69C3\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Follow charge",
     "duration": 5,
     "suppress": 8
@@ -27828,6 +30243,7 @@
     "eventType": "StartsUsing",
     "ids": ["69C4"],
     "pattern": "\\b69C4\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get under",
     "duration": 5,
     "suppress": 8
@@ -27839,6 +30255,7 @@
     "eventType": "StartsUsing",
     "ids": ["69C6"],
     "pattern": "\\b69C6\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -27850,6 +30267,7 @@
     "eventType": "StartsUsing",
     "ids": ["69C5"],
     "pattern": "\\b69C5\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -27861,6 +30279,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AE1"],
     "pattern": "\\b6AE1\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -27872,6 +30291,7 @@
     "eventType": "Ability",
     "ids": ["6ADA"],
     "pattern": "\\b6ADA\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -27883,6 +30303,7 @@
     "eventType": "Ability",
     "ids": ["6ADB"],
     "pattern": "\\b6ADB\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get in",
     "duration": 5,
     "suppress": 8
@@ -27894,6 +30315,7 @@
     "eventType": "Ability",
     "ids": ["6ADC"],
     "pattern": "\\b6ADC\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -27905,6 +30327,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AE5"],
     "pattern": "\\b6AE5\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -27916,6 +30339,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AEB"],
     "pattern": "\\b6AEB\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get under",
     "duration": 5,
     "suppress": 8
@@ -27927,6 +30351,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AE4"],
     "pattern": "\\b6AE4\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get under",
     "duration": 5,
     "suppress": 8
@@ -27938,6 +30363,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AEA"],
     "pattern": "\\b6AEA\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -27949,6 +30375,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AE3"],
     "pattern": "\\b6AE3\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Look away",
     "duration": 5,
     "suppress": 8
@@ -27960,6 +30387,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AE6"],
     "pattern": "\\b6AE6\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Out of melee",
     "duration": 5,
     "suppress": 8
@@ -27971,6 +30399,7 @@
     "eventType": "GainsEffect",
     "ids": ["B18"],
     "pattern": "\\bB18\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Away from Right Flank",
     "duration": 6,
     "suppress": 5
@@ -27982,6 +30411,7 @@
     "eventType": "GainsEffect",
     "ids": ["B1A"],
     "pattern": "\\bB1A\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Away from Back",
     "duration": 6,
     "suppress": 5
@@ -27993,6 +30423,7 @@
     "eventType": "GainsEffect",
     "ids": ["B19"],
     "pattern": "\\bB19\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Away from Left Flank",
     "duration": 6,
     "suppress": 5
@@ -28004,6 +30435,7 @@
     "eventType": "GainsEffect",
     "ids": ["B8E"],
     "pattern": "\\bB8E\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Away from Front",
     "duration": 6,
     "suppress": 5
@@ -28015,6 +30447,7 @@
     "eventType": "StartsUsing",
     "ids": ["6ABB"],
     "pattern": "\\b6ABB\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -28026,6 +30459,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AB9"],
     "pattern": "\\b6AB9\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Out of melee",
     "duration": 5,
     "suppress": 8
@@ -28037,6 +30471,7 @@
     "eventType": "StartsUsing",
     "ids": ["6902"],
     "pattern": "\\b6902\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -28048,6 +30483,7 @@
     "eventType": "StartsUsing",
     "ids": ["6BF4"],
     "pattern": "\\b6BF4\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Out of melee",
     "duration": 5,
     "suppress": 8
@@ -28059,6 +30495,7 @@
     "eventType": "StartsUsing",
     "ids": ["6BF5"],
     "pattern": "\\b6BF5\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get under",
     "duration": 5,
     "suppress": 8
@@ -28070,6 +30507,7 @@
     "eventType": "StartsUsing",
     "ids": ["6BFF"],
     "pattern": "\\b6BFF\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Look away",
     "duration": 5,
     "suppress": 8
@@ -28081,6 +30519,7 @@
     "eventType": "StartsUsing",
     "ids": ["6BFE"],
     "pattern": "\\b6BFE\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -28092,6 +30531,7 @@
     "eventType": "StartsUsing",
     "ids": ["6BF9"],
     "pattern": "\\b6BF9\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -28103,6 +30543,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A55"],
     "pattern": "\\b6A55\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get in",
     "duration": 5,
     "suppress": 8
@@ -28114,6 +30555,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A56"],
     "pattern": "\\b6A56\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -28125,6 +30567,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A53"],
     "pattern": "\\b6A53\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Knockback Stack",
     "duration": 5,
     "suppress": 8
@@ -28136,6 +30579,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A57"],
     "pattern": "\\b6A57\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank cleave",
     "duration": 5,
     "suppress": 8
@@ -28147,6 +30591,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A59"],
     "pattern": "\\b6A59\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -28158,6 +30603,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A5B"],
     "pattern": "\\b6A5B\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -28169,6 +30615,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A62"],
     "pattern": "\\b6A62\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -28180,6 +30627,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A5F"],
     "pattern": "\\b6A5F\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -28191,6 +30639,7 @@
     "eventType": "StartsUsing",
     "ids": ["6BE1"],
     "pattern": "\\b6BE1\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -28202,6 +30651,7 @@
     "eventType": "StartsUsing",
     "ids": ["6BE3"],
     "pattern": "\\b6BE3\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -28224,6 +30674,7 @@
     "eventType": "StartsUsing",
     "ids": ["6791"],
     "pattern": "\\b6791\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -28235,6 +30686,7 @@
     "eventType": "StartsUsing",
     "ids": ["6795"],
     "pattern": "\\b6795\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -28246,6 +30698,7 @@
     "eventType": "StartsUsing",
     "ids": ["6793"],
     "pattern": "\\b6793\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -28257,6 +30710,7 @@
     "eventType": "StartsUsing",
     "ids": ["6792"],
     "pattern": "\\b6792\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Avoid front",
     "duration": 5,
     "suppress": 8
@@ -28268,6 +30722,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A85"],
     "pattern": "\\b6A85\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Avoid front",
     "duration": 5,
     "suppress": 8
@@ -28279,6 +30734,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A88"],
     "pattern": "\\b6A88\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -28290,6 +30746,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A86"],
     "pattern": "\\b6A86\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get Front",
     "duration": 5,
     "suppress": 8
@@ -28301,6 +30758,7 @@
     "eventType": "Ability",
     "ids": ["6A8A"],
     "pattern": "\\b6A8A\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Away from jump",
     "duration": 6,
     "suppress": 8
@@ -28312,6 +30770,7 @@
     "eventType": "StartsUsing",
     "ids": ["6A89"],
     "pattern": "\\b6A89\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -28323,6 +30782,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AF4"],
     "pattern": "\\b6AF4\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -28334,6 +30794,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AF2"],
     "pattern": "\\b6AF2\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Avoid front",
     "duration": 5,
     "suppress": 8
@@ -28345,6 +30806,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AED"],
     "pattern": "\\b6AED\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Avoid front",
     "duration": 5,
     "suppress": 8
@@ -28356,6 +30818,7 @@
     "eventType": "StartsUsing",
     "ids": ["6AF3"],
     "pattern": "\\b6AF3\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -28367,6 +30830,7 @@
     "eventType": "StartsUsing",
     "ids": ["6B60"],
     "pattern": "\\b6B60\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get in",
     "duration": 5,
     "suppress": 8
@@ -28378,6 +30842,7 @@
     "eventType": "StartsUsing",
     "ids": ["6B5F"],
     "pattern": "\\b6B5F\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 8
@@ -28389,6 +30854,7 @@
     "eventType": "Ability",
     "ids": ["6AC5"],
     "pattern": "\\b6AC5\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -28400,6 +30866,7 @@
     "eventType": "Ability",
     "ids": ["6AC3"],
     "pattern": "\\b6AC3\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get in",
     "duration": 5,
     "suppress": 1
@@ -28411,6 +30878,7 @@
     "eventType": "Ability",
     "ids": ["6AC4"],
     "pattern": "\\b6AC4\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get out",
     "duration": 5,
     "suppress": 1
@@ -28422,6 +30890,7 @@
     "eventType": "StartsUsing",
     "ids": ["6254", "6561"],
     "pattern": "\\b(?:6254|6561)\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get under",
     "duration": 5,
     "suppress": 8
@@ -28433,6 +30902,7 @@
     "eventType": "StartsUsing",
     "ids": ["6567"],
     "pattern": "\\b6567\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Get behind",
     "duration": 5,
     "suppress": 8
@@ -28444,6 +30914,7 @@
     "eventType": "StartsUsing",
     "ids": ["6563"],
     "pattern": "\\b6563\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Under => Back",
     "duration": 5,
     "suppress": 8
@@ -28455,6 +30926,7 @@
     "eventType": "StartsUsing",
     "ids": ["6565"],
     "pattern": "\\b6565\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Sides => Back",
     "duration": 5,
     "suppress": 8
@@ -28466,6 +30938,7 @@
     "eventType": "StartsUsing",
     "ids": ["6564"],
     "pattern": "\\b6564\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Under => Front",
     "duration": 5,
     "suppress": 8
@@ -28477,6 +30950,7 @@
     "eventType": "StartsUsing",
     "ids": ["6566"],
     "pattern": "\\b6566\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Sides => Front",
     "duration": 5,
     "suppress": 8
@@ -28488,6 +30962,7 @@
     "eventType": "StartsUsing",
     "ids": ["6571"],
     "pattern": "\\b6571\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -28499,6 +30974,7 @@
     "eventType": "StartsUsing",
     "ids": ["6574"],
     "pattern": "\\b6574\\b",
+    "stateConditions": {"inCombat": true},
     "alert": "Tank cleave",
     "duration": 5,
     "suppress": 8
@@ -29534,6 +32010,19 @@
     "suppress": 5
   },
   {
+    "id": "cactbot-p12s-pangenesis-initial",
+    "zone": "Anabaseios: The Twelfth Circle (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["E22"],
+    "pattern": "\\bE22\\b",
+    "stateUpdates": {"pangenesisDebuffsCalled": true},
+    "silent": true,
+    "duration": 5,
+    "countdown": 0.5,
+    "suppress": 999999
+  },
+  {
     "id": "cactbot-p12s-summon-darkness-preposition",
     "zone": "Anabaseios: The Twelfth Circle (Savage)",
     "source": "LogLine",
@@ -30179,6 +32668,19 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-p3s-death-s-toll-number",
+    "zone": "Asphodelos: The Third Circle (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["ACA"],
+    "pattern": "\\bACA\\b",
+    "stateUpdates": {"deathsToll": true},
+    "silent": true,
+    "duration": 5,
+    "countdown": 15.5,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-p4n-elegant-evisceration",
     "zone": "Asphodelos: The Fourth Circle",
     "source": "LogLine",
@@ -30405,6 +32907,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-p4s-belone-coils",
+    "zone": "Asphodelos: The Fourth Circle (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["69DE", "69DF", "69E0", "69E1"],
+    "pattern": "\\b(?:69DE|69DF|69E0|69E1)\\b",
+    "stateUpdates": {"beloneCoilsTwo": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 1
+  },
+  {
     "id": "cactbot-p4s-role-call",
     "zone": "Asphodelos: The Fourth Circle (Savage)",
     "source": "LogLine",
@@ -30555,6 +33069,8 @@
     "eventType": "StartsUsing",
     "ids": ["69FD", "69FE", "69FF", "6A00"],
     "pattern": "\\b(?:69FD|69FE|69FF|6A00)\\b",
+    "stateConditions": {"wellShiftKnockback": false},
+    "stateUpdates": {"wellShiftKnockback": false},
     "alert": "Knockback",
     "duration": 5,
     "suppress": 8
@@ -30659,6 +33175,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-p5n-topaz-stones",
+    "zone": "Abyssos: The Fifth Circle",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["76DE"],
+    "pattern": "\\b76DE\\b",
+    "stateUpdates": {"seenStones": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-p5n-sonic-howl",
     "zone": "Abyssos: The Fifth Circle",
     "source": "LogLine",
@@ -30666,6 +33194,18 @@
     "ids": ["76F2"],
     "pattern": "\\b76F2\\b",
     "alert": "Raidwide AoE",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-p5n-acidic-slaver",
+    "zone": "Abyssos: The Fifth Circle",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["78EB"],
+    "pattern": "\\b78EB\\b",
+    "stateUpdates": {"acid": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -30836,6 +33376,19 @@
     "ids": ["7887"],
     "pattern": "\\b7887\\b",
     "alert": "Split Tankbusters",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-p6s-exocleaver-healer-groups",
+    "zone": "Abyssos: The Sixth Circle (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["7869", "786B"],
+    "pattern": "\\b(?:7869|786B)\\b",
+    "stateConditions": {"secondExocleavers": false},
+    "stateUpdates": {"secondExocleavers": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -31051,6 +33604,19 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-p7s-forbidden-fruit-4-and-harvest-stop-collection",
+    "zone": "Abyssos: The Seventh Circle (Savage)",
+    "source": "LogLine",
+    "eventType": "Tether",
+    "ids": ["0006", "0039"],
+    "pattern": "\\b(?:0006|0039)\\b",
+    "stateUpdates": {"stopTethers": true},
+    "silent": true,
+    "duration": 5,
+    "countdown": 0.2,
+    "suppress": 6
+  },
+  {
     "id": "cactbot-p7s-light-of-life",
     "zone": "Abyssos: The Seventh Circle (Savage)",
     "source": "LogLine",
@@ -31197,6 +33763,32 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-p8s-first-snake-debuff-initial-call",
+    "zone": "Abyssos: The Eighth Circle (Savage)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["CFE", "D17"],
+    "pattern": "\\b(?:CFE|D17)\\b",
+    "stateConditions": {"firstSnakeCalled": false},
+    "stateUpdates": {"firstSnakeCalled": true},
+    "silent": true,
+    "duration": 5,
+    "countdown": 0.3,
+    "suppress": 1
+  },
+  {
+    "id": "cactbot-p8s-snake-2-illusory-creation",
+    "zone": "Abyssos: The Eighth Circle (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["7931"],
+    "pattern": "\\b7931\\b",
+    "stateUpdates": {"seenSnakeIllusoryCreation": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-p8s-aioniopyr",
     "zone": "Abyssos: The Eighth Circle (Savage)",
     "source": "LogLine",
@@ -31226,6 +33818,18 @@
     "ids": ["79AC"],
     "pattern": "\\b79AC\\b",
     "alert": "Big raidwide AoE",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-p8s-natural-alignment-second",
+    "zone": "Abyssos: The Eighth Circle (Savage)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["79BD", "79BE", "79BF", "79C0"],
+    "pattern": "\\b(?:79BD|79BE|79BF|79C0)\\b",
+    "stateUpdates": {"seenFirstAlignmentStackSpread": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -31436,6 +34040,18 @@
     "ids": ["815F"],
     "pattern": "\\b815F\\b",
     "alert": "Knockback into Wall",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-p9s-chimeric-succession",
+    "zone": "Anabaseios: The Ninth Circle (Savage)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["81BB"],
+    "pattern": "\\b81BB\\b",
+    "stateUpdates": {"seenChimericSuccession": true},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -32005,6 +34621,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-hydaelynex-parhelion-tracker",
+    "zone": "The Minstrel's Ballad: Hydaelyn's Call",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["65B0"],
+    "pattern": "\\b65B0\\b",
+    "stateUpdates": {"parhelion": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-hydaelynex-exodus",
     "zone": "The Minstrel's Ballad: Hydaelyn's Call",
     "source": "LogLine",
@@ -32103,6 +34731,31 @@
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
+  },
+  {
+    "id": "cactbot-hydaelyn-dawn-mantle-equinox",
+    "zone": "The Mothercrystal",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["6C0C"],
+    "pattern": "\\b6C0C\\b",
+    "stateUpdates": {"isEquinox": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-hydaelyn-marker-anthelion",
+    "zone": "The Mothercrystal",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["8E1"],
+    "pattern": "\\b8E1\\b",
+    "stateUpdates": {"isEquinox": false},
+    "silent": true,
+    "duration": 5,
+    "countdown": 2.5,
+    "suppress": 5
   },
   {
     "id": "cactbot-hydaelyn-exodus",
@@ -32386,6 +35039,19 @@
     "suppress": 0.5
   },
   {
+    "id": "cactbot-rubicante-dualfire-not-target",
+    "zone": "Mount Ordeals",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["7D95"],
+    "pattern": "\\b7D95\\b",
+    "stateUpdates": {"dualfireTarget": false},
+    "silent": true,
+    "duration": 5,
+    "countdown": 0.5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-rubicante-sweeping-immolation-stack",
     "zone": "Mount Ordeals",
     "source": "LogLine",
@@ -32552,12 +35218,26 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-sophiaun-thunder-seen",
+    "zone": "Containment Bay P1T6 (Unreal)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["7DA5"],
+    "pattern": "\\b7DA5\\b",
+    "stateUpdates": {"seenThunder": true},
+    "silent": true,
+    "duration": 5,
+    "countdown": 1,
+    "suppress": 5
+  },
+  {
     "id": "cactbot-sophiaun-light-dew",
     "zone": "Containment Bay P1T6 (Unreal)",
     "source": "LogLine",
     "eventType": "Ability",
-    "ids": ["7D9D"],
-    "pattern": "\\b7D9D\\b",
+    "ids": ["7D9D", "7DB9", "7DBA"],
+    "pattern": "\\b(?:7D9D|7DB9|7DBA)\\b",
+    "stateConditions": {"clonesActive": true},
     "alert": "Avoid head laser",
     "duration": 5,
     "suppress": 8
@@ -32853,6 +35533,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-zodiarkex-adikia",
+    "zone": "The Minstrel's Ballad: Zodiark's Fall",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["63A9"],
+    "pattern": "\\b63A9\\b",
+    "stateUpdates": {"seenAdikia": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-zodiarkex-phobos",
     "zone": "The Minstrel's Ballad: Zodiark's Fall",
     "source": "LogLine",
@@ -32893,6 +35585,18 @@
     "ids": ["67D2"],
     "pattern": "\\b67D2\\b",
     "alert": "Go NW (knockback)",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-zurvanun-phase-tracker",
+    "zone": "Containment Bay Z1T9 (Unreal)",
+    "source": "LogLine",
+    "eventType": "Ability",
+    "ids": ["8559"],
+    "pattern": "\\b8559\\b",
+    "stateUpdates": {"isPhaseOne": false},
+    "silent": true,
     "duration": 5,
     "suppress": 8
   },
@@ -33019,6 +35723,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-dsr-empty-dimension",
+    "zone": "Dragonsong's Reprise (Ultimate)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["62DA"],
+    "pattern": "\\b62DA\\b",
+    "stateUpdates": {"seenEmptyDimension": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
     "id": "cactbot-dsr-full-dimension",
     "zone": "Dragonsong's Reprise (Ultimate)",
     "source": "LogLine",
@@ -33138,6 +35854,7 @@
     "ids": ["6711"],
     "pattern": "\\b6711\\b",
     "targetSelf": true,
+    "stateUpdates": {"waitingForGeirskogul": true},
     "alert": "Bait",
     "duration": 5,
     "suppress": 1
@@ -33229,6 +35946,30 @@
     "alert": "Twisters",
     "duration": 5,
     "suppress": 1
+  },
+  {
+    "id": "cactbot-dsr-great-wyrmsbreath-hraesvelgr-glowing",
+    "zone": "Dragonsong's Reprise (Ultimate)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["6D35"],
+    "pattern": "\\b6D35\\b",
+    "stateUpdates": {"hraesvelgrGlowing": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-dsr-great-wyrmsbreath-nidhogg-glowing",
+    "zone": "Dragonsong's Reprise (Ultimate)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["6D33"],
+    "pattern": "\\b6D33\\b",
+    "stateUpdates": {"nidhoggGlowing": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 8
   },
   {
     "id": "cactbot-dsr-akh-afah",
@@ -33343,6 +36084,18 @@
     "suppress": 8
   },
   {
+    "id": "cactbot-top-p5-omega-tether-detector",
+    "zone": "The Omega Protocol (Ultimate)",
+    "source": "LogLine",
+    "eventType": "Tether",
+    "ids": ["0059"],
+    "pattern": "\\b0059\\b",
+    "stateUpdates": {"seenOmegaTethers": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 30
+  },
+  {
     "id": "cactbot-top-p5-omega-tether-bait",
     "zone": "The Omega Protocol (Ultimate)",
     "source": "LogLine",
@@ -33397,5 +36150,17 @@
     "alert": "Bait Middle",
     "duration": 5,
     "suppress": 8
+  },
+  {
+    "id": "cactbot-lakshmiex-chanchala-lose-chanchala-gain",
+    "zone": "Emanation (Extreme)",
+    "source": "LogLine",
+    "eventType": "GainsEffect",
+    "ids": ["582"],
+    "pattern": "\\b582\\b",
+    "stateUpdates": {"chanchala": true},
+    "silent": true,
+    "duration": 5,
+    "suppress": 5
   }
 ]

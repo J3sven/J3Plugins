@@ -32,7 +32,11 @@ struct Trigger {
     ids: Vec<String>,
     pattern: String,
     target_self: bool,
-    alert: String,
+    mechanic_key: String,
+    state_conditions: Vec<(String, bool)>,
+    state_updates: Vec<(String, bool)>,
+    silent: bool,
+    alert: Option<String>,
     duration: f64,
     suppress: f64,
     countdown: Option<f64>,
@@ -152,6 +156,8 @@ fn run() -> Result<(), String> {
         }
     }
 
+    triggers = augment_stateful_trigger_ids_from_timelines(triggers, &timelines);
+    triggers = synthesize_effect_state_gain_triggers(triggers);
     triggers = dedupe_triggers(triggers);
     write_trigger_json(&args.output, &triggers)?;
     write_timeline_json(&args.timeline_output, &timelines)?;
@@ -680,10 +686,14 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
         return skipped(file, Some(cactbot_id), "missing static netRegex id");
     }
     let target_self = block.contains("Conditions.targetIsYou");
-    let Some(text) = extract_alert_text(block, target_self) else {
+    let state_conditions = extract_bool_state_condition(block).into_iter().collect::<Vec<_>>();
+    let state_updates = extract_bool_state_updates(block);
+    let mechanic_key = slugify(&cactbot_id);
+    let text = extract_alert_text(block, target_self);
+    if text.is_none() && state_updates.is_empty() {
         return skipped(file, Some(cactbot_id), "missing static alert text");
-    };
-    if text.contains("${") {
+    }
+    if text.as_deref().is_some_and(|text| text.contains("${")) {
         return skipped(file, Some(cactbot_id), "dynamic alert text");
     }
 
@@ -697,6 +707,10 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
         ids: ids.clone(),
         pattern: make_id_pattern(&ids),
         target_self,
+        mechanic_key,
+        state_conditions,
+        state_updates,
+        silent: text.is_none(),
         alert: text,
         duration,
         suppress,
@@ -818,6 +832,63 @@ fn extract_number_property(block: &str, name: &str) -> Option<f64> {
     } else {
         None
     }
+}
+
+fn extract_bool_state_updates(block: &str) -> Vec<(String, bool)> {
+    let mut updates = BTreeMap::new();
+    for field in ["preRun", "run"] {
+        if let Some(value) = extract_property_value(block, field) {
+            for (key, state) in extract_bool_assignments(&value) {
+                updates.insert(key, state);
+            }
+        }
+    }
+    updates.into_iter().collect()
+}
+
+fn extract_bool_assignments(value: &str) -> Vec<(String, bool)> {
+    let mut assignments = Vec::new();
+    for expected in [(" = true", true), (" = false", false)] {
+        let mut search_from = 0;
+        while let Some(offset) = value[search_from..].find(expected.0) {
+            let value_end = search_from + offset;
+            let Some(data_offset) = value[..value_end].rfind("data.") else {
+                search_from = value_end + expected.0.len();
+                continue;
+            };
+            let key = value[data_offset + "data.".len()..value_end].trim();
+            if is_simple_identifier(key) {
+                assignments.push((key.to_string(), expected.1));
+            }
+            search_from = value_end + expected.0.len();
+        }
+    }
+    assignments
+}
+
+fn extract_bool_state_condition(block: &str) -> Option<(String, bool)> {
+    let value = extract_property_value(block, "condition")?;
+    let expr = value.split("=>").nth(1)?.trim();
+    if let Some(key) = expr.strip_prefix("!data.") {
+        let key = key.trim();
+        if is_simple_identifier(key) {
+            return Some((key.to_string(), false));
+        }
+    }
+    if let Some(key) = expr.strip_prefix("data.") {
+        let key = key.trim();
+        if is_simple_identifier(key) {
+            return Some((key.to_string(), true));
+        }
+    }
+    None
+}
+
+fn is_simple_identifier(value: &str) -> bool {
+    !value.is_empty()
+        && value
+            .chars()
+            .all(|ch| ch.is_ascii_alphanumeric() || ch == '_')
 }
 
 fn extract_net_regex_ids(net_regex: &str, event_type: &str) -> Vec<String> {
@@ -1069,18 +1140,126 @@ fn unescape_ts_string(value: &str) -> String {
         .replace("\\`", "`")
 }
 
+fn augment_stateful_trigger_ids_from_timelines(mut triggers: Vec<Trigger>, timelines: &[Timeline]) -> Vec<Trigger> {
+    let mut timeline_ids_by_zone: BTreeMap<String, Vec<(String, Vec<String>)>> = BTreeMap::new();
+    for timeline in timelines {
+        let zone = timeline.zone.as_deref().unwrap_or_default().to_string();
+        let entries = timeline_ids_by_zone.entry(zone).or_default();
+        for entry in &timeline.entries {
+            if entry.ids.is_empty() {
+                continue;
+            }
+
+            let key = slugify(&entry.text);
+            if key.len() < 4 {
+                continue;
+            }
+
+            entries.push((key, entry.ids.clone()));
+        }
+    }
+
+    for trigger in &mut triggers {
+        if trigger.state_conditions.is_empty() || !matches!(trigger.event_type.as_str(), "StartsUsing" | "Ability") {
+            continue;
+        }
+
+        let zone = trigger.zone.as_deref().unwrap_or_default();
+        let Some(entries) = timeline_ids_by_zone.get(zone) else {
+            continue;
+        };
+
+        let mut ids = trigger.ids.iter().cloned().collect::<BTreeSet<_>>();
+        for (entry_key, entry_ids) in entries {
+            if !trigger.mechanic_key.ends_with(entry_key) {
+                continue;
+            }
+
+            ids.extend(entry_ids.iter().cloned());
+        }
+
+        if ids.len() != trigger.ids.len() {
+            trigger.ids = ids.into_iter().collect();
+            trigger.pattern = make_id_pattern(&trigger.ids);
+        }
+    }
+
+    triggers
+}
+
+fn synthesize_effect_state_gain_triggers(mut triggers: Vec<Trigger>) -> Vec<Trigger> {
+    let mut true_states = BTreeSet::new();
+    let mut gain_state_ids = BTreeSet::new();
+
+    for trigger in &triggers {
+        let zone = trigger.zone.as_deref().unwrap_or_default().to_string();
+        let ids = trigger.ids.join(",");
+        for (key, value) in &trigger.state_updates {
+            if *value {
+                true_states.insert((zone.clone(), key.clone()));
+                if trigger.event_type == "GainsEffect" {
+                    gain_state_ids.insert((zone.clone(), key.clone(), ids.clone()));
+                }
+            }
+        }
+    }
+
+    let mut additions = Vec::new();
+    for trigger in &triggers {
+        if trigger.event_type != "LosesEffect" || trigger.ids.is_empty() {
+            continue;
+        }
+
+        let zone = trigger.zone.as_deref().unwrap_or_default().to_string();
+        let ids = trigger.ids.join(",");
+        for (key, value) in &trigger.state_updates {
+            if *value || !true_states.contains(&(zone.clone(), key.clone())) {
+                continue;
+            }
+
+            let gain_key = (zone.clone(), key.clone(), ids.clone());
+            if !gain_state_ids.insert(gain_key) {
+                continue;
+            }
+
+            additions.push(Trigger {
+                id: format!("{}-{}-gain", trigger.id, slugify(key)),
+                zone: trigger.zone.clone(),
+                event_type: "GainsEffect".to_string(),
+                ids: trigger.ids.clone(),
+                pattern: trigger.pattern.clone(),
+                target_self: trigger.target_self,
+                mechanic_key: trigger.mechanic_key.clone(),
+                state_conditions: Vec::new(),
+                state_updates: vec![(key.clone(), true)],
+                silent: true,
+                alert: None,
+                duration: trigger.duration,
+                suppress: trigger.suppress,
+                countdown: None,
+            });
+        }
+    }
+
+    triggers.extend(additions);
+    triggers
+}
+
 fn dedupe_triggers(triggers: Vec<Trigger>) -> Vec<Trigger> {
     let mut seen = BTreeSet::new();
     let mut deduped = Vec::new();
     for trigger in triggers {
         let key = format!(
-            "{}:{}:{}:{}:{}:{}",
+            "{}:{}:{}:{}:{}:{}:{}:{}:{}",
             trigger.zone.as_deref().unwrap_or_default(),
             trigger.event_type,
             trigger.ids.join(","),
             trigger.pattern,
             trigger.target_self,
-            trigger.alert
+            format_state_pairs(&trigger.state_conditions),
+            format_state_pairs(&trigger.state_updates),
+            trigger.silent,
+            trigger.alert.as_deref().unwrap_or_default()
         );
         if seen.insert(key) {
             deduped.push(trigger);
@@ -1099,6 +1278,29 @@ fn dedupe_cues(cues: Vec<TimelineCue>) -> Vec<TimelineCue> {
         }
     }
     deduped
+}
+
+fn format_state_pairs(pairs: &[(String, bool)]) -> String {
+    pairs
+        .iter()
+        .map(|(key, value)| format!("{key}={value}"))
+        .collect::<Vec<_>>()
+        .join(",")
+}
+
+fn write_bool_map(out: &mut String, name: &str, pairs: &[(String, bool)]) {
+    if pairs.is_empty() {
+        return;
+    }
+
+    out.push_str(&format!("    \"{name}\": {{"));
+    for (idx, (key, value)) in pairs.iter().enumerate() {
+        if idx > 0 {
+            out.push_str(", ");
+        }
+        out.push_str(&format!("\"{}\": {}", json_escape(key), value));
+    }
+    out.push_str("},\n");
 }
 
 fn write_trigger_json(path: &Path, triggers: &[Trigger]) -> Result<(), String> {
@@ -1126,7 +1328,14 @@ fn write_trigger_json(path: &Path, triggers: &[Trigger]) -> Result<(), String> {
         if trigger.target_self {
             out.push_str("    \"targetSelf\": true,\n");
         }
-        out.push_str(&format!("    \"alert\": \"{}\",\n", json_escape(&trigger.alert)));
+        write_bool_map(&mut out, "stateConditions", &trigger.state_conditions);
+        write_bool_map(&mut out, "stateUpdates", &trigger.state_updates);
+        if trigger.silent {
+            out.push_str("    \"silent\": true,\n");
+        }
+        if let Some(alert) = &trigger.alert {
+            out.push_str(&format!("    \"alert\": \"{}\",\n", json_escape(alert)));
+        }
         out.push_str(&format!("    \"duration\": {},\n", format_number(trigger.duration)));
         if let Some(countdown) = trigger.countdown {
             out.push_str(&format!("    \"countdown\": {},\n", format_number(countdown)));
@@ -1288,6 +1497,9 @@ fn write_report(
 - Imported triggers are zone-scoped when cactbot's ZoneId maps to an English zone name.\n\
 - Imported triggers include structured event type and ID metadata, with raw regex patterns retained as a fallback.\n\
 - `Conditions.targetIsYou()` imports as a `targetSelf` runtime check when a static fallback callout can be derived.\n\
+- Simple boolean `data.foo` conditions and `data.foo = true/false` run hooks import as Chocobot state flags.\n\
+- State-gated ability triggers can inherit additional same-mechanic IDs from cactbot timeline entries in the same zone.\n\
+- Boolean state clearers on `LosesEffect` synthesize paired silent `GainsEffect` setters when cactbot has a true setter for that state in the same zone.\n\
 - Imported timelines are conservative: cues are generated from static timelineTriggers and sync from observed ability IDs.\n\
 - Dynamic output text, role checks, state collectors, and geometry solvers are otherwise intentionally skipped.\n\
 - Re-run this importer after updating cactbot to identify newly importable or newly skipped encounters.\n",

@@ -35,7 +35,7 @@ internal sealed class NetLogEvent
             "21" or "22" => FromFields(line, "Ability", Field(fields, 4), Field(fields, 3), Field(fields, 7)),
             "26" => FromFields(line, "GainsEffect", Field(fields, 2), Field(fields, 6), Field(fields, 8)),
             "30" => FromFields(line, "LosesEffect", Field(fields, 2), Field(fields, 6), Field(fields, 8)),
-            "27" => FromFields(line, "HeadMarker", Field(fields, 4), null, Field(fields, 3)),
+            "27" => FromFields(line, "HeadMarker", Field(fields, 6), null, Field(fields, 3)),
             "35" => FromFields(line, "Tether", Field(fields, 6), Field(fields, 3), Field(fields, 5)),
             _ => new NetLogEvent(line, null, null, null, null),
         };

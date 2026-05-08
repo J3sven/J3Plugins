@@ -39,6 +39,9 @@ public sealed class Plugin : IDalamudPlugin
     private readonly List<ActiveAlert> alerts = [];
     private readonly Dictionary<string, DateTime> lastTriggerFireAtUtc = [];
     private readonly Dictionary<string, ActiveTimeline> activeTimelines = [];
+    private readonly Dictionary<string, bool> encounterState = [];
+    private readonly List<string> recentStateChanges = [];
+    private readonly List<string> recentStateDiagnostics = [];
     private readonly HashSet<string> scheduledTimelineCues = [];
     private CancellationTokenSource? webSocketCancellation;
     private Task? webSocketTask;
@@ -312,7 +315,7 @@ public sealed class Plugin : IDalamudPlugin
         var durationRolledBack = durationSeconds + 1 < lastCombatDurationSeconds;
         var combatEnded = lastCombatDataActive != false && !isActive;
 
-        if (activeTimelines.Count > 0 && (durationRolledBack || combatEnded))
+        if (durationRolledBack || combatEnded)
             ResetTimelines();
 
         lastCombatDataActive = isActive;
@@ -332,15 +335,29 @@ public sealed class Plugin : IDalamudPlugin
             if (!ZoneMatches(trigger.Zone))
                 continue;
 
-            if (trigger.HasStructuredCriteria && !StructuredTriggerMatches(trigger, netLogEvent))
-                continue;
-
             var match = trigger.CompiledRegex?.Match(line);
             if (trigger.CompiledRegex is not null && match is not { Success: true })
                 continue;
 
+            if (trigger.HasStructuredCriteria && !StructuredTriggerMatches(trigger, netLogEvent, match is { Success: true }))
+            {
+                if (trigger.StateUpdates.Count > 0 && match is { Success: true })
+                    RecordStateDiagnostic($"{trigger.Id}: raw matched but structured did not match event={netLogEvent.EventType ?? "unknown"} id={netLogEvent.Id ?? "unknown"}");
+                else if (trigger.StateConditions.Count > 0 && match is { Success: true } && StateConditionsFailed(trigger) is { } stateMismatch)
+                    RecordStateDiagnostic($"{trigger.Id}: {stateMismatch}");
+                continue;
+            }
+
             if (trigger.TargetSelf && !EventTargetsPrimaryPlayer(netLogEvent))
                 continue;
+
+            ApplyStateUpdates(trigger);
+            if (trigger.Silent)
+            {
+                matchedTriggerCount++;
+                lastTriggerAt = DateTime.Now;
+                continue;
+            }
 
             var now = DateTime.UtcNow;
             if (IsSuppressed(trigger, now))
@@ -359,17 +376,91 @@ public sealed class Plugin : IDalamudPlugin
         }
     }
 
-    private static bool StructuredTriggerMatches(TriggerDefinition trigger, NetLogEvent netLogEvent)
+    private bool StructuredTriggerMatches(TriggerDefinition trigger, NetLogEvent netLogEvent, bool rawPatternMatched)
     {
         if (!string.IsNullOrWhiteSpace(trigger.EventType)
-            && !string.Equals(trigger.EventType, netLogEvent.EventType, StringComparison.OrdinalIgnoreCase))
-            return false;
+            && !EventTypeMatches(trigger.EventType, netLogEvent.EventType))
+        {
+            if (!CanUseRawFallback(trigger, rawPatternMatched, netLogEvent))
+                return false;
+        }
 
         if (trigger.NormalizedIds.Count > 0
             && (netLogEvent.NormalizedId is null || !trigger.NormalizedIds.Contains(netLogEvent.NormalizedId)))
-            return false;
+        {
+            if (!CanUseRawFallback(trigger, rawPatternMatched, netLogEvent))
+                return false;
+        }
+
+        foreach (var (key, expected) in trigger.StateConditions)
+        {
+            if (!encounterState.TryGetValue(key, out var actual))
+                actual = false;
+
+            if (actual != expected)
+                return false;
+        }
 
         return true;
+    }
+
+    private static bool CanUseRawFallback(TriggerDefinition trigger, bool rawPatternMatched, NetLogEvent netLogEvent)
+    {
+        if (!rawPatternMatched)
+            return false;
+
+        if (trigger.StateUpdates.Count == 0 && trigger.StateConditions.Count == 0)
+            return false;
+
+        return netLogEvent.EventType is null || netLogEvent.NormalizedId is null;
+    }
+
+    private static bool EventTypeMatches(string triggerEventType, string? observedEventType)
+    {
+        if (string.Equals(triggerEventType, observedEventType, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        // IINACT/OverlayPlugin streams can expose some cactbot StartsUsing IDs
+        // only on the resolved Ability line. Keep the structured ID check, but
+        // avoid regressing triggers that previously worked via raw ID matching.
+        return string.Equals(triggerEventType, "StartsUsing", StringComparison.OrdinalIgnoreCase)
+               && string.Equals(observedEventType, "Ability", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void ApplyStateUpdates(TriggerDefinition trigger)
+    {
+        foreach (var (key, value) in trigger.StateUpdates)
+        {
+            if (!encounterState.TryGetValue(key, out var previous) || previous != value)
+            {
+                recentStateChanges.Insert(0, $"{FormatTime(DateTime.Now)} {trigger.Id}: {key}={value}");
+                if (recentStateChanges.Count > 8)
+                    recentStateChanges.RemoveRange(8, recentStateChanges.Count - 8);
+            }
+
+            encounterState[key] = value;
+        }
+    }
+
+    private string? StateConditionsFailed(TriggerDefinition trigger)
+    {
+        foreach (var (key, expected) in trigger.StateConditions)
+        {
+            if (!encounterState.TryGetValue(key, out var actual))
+                actual = false;
+
+            if (actual != expected)
+                return $"state {key} expected {expected} actual {actual}";
+        }
+
+        return null;
+    }
+
+    private void RecordStateDiagnostic(string message)
+    {
+        recentStateDiagnostics.Insert(0, $"{FormatTime(DateTime.Now)} {message}");
+        if (recentStateDiagnostics.Count > 8)
+            recentStateDiagnostics.RemoveRange(8, recentStateDiagnostics.Count - 8);
     }
 
     private void ProcessPrimaryPlayer(JObject data)
@@ -529,6 +620,9 @@ public sealed class Plugin : IDalamudPlugin
     private void ResetTimelines()
     {
         activeTimelines.Clear();
+        encounterState.Clear();
+        recentStateChanges.Clear();
+        recentStateDiagnostics.Clear();
         scheduledTimelineCues.Clear();
         alerts.RemoveAll(alert => alert.TriggerId.StartsWith("cactbot-timeline-", StringComparison.Ordinal));
         lastCombatDataActive = null;
@@ -1225,6 +1319,8 @@ public sealed class Plugin : IDalamudPlugin
         ImGui.TextUnformatted($"Timelines loaded: {timelines.Count}");
         ImGui.TextUnformatted($"Current zone: {currentZone ?? "unknown"}");
         ImGui.TextUnformatted($"Player: {primaryPlayerName ?? "unknown"}");
+        ImGui.TextUnformatted($"State flags: {encounterState.Count}");
+        ImGui.TextUnformatted($"State update triggers: {triggers.Count(trigger => trigger.StateUpdates.Count > 0)}");
 
         if (Configuration.ShowDebugWindow)
         {
@@ -1236,6 +1332,17 @@ public sealed class Plugin : IDalamudPlugin
             ImGui.TextUnformatted($"Active timelines: {activeTimelines.Count}");
             ImGui.TextUnformatted($"Combat active: {lastCombatDataActive?.ToString() ?? "unknown"}");
             ImGui.TextUnformatted($"Combat duration: {lastCombatDurationSeconds:0.0}s");
+            if (encounterState.Count > 0)
+            {
+                ImGui.TextWrapped($"State: {string.Join(", ", encounterState.Select(pair => $"{pair.Key}={pair.Value}"))}");
+            }
+
+            foreach (var stateChange in recentStateChanges)
+                ImGui.TextUnformatted(stateChange);
+
+            foreach (var diagnostic in recentStateDiagnostics)
+                ImGui.TextWrapped(diagnostic);
+
             ImGui.TextUnformatted($"Last event type: {lastEventType ?? "unknown"}");
             ImGui.TextUnformatted($"Last event: {FormatTime(lastEventAt)}");
             ImGui.TextUnformatted($"Last trigger: {FormatTime(lastTriggerAt)}");
@@ -1405,6 +1512,9 @@ public sealed class Plugin : IDalamudPlugin
         triggers.Clear();
         timelines.Clear();
         activeTimelines.Clear();
+        encounterState.Clear();
+        recentStateChanges.Clear();
+        recentStateDiagnostics.Clear();
         scheduledTimelineCues.Clear();
         lastTriggerFireAtUtc.Clear();
         triggerLoadError = null;
