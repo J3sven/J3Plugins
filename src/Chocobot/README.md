@@ -77,9 +77,11 @@ Assets/cactbot-import-report.md
 
 It only imports static ID-based cactbot raidboss triggers that Chocobot can
 represent today, plus conservative timeline data that can be matched to static
-timeline entries. Imported timelines sync from observed ability IDs, show the
-next mechanics in the upcoming overlay, and promote imported timeline cues to
-live callouts when their cue time arrives.
+timeline entries. Imported triggers carry structured netlog metadata for event
+type and IDs, while retaining raw regex patterns as a compatibility fallback.
+Imported timelines sync from observed ability IDs, show the next mechanics in
+the upcoming overlay, and promote imported timeline cues to live callouts when
+their cue time arrives.
 
 `Conditions.targetIsYou()` is represented as a `targetSelf` runtime check when a
 static fallback callout can be derived, using IINACT's primary-player event to

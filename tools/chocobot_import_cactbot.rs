@@ -28,6 +28,8 @@ struct Args {
 struct Trigger {
     id: String,
     zone: Option<String>,
+    event_type: String,
+    ids: Vec<String>,
     pattern: String,
     target_self: bool,
     alert: String,
@@ -691,6 +693,8 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
     let trigger = Trigger {
         id: format!("cactbot-{}", slugify(&cactbot_id)),
         zone,
+        event_type,
+        ids: ids.clone(),
         pattern: make_id_pattern(&ids),
         target_self,
         alert: text,
@@ -1070,8 +1074,10 @@ fn dedupe_triggers(triggers: Vec<Trigger>) -> Vec<Trigger> {
     let mut deduped = Vec::new();
     for trigger in triggers {
         let key = format!(
-            "{}:{}:{}:{}",
+            "{}:{}:{}:{}:{}:{}",
             trigger.zone.as_deref().unwrap_or_default(),
+            trigger.event_type,
+            trigger.ids.join(","),
             trigger.pattern,
             trigger.target_self,
             trigger.alert
@@ -1107,6 +1113,15 @@ fn write_trigger_json(path: &Path, triggers: &[Trigger]) -> Result<(), String> {
             out.push_str(&format!("    \"zone\": \"{}\",\n", json_escape(zone)));
         }
         out.push_str("    \"source\": \"LogLine\",\n");
+        out.push_str(&format!("    \"eventType\": \"{}\",\n", json_escape(&trigger.event_type)));
+        out.push_str("    \"ids\": [");
+        for (id_idx, id) in trigger.ids.iter().enumerate() {
+            if id_idx > 0 {
+                out.push_str(", ");
+            }
+            out.push_str(&format!("\"{}\"", json_escape(id)));
+        }
+        out.push_str("],\n");
         out.push_str(&format!("    \"pattern\": \"{}\",\n", json_escape(&trigger.pattern)));
         if trigger.target_self {
             out.push_str("    \"targetSelf\": true,\n");
@@ -1271,6 +1286,7 @@ fn write_report(
     out.push_str(
         "\n## Notes\n\n\
 - Imported triggers are zone-scoped when cactbot's ZoneId maps to an English zone name.\n\
+- Imported triggers include structured event type and ID metadata, with raw regex patterns retained as a fallback.\n\
 - `Conditions.targetIsYou()` imports as a `targetSelf` runtime check when a static fallback callout can be derived.\n\
 - Imported timelines are conservative: cues are generated from static timelineTriggers and sync from observed ability IDs.\n\
 - Dynamic output text, role checks, state collectors, and geometry solvers are otherwise intentionally skipped.\n\

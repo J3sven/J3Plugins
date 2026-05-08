@@ -14,6 +14,12 @@ internal sealed class TriggerDefinition
     [JsonProperty("source")]
     public TriggerSource Source { get; set; } = TriggerSource.LogLine;
 
+    [JsonProperty("eventType")]
+    public string? EventType { get; set; }
+
+    [JsonProperty("ids")]
+    public List<string> Ids { get; set; } = [];
+
     [JsonProperty("pattern")]
     public string Pattern { get; set; } = string.Empty;
 
@@ -53,6 +59,13 @@ internal sealed class TriggerDefinition
     [JsonIgnore]
     public Regex? CompiledRegex { get; private set; }
 
+    [JsonIgnore]
+    public HashSet<string> NormalizedIds { get; private set; } = [];
+
+    [JsonIgnore]
+    public bool HasStructuredCriteria =>
+        !string.IsNullOrWhiteSpace(EventType) || NormalizedIds.Count > 0 || TargetSelf;
+
     public bool Compile(out string? error)
     {
         error = null;
@@ -62,15 +75,21 @@ internal sealed class TriggerDefinition
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(Pattern))
+        if (string.IsNullOrWhiteSpace(Pattern) && Ids.Count == 0)
         {
-            error = $"{Id} is missing pattern.";
+            error = $"{Id} is missing pattern or structured ids.";
             return false;
         }
 
         try
         {
-            CompiledRegex = new Regex(Pattern, RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+            if (!string.IsNullOrWhiteSpace(Pattern))
+                CompiledRegex = new Regex(Pattern, RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+
+            NormalizedIds = Ids
+                .Where(id => !string.IsNullOrWhiteSpace(id))
+                .Select(NormalizeId)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
             DurationSeconds = Math.Clamp(DurationSeconds, 1f, 30f);
             CountdownSeconds = Math.Clamp(CountdownSeconds, 0f, 120f);
             SuppressSeconds = Math.Clamp(SuppressSeconds, 0f, 120f);
@@ -81,6 +100,12 @@ internal sealed class TriggerDefinition
             error = $"{Id} regex failed: {ex.Message}";
             return false;
         }
+    }
+
+    public static string NormalizeId(string id)
+    {
+        var normalized = id.Trim().TrimStart('0').ToUpperInvariant();
+        return normalized.Length == 0 ? "0" : normalized;
     }
 }
 

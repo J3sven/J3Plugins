@@ -1371,6 +1371,7 @@
 ## Notes
 
 - Imported triggers are zone-scoped when cactbot's ZoneId maps to an English zone name.
+- Imported triggers include structured event type and ID metadata, with raw regex patterns retained as a fallback.
 - `Conditions.targetIsYou()` imports as a `targetSelf` runtime check when a static fallback callout can be derived.
 - Imported timelines are conservative: cues are generated from static timelineTriggers and sync from observed ability IDs.
 - Dynamic output text, role checks, state collectors, and geometry solvers are otherwise intentionally skipped.

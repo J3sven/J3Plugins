@@ -325,17 +325,21 @@ public sealed class Plugin : IDalamudPlugin
             return;
 
         lastLogLine = line;
+        var netLogEvent = NetLogEvent.Parse(line);
 
         foreach (var trigger in triggers.Where(trigger => trigger.Source == source))
         {
             if (!ZoneMatches(trigger.Zone))
                 continue;
 
-            var match = trigger.CompiledRegex?.Match(line);
-            if (match is not { Success: true })
+            if (trigger.HasStructuredCriteria && !StructuredTriggerMatches(trigger, netLogEvent))
                 continue;
 
-            if (trigger.TargetSelf && !LineTargetsPrimaryPlayer(line))
+            var match = trigger.CompiledRegex?.Match(line);
+            if (trigger.CompiledRegex is not null && match is not { Success: true })
+                continue;
+
+            if (trigger.TargetSelf && !EventTargetsPrimaryPlayer(netLogEvent))
                 continue;
 
             var now = DateTime.UtcNow;
@@ -353,6 +357,19 @@ public sealed class Plugin : IDalamudPlugin
             matchedTriggerCount++;
             lastTriggerAt = DateTime.Now;
         }
+    }
+
+    private static bool StructuredTriggerMatches(TriggerDefinition trigger, NetLogEvent netLogEvent)
+    {
+        if (!string.IsNullOrWhiteSpace(trigger.EventType)
+            && !string.Equals(trigger.EventType, netLogEvent.EventType, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        if (trigger.NormalizedIds.Count > 0
+            && (netLogEvent.NormalizedId is null || !trigger.NormalizedIds.Contains(netLogEvent.NormalizedId)))
+            return false;
+
+        return true;
     }
 
     private void ProcessPrimaryPlayer(JObject data)
@@ -377,12 +394,15 @@ public sealed class Plugin : IDalamudPlugin
         }
     }
 
-    private bool LineTargetsPrimaryPlayer(string line)
+    private bool EventTargetsPrimaryPlayer(NetLogEvent netLogEvent)
     {
         if (string.IsNullOrWhiteSpace(primaryPlayerName))
             return false;
 
-        return line.Contains(primaryPlayerName, StringComparison.OrdinalIgnoreCase);
+        if (!string.IsNullOrWhiteSpace(netLogEvent.TargetName))
+            return string.Equals(netLogEvent.TargetName, primaryPlayerName, StringComparison.OrdinalIgnoreCase);
+
+        return netLogEvent.RawLine.Contains(primaryPlayerName, StringComparison.OrdinalIgnoreCase);
     }
 
     private bool IsSuppressed(TriggerDefinition trigger, DateTime now)
@@ -515,9 +535,12 @@ public sealed class Plugin : IDalamudPlugin
         lastCombatDurationSeconds = 0;
     }
 
-    private static string ResolveText(TriggerDefinition trigger, System.Text.RegularExpressions.Match match)
+    private static string ResolveText(TriggerDefinition trigger, System.Text.RegularExpressions.Match? match)
     {
         var text = trigger.AlertText ?? trigger.InfoText ?? trigger.Id;
+        if (match is null)
+            return text;
+
         foreach (var groupName in trigger.CompiledRegex?.GetGroupNames() ?? [])
         {
             if (int.TryParse(groupName, out var groupNumber))
