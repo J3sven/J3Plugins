@@ -47,6 +47,13 @@ public sealed unsafe class Plugin : IDalamudPlugin
     private static readonly Vector4 DialogueBoxBorder = new(0.34f, 0.29f, 0.21f, 0.95f);
     private static readonly Vector4 DialogueTextColor = new(0.08f, 0.07f, 0.05f, 1.00f);
     private static readonly Vector4 DialogueShadowColor = new(0.00f, 0.00f, 0.00f, 0.28f);
+    private static readonly Vector4 IconFill = new(0.13f, 0.11f, 0.08f, 0.92f);
+    private static readonly Vector4 IconFillHover = new(0.23f, 0.18f, 0.11f, 0.96f);
+    private static readonly Vector4 IconGold = new(0.77f, 0.58f, 0.28f, 1.00f);
+    private static readonly Vector4 WindowBg = new(0.10f, 0.09f, 0.07f, 0.96f);
+    private static readonly Vector4 WindowBorder = new(0.67f, 0.52f, 0.27f, 0.86f);
+    private static readonly Vector4 WindowBorderDark = new(0.02f, 0.02f, 0.02f, 0.78f);
+    private static readonly Vector4 ToolbarBg = new(0.18f, 0.14f, 0.09f, 0.70f);
 
     private readonly IDalamudPluginInterface pluginInterface;
     private readonly ICommandManager commandManager;
@@ -69,11 +76,14 @@ public sealed unsafe class Plugin : IDalamudPlugin
     private string? lastDialogSpeaker;
     private string? lastChoiceSkipDebugKey;
     private DateTimeOffset lastChoiceSkipDebugAt;
+    private TalkWindowBounds? talkWindowBounds;
+    private DateTimeOffset lastTalkWindowBoundsAt;
 
     internal static IPluginLog Log { get; private set; } = null!;
     internal Configuration Configuration { get; }
 
     private sealed record TranscriptEntry(DateTimeOffset Timestamp, string? Speaker, string Text);
+    private readonly record struct TalkWindowBounds(Vector2 Position, Vector2 Size);
 
     private sealed class ChoiceState
     {
@@ -209,7 +219,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         lastCutsceneActive = cutsceneActive;
 
         if (Configuration.Enabled && Configuration.ShowButtonDuringCutscenes && cutsceneActive && entries.Count > 0)
-            DrawTranscriptButton();
+            DrawTranscriptIconButton();
 
         DrawTranscriptWindow();
         DrawConfigWindow();
@@ -223,35 +233,77 @@ public sealed unsafe class Plugin : IDalamudPlugin
             || condition[ConditionFlag.WatchingCutscene78];
     }
 
-    private void DrawTranscriptButton()
+    private void DrawTranscriptIconButton()
     {
-        ImGui.SetNextWindowPos(new Vector2(Configuration.ButtonX, Configuration.ButtonY), ImGuiCond.FirstUseEver);
-        ImGui.SetNextWindowBgAlpha(0.72f);
+        var scale = Math.Max(0.85f, ImGui.GetFontSize() / 17f);
+        var buttonSize = new Vector2(30f * scale, 30f * scale);
+        var anchored = TryGetRecentTalkWindowBounds(out var bounds);
+        var windowPos = anchored
+            ? new Vector2(bounds.Position.X + bounds.Size.X - buttonSize.X - 18f * scale, bounds.Position.Y + 12f * scale)
+            : new Vector2(Configuration.ButtonX, Configuration.ButtonY);
+
+        ImGui.SetNextWindowPos(windowPos, anchored ? ImGuiCond.Always : ImGuiCond.FirstUseEver);
 
         const ImGuiWindowFlags flags = ImGuiWindowFlags.NoDecoration
             | ImGuiWindowFlags.AlwaysAutoResize
             | ImGuiWindowFlags.NoSavedSettings
             | ImGuiWindowFlags.NoFocusOnAppearing
-            | ImGuiWindowFlags.NoNav;
+            | ImGuiWindowFlags.NoNav
+            | ImGuiWindowFlags.NoScrollbar
+            | ImGuiWindowFlags.NoScrollWithMouse
+            | ImGuiWindowFlags.NoBackground;
 
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
         if (!ImGui.Begin("##CutsceneTranscriptButton", flags))
         {
             ImGui.End();
+            ImGui.PopStyleVar();
             return;
         }
 
-        if (ImGui.Button($"Transcript ({entries.Count})"))
+        if (ImGui.InvisibleButton("##OpenTranscript", buttonSize))
             transcriptOpen = true;
 
-        var pos = ImGui.GetWindowPos();
-        if (Vector2.Distance(pos, new Vector2(Configuration.ButtonX, Configuration.ButtonY)) > 0.5f)
+        DrawTranscriptIcon(ImGui.GetWindowDrawList(), ImGui.GetItemRectMin(), buttonSize, ImGui.IsItemHovered());
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip("Open transcript");
+
+        if (!anchored)
         {
-            Configuration.ButtonX = pos.X;
-            Configuration.ButtonY = pos.Y;
-            Configuration.Save();
+            var pos = ImGui.GetWindowPos();
+            if (Vector2.Distance(pos, new Vector2(Configuration.ButtonX, Configuration.ButtonY)) > 0.5f)
+            {
+                Configuration.ButtonX = pos.X;
+                Configuration.ButtonY = pos.Y;
+                Configuration.Save();
+            }
         }
 
         ImGui.End();
+        ImGui.PopStyleVar();
+    }
+
+    private void DrawTranscriptIcon(ImDrawListPtr drawList, Vector2 pos, Vector2 size, bool hovered)
+    {
+        var scale = size.X / 30f;
+        var end = pos + size;
+        var rounding = 5f * scale;
+        drawList.AddRectFilled(pos + new Vector2(2f * scale, 3f * scale), end + new Vector2(2f * scale, 3f * scale),
+                               ImGui.GetColorU32(new Vector4(0f, 0f, 0f, 0.34f)), rounding);
+        drawList.AddRectFilled(pos, end, ImGui.GetColorU32(hovered ? IconFillHover : IconFill), rounding);
+        drawList.AddRect(pos, end, ImGui.GetColorU32(IconGold), rounding, ImDrawFlags.RoundCornersAll, 1.2f * scale);
+
+        var pageMin = pos + new Vector2(8f * scale, 6f * scale);
+        var pageMax = pos + new Vector2(22f * scale, 24f * scale);
+        drawList.AddRectFilled(pageMin, pageMax, ImGui.GetColorU32(new Vector4(0.82f, 0.75f, 0.58f, 1f)), 2f * scale);
+        drawList.AddRect(pageMin, pageMax, ImGui.GetColorU32(new Vector4(0.24f, 0.18f, 0.10f, 0.95f)), 2f * scale, ImDrawFlags.RoundCornersAll, 1f * scale);
+        for (var i = 0; i < 3; i++)
+        {
+            var y = pageMin.Y + (6f + i * 4f) * scale;
+            drawList.AddLine(new Vector2(pageMin.X + 3f * scale, y), new Vector2(pageMax.X - 3f * scale, y),
+                             ImGui.GetColorU32(new Vector4(0.24f, 0.18f, 0.10f, 0.70f)), 1f * scale);
+        }
+
     }
 
     private void DrawTranscriptWindow()
@@ -259,23 +311,18 @@ public sealed unsafe class Plugin : IDalamudPlugin
         if (!transcriptOpen)
             return;
 
+        var scale = Math.Max(0.85f, ImGui.GetFontSize() / 17f);
         ImGui.SetNextWindowSize(new Vector2(Configuration.WindowWidth, Configuration.WindowHeight), ImGuiCond.FirstUseEver);
+        PushTranscriptWindowStyle(scale);
         if (!ImGui.Begin("Cutscene Transcript", ref transcriptOpen))
         {
             ImGui.End();
+            PopTranscriptWindowStyle();
             return;
         }
 
-        if (ImGui.Button("Copy"))
-            ImGui.SetClipboardText(BuildTranscriptText());
-
-        ImGui.SameLine();
-        if (ImGui.Button("Clear"))
-            ClearTranscript();
-
-        ImGui.SameLine();
-        ImGui.TextDisabled($"{entries.Count} line{(entries.Count == 1 ? string.Empty : "s")}");
-        ImGui.Separator();
+        DrawTranscriptWindowFrame(scale);
+        DrawTranscriptToolbar(scale);
 
         if (entries.Count == 0)
         {
@@ -299,6 +346,69 @@ public sealed unsafe class Plugin : IDalamudPlugin
         }
 
         ImGui.End();
+        PopTranscriptWindowStyle();
+    }
+
+    private static void PushTranscriptWindowStyle(float scale)
+    {
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 7f * scale);
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 1f * scale);
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(14f * scale, 12f * scale));
+        ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 4f * scale);
+        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(8f * scale, 8f * scale));
+        ImGui.PushStyleColor(ImGuiCol.WindowBg, WindowBg);
+        ImGui.PushStyleColor(ImGuiCol.Border, WindowBorder);
+        ImGui.PushStyleColor(ImGuiCol.TitleBg, new Vector4(0.12f, 0.10f, 0.07f, 0.98f));
+        ImGui.PushStyleColor(ImGuiCol.TitleBgActive, new Vector4(0.22f, 0.17f, 0.10f, 0.98f));
+        ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.22f, 0.17f, 0.10f, 0.92f));
+        ImGui.PushStyleColor(ImGuiCol.ButtonHovered, new Vector4(0.34f, 0.25f, 0.13f, 0.98f));
+        ImGui.PushStyleColor(ImGuiCol.ButtonActive, new Vector4(0.43f, 0.31f, 0.14f, 1.00f));
+        ImGui.PushStyleColor(ImGuiCol.Separator, new Vector4(0.62f, 0.48f, 0.25f, 0.62f));
+    }
+
+    private static void PopTranscriptWindowStyle()
+    {
+        ImGui.PopStyleColor(8);
+        ImGui.PopStyleVar(5);
+    }
+
+    private static void DrawTranscriptWindowFrame(float scale)
+    {
+        var drawList = ImGui.GetWindowDrawList();
+        var pos = ImGui.GetWindowPos();
+        var size = ImGui.GetWindowSize();
+        var end = pos + size;
+        var rounding = 7f * scale;
+
+        drawList.AddRect(pos + new Vector2(1f * scale, 1f * scale), end - new Vector2(1f * scale, 1f * scale),
+                         ImGui.GetColorU32(WindowBorderDark), rounding, ImDrawFlags.RoundCornersAll, 2.5f * scale);
+        drawList.AddRect(pos + new Vector2(2f * scale, 2f * scale), end - new Vector2(2f * scale, 2f * scale),
+                         ImGui.GetColorU32(WindowBorder), rounding, ImDrawFlags.RoundCornersAll, 1f * scale);
+    }
+
+    private void DrawTranscriptToolbar(float scale)
+    {
+        var drawList = ImGui.GetWindowDrawList();
+        var toolbarPos = ImGui.GetCursorScreenPos();
+        var toolbarHeight = ImGui.GetFrameHeight() + 8f * scale;
+        var toolbarEnd = toolbarPos + new Vector2(ImGui.GetContentRegionAvail().X, toolbarHeight);
+        drawList.AddRectFilled(toolbarPos - new Vector2(4f * scale, 2f * scale),
+                               toolbarEnd + new Vector2(4f * scale, 2f * scale),
+                               ImGui.GetColorU32(ToolbarBg), 5f * scale);
+
+        ImGui.SetCursorScreenPos(toolbarPos + new Vector2(4f * scale, 4f * scale));
+        if (ImGui.Button("Copy"))
+            ImGui.SetClipboardText(BuildTranscriptText());
+
+        ImGui.SameLine();
+        if (ImGui.Button("Clear"))
+            ClearTranscript();
+
+        ImGui.SameLine();
+        ImGui.TextDisabled($"{entries.Count} line{(entries.Count == 1 ? string.Empty : "s")}");
+        ImGui.SetCursorScreenPos(new Vector2(toolbarPos.X, toolbarPos.Y + toolbarHeight + 8f * scale));
+        ImGui.Separator();
+        ImGui.Spacing();
     }
 
     private void DrawDialogueEntry(TranscriptEntry entry)
@@ -430,15 +540,61 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
     private void OnTalkPostUpdate(AddonEvent eventType, AddonArgs args)
     {
-        if (!Configuration.Enabled || !IsCutsceneActive() || args.Addon.IsNull || !args.Addon.IsVisible)
+        if (args.Addon.IsNull || !args.Addon.IsVisible)
+        {
+            talkWindowBounds = null;
+            return;
+        }
+
+        var cutsceneActive = IsCutsceneActive();
+        var addon = (AddonTalk*)args.Addon.Address;
+        if (cutsceneActive)
+            UpdateTalkWindowBounds(addon);
+
+        if (!Configuration.Enabled || !cutsceneActive)
             return;
 
-        CaptureTalkAddon((AddonTalk*)args.Addon.Address);
+        CaptureTalkAddon(addon);
     }
 
     private void OnTalkFinalize(AddonEvent eventType, AddonArgs args)
     {
         lastObservedTalkKey = null;
+        talkWindowBounds = null;
+    }
+
+    private void UpdateTalkWindowBounds(AddonTalk* addon)
+    {
+        var root = addon->RootNode;
+        if (root == null)
+        {
+            talkWindowBounds = null;
+            return;
+        }
+
+        var width = root->Width * root->ScaleX;
+        var height = root->Height * root->ScaleY;
+        if (width <= 0 || height <= 0)
+        {
+            talkWindowBounds = null;
+            return;
+        }
+
+        talkWindowBounds = new TalkWindowBounds(new Vector2(root->ScreenX, root->ScreenY), new Vector2(width, height));
+        lastTalkWindowBoundsAt = DateTimeOffset.Now;
+    }
+
+    private bool TryGetRecentTalkWindowBounds(out TalkWindowBounds bounds)
+    {
+        if (talkWindowBounds is { } current
+            && DateTimeOffset.Now - lastTalkWindowBoundsAt <= TimeSpan.FromSeconds(1.5))
+        {
+            bounds = current;
+            return true;
+        }
+
+        bounds = default;
+        return false;
     }
 
     private void OnChoicePostUpdate(AddonEvent eventType, AddonArgs args)
