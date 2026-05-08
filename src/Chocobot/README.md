@@ -1,101 +1,79 @@
+<img src="Assets/chocobot-icon.png" alt="Chocobot icon" width="128">
+
 # Chocobot
 
-Native Dalamud encounter callouts powered by IINACT.
+Chocobot is a Dalamud plugin that shows cactbot-style encounter callouts directly in game, powered by IINACT log events.
 
-This is the foundation for a cactbot-like experience without running external ACT. It consumes IINACT `LogLine` events through the MiniParse WebSocket by default, with IPC fallback available, then evaluates JSON trigger definitions and displays native Dalamud encounter alerts. `ChangeZone` events are used only for zone state and timeline reset.
+It does not replace IINACT. IINACT still reads the combat log; Chocobot connects to IINACT, evaluates included encounter trigger data, and renders native Dalamud alerts, upcoming timeline countdowns, and optional text-to-speech.
 
-The mascot direction is a cute robotic chocobo: small, readable, and distinct from cactbot while still making the callout role obvious.
+## Requirements
 
-Visual alerts are rendered by Chocobot's own overlay instead of native quest toasts. Upcoming mechanics appear in the ready overlay with countdowns; live cues use the large top-screen callout. Spoken alerts use `spd-say`/`espeak-ng`/`espeak` on Linux and Windows `System.Speech` when SAPI voices are present.
+- Final Fantasy XIV with Dalamud installed.
+- IINACT installed, enabled, and receiving log events.
+- IINACT's WebSocket server enabled. The default address is usually `ws://127.0.0.1:10501`.
 
-## Commands
+## Install
 
-```text
-/chocobot
-/chocobot test
-/chocobot testtts
-/chocobot reload
-/chocobot reconnect
-/chocobot on
-/chocobot off
-```
+1. Open Dalamud settings in game.
+2. Go to `Experimental`.
+3. Add this custom plugin repository:
 
-## Trigger Packs
+   ```text
+   https://raw.githubusercontent.com/J3sven/J3Plugins/main/repo.json
+   ```
 
-Trigger definitions are loaded from:
+4. Save the repository list.
+5. Open the Dalamud Plugin Installer.
+6. Search for `Chocobot`.
+7. Install and enable the plugin.
 
-```text
-Assets/*.json
-```
+## Set Up IINACT
 
-Current fields:
+1. Install and enable IINACT in Dalamud if you have not already.
+2. Open IINACT's settings.
+3. Enable the WebSocket server.
+4. Keep the server on the default local address unless you have a reason to change it.
+5. Enter an instance or start an encounter so IINACT starts sending log events.
 
-- `id`: unique trigger id
-- `source`: `LogLine`
-- `zone`: optional zone name filter
-- `pattern`: regular expression
-- `info`: default text
-- `alert`: alert text
-- `duration`: alert duration in seconds
-- `countdown`: optional seconds to show in the upcoming list before the cue becomes a live callout; use this only when the trigger event arrives before the desired callout
-- `speak`: optional spoken alert toggle
-- `suppress`: optional per-trigger debounce window in seconds
+Chocobot uses the WebSocket connection by default and falls back to Dalamud IPC when configured to do so. If it does not connect, run `/chocobot` and press `Reconnect`.
 
-Named regex capture groups can be referenced in alert text as `$groupName`.
-Numbered regex capture groups can be referenced as `$1`, `$2`, and so on.
+## Usage
 
-The included Sophia Extreme seed pack is adapted from cactbot's
-`ui/raidboss/data/03-hw/trial/sophia-ex.ts` encounter triggers. Chocobot only
-uses reactive log-line triggers right now, so log-line cues fire immediately.
-Timeline cues are supported for imported static timeline triggers, but cactbot's
-stateful safe-spot solver is represented as simpler alerts until Chocobot has
-native stateful trigger logic.
+- `/chocobot` opens the settings window.
+- `/chocobot test` shows a test visual alert.
+- `/chocobot testtts` plays a text-to-speech test.
+- `/chocobot reload` reloads trigger and timeline data.
+- `/chocobot reconnect` reconnects to IINACT.
+- `/chocobot on` enables callouts.
+- `/chocobot off` disables callouts.
 
-## cactbot Import Flow
+The settings window lets you enable or disable alerts, lock the overlay, toggle click-through mode, show the ready panel, enable debug details, choose WebSocket or IPC transport, reconnect to IINACT, test alerts, test TTS, and adjust alert count, opacity, and scale.
 
-Regenerate the conservative cactbot import pack from a local cactbot checkout:
+## What It Shows
 
-```text
-rustc tools/chocobot_import_cactbot.rs -o /tmp/chocobot_import_cactbot
-/tmp/chocobot_import_cactbot --cactbot-dir /path/to/cactbot
-```
+- Large top-screen callouts for active mechanics.
+- A ready/upcoming overlay with countdowns for pending cues and imported timelines.
+- Optional spoken callouts.
+- Zone-scoped encounter triggers and timeline syncs imported from cactbot data where Chocobot can represent them safely.
 
-Or download the current cactbot `main` archive into a temporary directory:
+On Linux, Chocobot uses `spd-say`, `espeak-ng`, or `espeak` for text-to-speech. On Windows, it uses `System.Speech` when SAPI voices are available.
 
-```text
-rustc tools/chocobot_import_cactbot.rs -o /tmp/chocobot_import_cactbot
-/tmp/chocobot_import_cactbot --download
-```
+## Troubleshooting
 
-The importer writes:
+If Chocobot shows no alerts:
 
-```text
-Assets/cactbot-imported-triggers.json
-Assets/cactbot-imported-timelines.json
-Assets/cactbot-import-report.md
-```
+- Make sure IINACT is installed and enabled.
+- Make sure IINACT is receiving log events.
+- Make sure IINACT's WebSocket server is enabled.
+- Open `/chocobot` and check the connection status.
+- Press `Reconnect`.
+- Try the IPC transport if WebSocket is unavailable.
+- Use `Test alert` to confirm the visual overlay is working.
 
-It only imports static ID-based cactbot raidboss triggers that Chocobot can
-represent today, plus conservative timeline data that can be matched to static
-timeline entries. Imported triggers carry structured netlog metadata for event
-type and IDs, while retaining raw regex patterns as a compatibility fallback.
-Imported timelines sync from observed ability IDs, show the next mechanics in
-the upcoming overlay, and promote imported timeline cues to live callouts when
-their cue time arrives.
+If timeline countdowns do not appear:
 
-`Conditions.targetIsYou()` is represented as a `targetSelf` runtime check when a
-static fallback callout can be derived, using IINACT's primary-player event to
-avoid firing personal markers for the whole party.
+- Make sure you are in a supported encounter zone.
+- Start the encounter from the beginning when possible, because timelines need an observed sync event.
+- Wipe or leave the instance to reset stale timeline state.
 
-Simple cactbot role/job checks such as `data.role === 'tank'` or
-`data.job === 'BLU'` are imported as local player runtime checks.
-
-Simple boolean cactbot state such as `data.foo = true` and
-`condition: (data) => data.foo` is imported as silent state updates and runtime
-state conditions. Paired effect state is inferred generically when cactbot
-clears a boolean on `LosesEffect` and sets that same boolean true elsewhere in
-the same zone. State-gated ability triggers can inherit additional matching
-ability IDs from cactbot timeline entries in the same zone. Dynamic output text,
-role checks, collectors, geometry solvers, and complex timeline behavior such
-as jumps/resync windows are still reported or handled conservatively so missing
-encounter coverage can be tackled as Chocobot grows those systems.
+Chocobot is intentionally conservative when importing cactbot data. Static triggers, many personal-target callouts, role/job checks, simple state conditions, and static timelines are supported. Highly dynamic JavaScript logic, geometry solvers, and complex party assignment logic may be missing until native support exists.

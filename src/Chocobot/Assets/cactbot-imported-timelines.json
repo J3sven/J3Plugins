@@ -40723,10 +40723,6 @@
         "pattern": "\\b(?:1326|ADDEDC)\\b"
       },
       {
-        "time": 924,
-        "pattern": "\\b(?:1526|15EE)\\b"
-      },
-      {
         "time": 1011,
         "pattern": "\\b15EE\\b"
       },
@@ -40891,46 +40887,6 @@
       {
         "time": 266,
         "text": "Bomb x1"
-      },
-      {
-        "time": 267,
-        "text": ""
-      },
-      {
-        "time": 267,
-        "text": ""
-      },
-      {
-        "time": 267,
-        "text": ""
-      },
-      {
-        "time": 267,
-        "text": ""
-      },
-      {
-        "time": 267,
-        "text": ""
-      },
-      {
-        "time": 267,
-        "text": ""
-      },
-      {
-        "time": 267,
-        "text": ""
-      },
-      {
-        "time": 267,
-        "text": ""
-      },
-      {
-        "time": 267,
-        "text": ""
-      },
-      {
-        "time": 267,
-        "text": ""
       },
       {
         "time": 359,
@@ -41183,46 +41139,6 @@
       {
         "time": 923,
         "text": "Bombs / Sizzlebeam"
-      },
-      {
-        "time": 924,
-        "text": ""
-      },
-      {
-        "time": 924,
-        "text": ""
-      },
-      {
-        "time": 924,
-        "text": ""
-      },
-      {
-        "time": 924,
-        "text": ""
-      },
-      {
-        "time": 924,
-        "text": ""
-      },
-      {
-        "time": 924,
-        "text": ""
-      },
-      {
-        "time": 924,
-        "text": ""
-      },
-      {
-        "time": 924,
-        "text": ""
-      },
-      {
-        "time": 924,
-        "text": ""
-      },
-      {
-        "time": 924,
-        "text": ""
       },
       {
         "time": 962,
@@ -47448,6 +47364,90 @@
         "time": 174.2,
         "before": 4,
         "alert": "Tank cleave",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1013.2",
+        "time": 1013.2,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1070.1",
+        "time": 1070.1,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1101.3",
+        "time": 1101.3,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1129.7",
+        "time": 1129.7,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1166.5",
+        "time": 1166.5,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1185.8",
+        "time": 1185.8,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1210.4",
+        "time": 1210.4,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1267.4",
+        "time": 1267.4,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1298.6",
+        "time": 1298.6,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1327",
+        "time": 1327,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1363.8",
+        "time": 1363.8,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotex-yesod-bait-yesod-1382.9",
+        "time": 1382.9,
+        "before": 6,
+        "alert": "Bait Yesod",
         "duration": 5
       }
     ]
@@ -76109,6 +76109,20 @@
       }
     ],
     "cues": [
+      {
+        "id": "timeline-o12s-discharger-discharger-61.2",
+        "time": 61.2,
+        "before": 5,
+        "alert": "Knockback F + Avoid M",
+        "duration": 5
+      },
+      {
+        "id": "timeline-o12s-discharger-discharger-122.7",
+        "time": 122.7,
+        "before": 5,
+        "alert": "Knockback F + Avoid M",
+        "duration": 5
+      }
     ]
   },
   {
@@ -105130,6 +105144,34 @@
       }
     ],
     "cues": [
+      {
+        "id": "timeline-copied-flight-unit-lightfast-lightfast-blade-1851.3",
+        "time": 1851.3,
+        "before": 15,
+        "alert": "Be Near Boss",
+        "duration": 5
+      },
+      {
+        "id": "timeline-copied-flight-unit-lightfast-lightfast-blade-1871.1",
+        "time": 1871.1,
+        "before": 15,
+        "alert": "Be Near Boss",
+        "duration": 5
+      },
+      {
+        "id": "timeline-copied-flight-unit-lightfast-lightfast-blade-1879.7",
+        "time": 1879.7,
+        "before": 15,
+        "alert": "Be Near Boss",
+        "duration": 5
+      },
+      {
+        "id": "timeline-copied-flight-unit-lightfast-lightfast-blade-1918.5",
+        "time": 1918.5,
+        "before": 15,
+        "alert": "Be Near Boss",
+        "duration": 5
+      },
       {
         "id": "timeline-copied-engels-demolish-structure-demolish-structure-2433",
         "time": 2433,
@@ -159520,6 +159562,55 @@
       }
     ],
     "cues": [
+      {
+        "id": "timeline-wolex-limit-break-limit-break-41.2",
+        "time": 41.2,
+        "before": 8,
+        "alert": "role positions",
+        "duration": 5
+      },
+      {
+        "id": "timeline-wolex-limit-break-limit-break-118.6",
+        "time": 118.6,
+        "before": 8,
+        "alert": "role positions",
+        "duration": 5
+      },
+      {
+        "id": "timeline-wolex-limit-break-limit-break-173.1",
+        "time": 173.1,
+        "before": 8,
+        "alert": "role positions",
+        "duration": 5
+      },
+      {
+        "id": "timeline-wolex-limit-break-limit-break-1580.2",
+        "time": 1580.2,
+        "before": 8,
+        "alert": "role positions",
+        "duration": 5
+      },
+      {
+        "id": "timeline-wolex-limit-break-limit-break-2571.8",
+        "time": 2571.8,
+        "before": 8,
+        "alert": "role positions",
+        "duration": 5
+      },
+      {
+        "id": "timeline-wolex-limit-break-limit-break-6063.1",
+        "time": 6063.1,
+        "before": 8,
+        "alert": "role positions",
+        "duration": 5
+      },
+      {
+        "id": "timeline-wolex-limit-break-limit-break-7054.6",
+        "time": 7054.6,
+        "before": 8,
+        "alert": "role positions",
+        "duration": 5
+      }
     ]
   },
   {
@@ -205776,7 +205867,7 @@
         "id": "timeline-p4s-hemitheos-s-water-iv-hemitheos-s-water-iv-1170.2",
         "time": 1170.2,
         "before": 5,
-        "alert": "Raidwide AoE",
+        "alert": "Middle Knockback",
         "duration": 5
       }
     ]
@@ -220859,6 +220950,41 @@
       }
     ],
     "cues": [
+      {
+        "id": "timeline-hydaelynex-marker-equinox-equinox-225.8",
+        "time": 225.8,
+        "before": 3.5,
+        "alert": "Intercards",
+        "duration": 5
+      },
+      {
+        "id": "timeline-hydaelynex-marker-equinox-equinox-325.6",
+        "time": 325.6,
+        "before": 3.5,
+        "alert": "Intercards",
+        "duration": 5
+      },
+      {
+        "id": "timeline-hydaelynex-marker-equinox-equinox-1783.8",
+        "time": 1783.8,
+        "before": 3.5,
+        "alert": "Intercards",
+        "duration": 5
+      },
+      {
+        "id": "timeline-hydaelynex-marker-equinox-equinox-2074.9",
+        "time": 2074.9,
+        "before": 3.5,
+        "alert": "Intercards",
+        "duration": 5
+      },
+      {
+        "id": "timeline-hydaelynex-marker-equinox-equinox-2359.5",
+        "time": 2359.5,
+        "before": 3.5,
+        "alert": "Intercards",
+        "duration": 5
+      }
     ]
   },
   {
@@ -223906,6 +224032,90 @@
         "time": 174.2,
         "before": 4,
         "alert": "Tank cleave",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1013.2",
+        "time": 1013.2,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1070.1",
+        "time": 1070.1,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1101.3",
+        "time": 1101.3,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1129.7",
+        "time": 1129.7,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1166.5",
+        "time": 1166.5,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1185.8",
+        "time": 1185.8,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1210.4",
+        "time": 1210.4,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1267.4",
+        "time": 1267.4,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1298.6",
+        "time": 1298.6,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1327",
+        "time": 1327,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1363.8",
+        "time": 1363.8,
+        "before": 6,
+        "alert": "Bait Yesod",
+        "duration": 5
+      },
+      {
+        "id": "timeline-sephirotun-yesod-bait-yesod-1382.9",
+        "time": 1382.9,
+        "before": 6,
+        "alert": "Bait Yesod",
         "duration": 5
       }
     ]
@@ -233380,6 +233590,41 @@
         "before": 5,
         "alert": "Raidwide bleed",
         "duration": 5
+      },
+      {
+        "id": "timeline-dsr-mortal-vow-mortal-vow-3543",
+        "time": 3543,
+        "before": 3.7,
+        "alert": "Vow on you",
+        "duration": 3.7
+      },
+      {
+        "id": "timeline-dsr-mortal-vow-mortal-vow-3577",
+        "time": 3577,
+        "before": 3.7,
+        "alert": "Vow on you",
+        "duration": 3.7
+      },
+      {
+        "id": "timeline-dsr-mortal-vow-mortal-vow-3611.1",
+        "time": 3611.1,
+        "before": 3.7,
+        "alert": "Vow on you",
+        "duration": 3.7
+      },
+      {
+        "id": "timeline-dsr-mortal-vow-mortal-vow-3645.1",
+        "time": 3645.1,
+        "before": 3.7,
+        "alert": "Vow on you",
+        "duration": 3.7
+      },
+      {
+        "id": "timeline-dsr-mortal-vow-mortal-vow-3679.1",
+        "time": 3679.1,
+        "before": 3.7,
+        "alert": "Vow on you",
+        "duration": 3.7
       }
     ]
   },

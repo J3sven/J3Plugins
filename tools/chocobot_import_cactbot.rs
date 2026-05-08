@@ -32,6 +32,7 @@ struct Trigger {
     ids: Vec<String>,
     pattern: String,
     target_self: bool,
+    target_not_self: bool,
     roles: Vec<String>,
     not_roles: Vec<String>,
     jobs: Vec<String>,
@@ -71,18 +72,27 @@ struct TimelineCue {
 }
 
 struct ImportResult {
-    trigger: Option<Trigger>,
+    triggers: Vec<Trigger>,
     reason: Option<String>,
     cactbot_id: Option<String>,
     file: String,
 }
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 struct RoleConditions {
     roles: Vec<String>,
     not_roles: Vec<String>,
     jobs: Vec<String>,
     not_jobs: Vec<String>,
+}
+
+impl RoleConditions {
+    fn is_empty(&self) -> bool {
+        self.roles.is_empty()
+            && self.not_roles.is_empty()
+            && self.jobs.is_empty()
+            && self.not_jobs.is_empty()
+    }
 }
 
 fn main() {
@@ -154,15 +164,14 @@ fn run() -> Result<(), String> {
 
         for block in blocks {
             let result = convert_trigger_block(&block, &rel, zone.clone());
-            match result.trigger {
-                Some(trigger) => {
+            if result.triggers.is_empty() {
+                let reason = result.reason.clone().unwrap_or_else(|| "skipped".to_string());
+                inc_stat(&mut file_stats, &rel, &reason);
+                skipped.push(result);
+            } else {
+                for trigger in result.triggers {
                     triggers.push(trigger);
                     inc_stat(&mut file_stats, &rel, "imported");
-                }
-                None => {
-                    let reason = result.reason.clone().unwrap_or_else(|| "skipped".to_string());
-                    inc_stat(&mut file_stats, &rel, &reason);
-                    skipped.push(result);
                 }
             }
         }
@@ -497,7 +506,7 @@ fn parse_timeline_entries(text: &str) -> Vec<TimelineEntry> {
             continue;
         };
         let text = rest[1..1 + end_quote].to_string();
-        if text.starts_with("--") {
+        if text.trim().is_empty() || text.starts_with("--") {
             continue;
         }
         let details = &rest[2 + end_quote..];
@@ -703,6 +712,32 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
     let role_conditions = extract_role_conditions(block);
     let mechanic_key = slugify(&cactbot_id);
     let text = extract_alert_text(block, target_self);
+    let duration = extract_number_property(block, "durationSeconds").unwrap_or_else(|| default_duration(block));
+    let suppress = extract_number_property(block, "suppressSeconds").unwrap_or_else(|| default_suppress(&event_type));
+    let countdown = extract_number_property(block, "delaySeconds").filter(|value| *value > 0.0);
+    if text.as_deref().is_none_or(|text| text.contains("${")) {
+        let branch_triggers = extract_target_branch_triggers(
+            block,
+            &cactbot_id,
+            zone.clone(),
+            &event_type,
+            &ids,
+            &role_conditions,
+            &state_conditions,
+            &state_updates,
+            duration,
+            suppress,
+            countdown,
+        );
+        if !branch_triggers.is_empty() {
+            return ImportResult {
+                triggers: branch_triggers,
+                reason: None,
+                cactbot_id: Some(cactbot_id),
+                file: file.to_string(),
+            };
+        }
+    }
     if text.is_none() && state_updates.is_empty() {
         return skipped(file, Some(cactbot_id), "missing static alert text");
     }
@@ -710,9 +745,6 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
         return skipped(file, Some(cactbot_id), "dynamic alert text");
     }
 
-    let duration = extract_number_property(block, "durationSeconds").unwrap_or_else(|| default_duration(block));
-    let suppress = extract_number_property(block, "suppressSeconds").unwrap_or_else(|| default_suppress(&event_type));
-    let countdown = extract_number_property(block, "delaySeconds").filter(|value| *value > 0.0);
     let trigger = Trigger {
         id: format!("cactbot-{}", slugify(&cactbot_id)),
         zone,
@@ -720,6 +752,7 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
         ids: ids.clone(),
         pattern: make_id_pattern(&ids),
         target_self,
+        target_not_self: false,
         roles: role_conditions.roles,
         not_roles: role_conditions.not_roles,
         jobs: role_conditions.jobs,
@@ -734,7 +767,7 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
         countdown,
     };
     ImportResult {
-        trigger: Some(trigger),
+        triggers: vec![trigger],
         reason: None,
         cactbot_id: Some(cactbot_id),
         file: file.to_string(),
@@ -743,11 +776,82 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
 
 fn skipped(file: &str, cactbot_id: Option<String>, reason: &str) -> ImportResult {
     ImportResult {
-        trigger: None,
+        triggers: Vec::new(),
         reason: Some(reason.to_string()),
         cactbot_id,
         file: file.to_string(),
     }
+}
+
+fn extract_target_branch_triggers(
+    block: &str,
+    cactbot_id: &str,
+    zone: Option<String>,
+    event_type: &str,
+    ids: &[String],
+    base_roles: &RoleConditions,
+    state_conditions: &[(String, bool)],
+    state_updates: &[(String, bool)],
+    duration: f64,
+    suppress: f64,
+    countdown: Option<f64>,
+) -> Vec<Trigger> {
+    let mut triggers = Vec::new();
+    let fallback_roles = extract_positive_role_conditions(block);
+    let condition_compact = extract_field_section(block, "condition")
+        .map(compact_text)
+        .unwrap_or_default();
+    let role_filter_applies_to_self = condition_compact.contains("&&") && !condition_compact.contains("||");
+    for field in ["alarmText", "alertText", "infoText"] {
+        let Some(section) = extract_field_section(block, field) else {
+            continue;
+        };
+        let compact = compact_text(section);
+        let Some(text) = extract_static_text_for_field_section(block, field, section) else {
+            continue;
+        };
+
+        let (suffix, target_self, target_not_self, roles) = if branch_targets_self(&compact) {
+            let roles = if base_roles.is_empty() && role_filter_applies_to_self {
+                fallback_roles.clone()
+            } else {
+                base_roles.clone()
+            };
+            ("you", true, false, roles)
+        } else if branch_targets_not_self(&compact) {
+            let roles = if base_roles.is_empty() {
+                fallback_roles.clone()
+            } else {
+                base_roles.clone()
+            };
+            ("other", false, true, roles)
+        } else {
+            continue;
+        };
+
+        triggers.push(Trigger {
+            id: format!("cactbot-{}-{}", slugify(cactbot_id), suffix),
+            zone: zone.clone(),
+            event_type: event_type.to_string(),
+            ids: ids.to_vec(),
+            pattern: make_id_pattern(ids),
+            target_self,
+            target_not_self,
+            roles: roles.roles,
+            not_roles: roles.not_roles,
+            jobs: roles.jobs,
+            not_jobs: roles.not_jobs,
+            mechanic_key: slugify(cactbot_id),
+            state_conditions: state_conditions.to_vec(),
+            state_updates: state_updates.to_vec(),
+            silent: false,
+            alert: Some(text),
+            duration,
+            suppress,
+            countdown,
+        });
+    }
+    triggers
 }
 
 fn extract_string_property(block: &str, name: &str) -> Option<String> {
@@ -942,6 +1046,36 @@ fn extract_role_conditions(block: &str) -> RoleConditions {
     conditions
 }
 
+fn extract_positive_role_conditions(block: &str) -> RoleConditions {
+    let Some(value) = extract_field_section(block, "condition") else {
+        return RoleConditions::default();
+    };
+    let compact = compact_text(value);
+    let mut conditions = RoleConditions::default();
+    collect_positive_role_values(&compact, "data.role===", &mut conditions.roles, false);
+    collect_positive_role_values(&compact, "data.job===", &mut conditions.jobs, true);
+    conditions
+}
+
+fn collect_positive_role_values(text: &str, marker: &str, values: &mut Vec<String>, uppercase: bool) {
+    let mut search_from = 0;
+    while let Some(offset) = text[search_from..].find(marker) {
+        let start = search_from + offset + marker.len();
+        let Some(value) = first_quoted_text(&text[start..]) else {
+            search_from = start;
+            continue;
+        };
+        values.push(if uppercase {
+            value.to_ascii_uppercase()
+        } else {
+            value.to_ascii_lowercase()
+        });
+        search_from = start + value.len();
+    }
+    values.sort();
+    values.dedup();
+}
+
 fn extract_role_comparison<'a>(part: &'a str, op: &str) -> Option<(&'a str, String)> {
     let part = trim_wrapping(part.trim(), '(', ')');
     let (left, right) = part.split_once(op)?;
@@ -1040,8 +1174,124 @@ fn extract_static_text_field(block: &str, field: &str, allow_target_self_dynamic
         return extract_output_string(&output_strings, &output_key);
     }
 
-    let output_key = extract_output_key_after_field(block, field, allow_target_self_dynamic_branch)?;
-    extract_output_string(&output_strings, &output_key)
+    if let Some(output_key) = extract_output_key_after_field(block, field, allow_target_self_dynamic_branch) {
+        return extract_output_string(&output_strings, &output_key)
+            .or_else(|| extract_single_output_string(&output_strings));
+    }
+
+    extract_single_output_string(&output_strings)
+}
+
+fn extract_static_text_for_field_section(block: &str, field: &str, section: &str) -> Option<String> {
+    let value = extract_property_value(block, field)?;
+    if let Some(text) = quoted_text(&value) {
+        return Some(clean_text(&text));
+    }
+    if let Some(text) = extract_english_from_object(&value) {
+        return Some(text);
+    }
+
+    let output_strings = extract_object_property(block, "outputStrings")?;
+    let output_key = extract_last_returned_output_key(section).or_else(|| extract_output_key(section))?;
+    let text = extract_output_string(&output_strings, &output_key)?;
+    materialize_output_template(&text, section)
+}
+
+fn extract_field_section<'a>(block: &'a str, field: &str) -> Option<&'a str> {
+    let marker = format!("{field}:");
+    let start = block.find(&marker)? + marker.len();
+    let mut end = block.len();
+    for candidate in [
+        "condition:",
+        "preRun:",
+        "delaySeconds:",
+        "durationSeconds:",
+        "suppressSeconds:",
+        "alarmText:",
+        "alertText:",
+        "infoText:",
+        "response:",
+        "outputStrings:",
+        "run:",
+        "sound:",
+    ] {
+        if candidate == marker {
+            continue;
+        }
+        if let Some(offset) = block[start..].find(candidate) {
+            let candidate_start = start + offset;
+            if candidate_start > start && candidate_start < end {
+                end = candidate_start;
+            }
+        }
+    }
+    Some(&block[start..end])
+}
+
+fn compact_text(value: &str) -> String {
+    value.chars().filter(|ch| !ch.is_whitespace()).collect()
+}
+
+fn branch_targets_self(compact_section: &str) -> bool {
+    compact_section.contains("data.me===matches.target")
+        || compact_section.contains("matches.target===data.me")
+}
+
+fn branch_targets_not_self(compact_section: &str) -> bool {
+    compact_section.contains("data.me!==matches.target")
+        || compact_section.contains("matches.target!==data.me")
+}
+
+fn materialize_output_template(text: &str, section: &str) -> Option<String> {
+    let mut resolved = text.to_string();
+    let compact = compact_text(section);
+    for placeholder in extract_template_placeholders(text) {
+        let replacement = output_placeholder_replacement(&compact, &placeholder)?;
+        resolved = resolved.replace(&format!("${{{placeholder}}}"), replacement);
+    }
+
+    if resolved.contains("${") {
+        None
+    } else {
+        Some(resolved)
+    }
+}
+
+fn extract_template_placeholders(text: &str) -> Vec<String> {
+    let mut placeholders = BTreeSet::new();
+    let mut search_from = 0;
+    while let Some(offset) = text[search_from..].find("${") {
+        let start = search_from + offset + 2;
+        let Some(end_offset) = text[start..].find('}') else {
+            break;
+        };
+        let key = &text[start..start + end_offset];
+        if is_simple_identifier(key) {
+            placeholders.insert(key.to_string());
+        }
+        search_from = start + end_offset + 1;
+    }
+    placeholders.into_iter().collect()
+}
+
+fn output_placeholder_replacement(compact_section: &str, placeholder: &str) -> Option<&'static str> {
+    if compact_section.contains(&format!("{placeholder}:data.party.member(matches.target)"))
+        || compact_section.contains(&format!("{placeholder}:matches.target"))
+    {
+        return Some("$target");
+    }
+
+    if compact_section.contains(&format!("{placeholder}:data.party.member(matches.source)"))
+        || compact_section.contains(&format!("{placeholder}:matches.source"))
+    {
+        return Some("$source");
+    }
+
+    if compact_section.contains(&format!("{placeholder}:matches.id")) {
+        return Some("$id");
+    }
+
+    None
 }
 
 fn quoted_text(value: &str) -> Option<String> {
@@ -1054,6 +1304,30 @@ fn quoted_text(value: &str) -> Option<String> {
         return None;
     }
     Some(unescape_ts_string(&value[1..end]))
+}
+
+fn first_quoted_text(value: &str) -> Option<String> {
+    let quote = value.chars().next()?;
+    if quote != '\'' && quote != '"' {
+        return None;
+    }
+
+    let mut escaped = false;
+    for (idx, ch) in value.char_indices().skip(1) {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        if ch == '\\' {
+            escaped = true;
+            continue;
+        }
+        if ch == quote {
+            return Some(unescape_ts_string(&value[1..idx]));
+        }
+    }
+
+    None
 }
 
 fn extract_english_from_object(value: &str) -> Option<String> {
@@ -1085,6 +1359,9 @@ fn extract_output_key_after_field(block: &str, field: &str, allow_dynamic_branch
         if let Some(output_key) = extract_last_returned_output_key(field_body) {
             return Some(output_key);
         }
+        if let Some(output_key) = extract_output_key(field_body) {
+            return Some(output_key);
+        }
     }
     if field_body.contains("data.") || field_body.contains("matches.") || block.contains("Conditions.targetIsYou") {
         return None;
@@ -1114,6 +1391,21 @@ fn extract_last_returned_output_key(field_body: &str) -> Option<String> {
 fn extract_output_string(output_strings: &str, key: &str) -> Option<String> {
     let object = extract_object_property(output_strings, key)?;
     extract_english_from_object(&object)
+}
+
+fn extract_single_output_string(output_strings: &str) -> Option<String> {
+    let mut texts = Vec::new();
+    for object in split_top_level_objects(output_strings) {
+        if let Some(text) = extract_english_from_object(&object) {
+            texts.push(text);
+        }
+    }
+
+    if texts.len() == 1 {
+        texts.into_iter().next()
+    } else {
+        None
+    }
 }
 
 fn extract_response_name(block: &str) -> Option<String> {
@@ -1323,6 +1615,7 @@ fn synthesize_effect_state_gain_triggers(mut triggers: Vec<Trigger>) -> Vec<Trig
                 ids: trigger.ids.clone(),
                 pattern: trigger.pattern.clone(),
                 target_self: trigger.target_self,
+                target_not_self: trigger.target_not_self,
                 roles: trigger.roles.clone(),
                 not_roles: trigger.not_roles.clone(),
                 jobs: trigger.jobs.clone(),
@@ -1348,12 +1641,13 @@ fn dedupe_triggers(triggers: Vec<Trigger>) -> Vec<Trigger> {
     let mut deduped = Vec::new();
     for trigger in triggers {
         let key = format!(
-            "{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}",
+            "{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}",
             trigger.zone.as_deref().unwrap_or_default(),
             trigger.event_type,
             trigger.ids.join(","),
             trigger.pattern,
             trigger.target_self,
+            trigger.target_not_self,
             trigger.roles.join(","),
             trigger.not_roles.join(","),
             trigger.jobs.join(","),
@@ -1444,6 +1738,9 @@ fn write_trigger_json(path: &Path, triggers: &[Trigger]) -> Result<(), String> {
         out.push_str(&format!("    \"pattern\": \"{}\",\n", json_escape(&trigger.pattern)));
         if trigger.target_self {
             out.push_str("    \"targetSelf\": true,\n");
+        }
+        if trigger.target_not_self {
+            out.push_str("    \"targetNotSelf\": true,\n");
         }
         write_string_array(&mut out, "roles", &trigger.roles);
         write_string_array(&mut out, "notRoles", &trigger.not_roles);
@@ -1668,7 +1965,7 @@ fn format_number(value: f64) -> String {
 impl From<io::Error> for ImportResult {
     fn from(_: io::Error) -> Self {
         ImportResult {
-            trigger: None,
+            triggers: Vec::new(),
             reason: Some("io error".to_string()),
             cactbot_id: None,
             file: String::new(),

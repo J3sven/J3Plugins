@@ -6,6 +6,8 @@ using System.Speech.Synthesis;
 using System.Text;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Game.Command;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Ipc;
@@ -26,6 +28,7 @@ public sealed class Plugin : IDalamudPlugin
 
     private readonly IDalamudPluginInterface pluginInterface;
     private readonly ICommandManager commandManager;
+    private readonly ITextureProvider textureProvider;
     private readonly IObjectTable objectTable;
     private readonly ICallGateSubscriber<string, bool> createSubscriber;
     private readonly ICallGateSubscriber<string, bool> createLegacySubscriber;
@@ -43,6 +46,7 @@ public sealed class Plugin : IDalamudPlugin
     private readonly List<string> recentStateChanges = [];
     private readonly List<string> recentStateDiagnostics = [];
     private readonly HashSet<string> scheduledTimelineCues = [];
+    private readonly ISharedImmediateTexture? mascotTexture;
     private CancellationTokenSource? webSocketCancellation;
     private Task? webSocketTask;
     private SpeechSynthesizer? speechSynthesizer;
@@ -83,11 +87,13 @@ public sealed class Plugin : IDalamudPlugin
     public Plugin(
         IDalamudPluginInterface pluginInterface,
         ICommandManager commandManager,
+        ITextureProvider textureProvider,
         IObjectTable objectTable,
         IPluginLog pluginLog)
     {
         this.pluginInterface = pluginInterface;
         this.commandManager = commandManager;
+        this.textureProvider = textureProvider;
         this.objectTable = objectTable;
         Log = pluginLog;
 
@@ -95,6 +101,7 @@ public sealed class Plugin : IDalamudPlugin
         Configuration.Initialize(pluginInterface);
         ClampConfiguration();
         LoadTriggers();
+        mascotTexture = LoadMascotTexture();
 
         createSubscriber = pluginInterface.GetIpcSubscriber<string, bool>("IINACT.CreateSubscriber");
         createLegacySubscriber = pluginInterface.GetIpcSubscriber<string, bool>("IINACT.CreateLegacySubscriber");
@@ -127,6 +134,14 @@ public sealed class Plugin : IDalamudPlugin
         speechSynthesizer?.Dispose();
         TryUnsubscribe();
         eventProvider.UnregisterFunc();
+    }
+
+    private ISharedImmediateTexture? LoadMascotTexture()
+    {
+        var iconPath = Path.Combine(pluginInterface.AssemblyLocation.Directory!.FullName, "Assets", "chocobot-icon.png");
+        return File.Exists(iconPath)
+            ? textureProvider.GetFromFile(iconPath)
+            : null;
     }
 
     private void OnCommand(string command, string args)
@@ -353,6 +368,9 @@ public sealed class Plugin : IDalamudPlugin
             if (trigger.TargetSelf && !EventTargetsPrimaryPlayer(netLogEvent))
                 continue;
 
+            if (trigger.TargetNotSelf && EventTargetsPrimaryPlayer(netLogEvent))
+                continue;
+
             ApplyStateUpdates(trigger);
             if (trigger.Silent)
             {
@@ -365,7 +383,7 @@ public sealed class Plugin : IDalamudPlugin
             if (IsSuppressed(trigger, now))
                 continue;
 
-            var text = ResolveText(trigger, match);
+            var text = ResolveText(trigger, match, netLogEvent);
             AddAlert(
                 trigger.Id,
                 text,
@@ -776,11 +794,11 @@ public sealed class Plugin : IDalamudPlugin
         lastCombatDurationSeconds = 0;
     }
 
-    private static string ResolveText(TriggerDefinition trigger, System.Text.RegularExpressions.Match? match)
+    private static string ResolveText(TriggerDefinition trigger, System.Text.RegularExpressions.Match? match, NetLogEvent netLogEvent)
     {
         var text = trigger.AlertText ?? trigger.InfoText ?? trigger.Id;
         if (match is null)
-            return text;
+            return ResolveEventText(text, netLogEvent);
 
         foreach (var groupName in trigger.CompiledRegex?.GetGroupNames() ?? [])
         {
@@ -792,6 +810,20 @@ public sealed class Plugin : IDalamudPlugin
 
             text = text.Replace($"${groupName}", match.Groups[groupName].Value, StringComparison.Ordinal);
         }
+
+        return ResolveEventText(text, netLogEvent);
+    }
+
+    private static string ResolveEventText(string text, NetLogEvent netLogEvent)
+    {
+        if (!string.IsNullOrWhiteSpace(netLogEvent.SourceName))
+            text = text.Replace("$source", netLogEvent.SourceName, StringComparison.Ordinal);
+
+        if (!string.IsNullOrWhiteSpace(netLogEvent.TargetName))
+            text = text.Replace("$target", netLogEvent.TargetName, StringComparison.Ordinal);
+
+        if (!string.IsNullOrWhiteSpace(netLogEvent.Id))
+            text = text.Replace("$id", netLogEvent.Id, StringComparison.Ordinal);
 
         return text;
     }
@@ -1014,10 +1046,10 @@ public sealed class Plugin : IDalamudPlugin
         if (Configuration.ClickThrough)
             flags |= ImGuiWindowFlags.NoInputs;
 
-        var windowWidth = upcomingCount > 0 ? 430 * scale : 470 * scale;
+        var windowWidth = upcomingCount > 0 ? 460 * scale : 470 * scale;
         var windowHeight = upcomingCount > 0
-            ? 42 * scale + upcomingCount * 34 * scale
-            : 58 * scale;
+            ? 54 * scale + upcomingCount * 38 * scale
+            : 68 * scale;
         ImGui.SetNextWindowSize(new Vector2(windowWidth, windowHeight), ImGuiCond.Always);
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
         ImGui.PushStyleVar(ImGuiStyleVar.WindowRounding, 8 * scale);
@@ -1054,24 +1086,56 @@ public sealed class Plugin : IDalamudPlugin
             var text = FitTextScaled(alert.Text, maxWidth, fontSize);
             var textSize = ImGui.CalcTextSize(text) * (fontSize / ImGui.GetFontSize());
             var y = viewport.Pos.Y + viewport.Size.Y * 0.17f + i * 50 * scale;
-            var pos = PixelSnap(new Vector2(viewport.Pos.X + (viewport.Size.X - textSize.X) * 0.5f, y));
+            var iconSize = i == 0 ? 46 * scale : 0;
+            var contentWidth = textSize.X + (iconSize > 0 ? iconSize + 16 * scale : 0);
+            var cardWidth = Math.Min(viewport.Size.X * 0.84f, contentWidth + 44 * scale);
+            var cardHeight = Math.Max(textSize.Y + 22 * scale, i == 0 ? 62 * scale : textSize.Y + 14 * scale);
+            var cardPos = PixelSnap(new Vector2(viewport.Pos.X + (viewport.Size.X - cardWidth) * 0.5f, y - 10 * scale));
+            var pos = PixelSnap(new Vector2(cardPos.X + (cardWidth - contentWidth) * 0.5f + (iconSize > 0 ? iconSize + 16 * scale : 0), cardPos.Y + (cardHeight - textSize.Y) * 0.5f - 1 * scale));
             var alpha = Math.Clamp(1f - i * 0.16f, 0.45f, 1f);
             var textColor = i == 0
                 ? new Vector4(1.0f, 0.96f, 0.72f, alpha)
                 : new Vector4(0.92f, 0.96f, 1.0f, alpha);
             var outlineColor = new Vector4(0.015f, 0.018f, 0.02f, 0.96f * alpha);
 
+            drawList.AddRectFilled(
+                cardPos + new Vector2(4 * scale, 6 * scale),
+                cardPos + new Vector2(cardWidth + 4 * scale, cardHeight + 6 * scale),
+                ImGui.GetColorU32(new Vector4(0, 0, 0, 0.34f * alpha)),
+                14 * scale);
+            drawList.AddRectFilled(
+                cardPos,
+                cardPos + new Vector2(cardWidth, cardHeight),
+                ImGui.GetColorU32(new Vector4(0.035f, 0.045f, 0.052f, 0.68f * alpha)),
+                14 * scale);
+            drawList.AddRect(
+                cardPos,
+                cardPos + new Vector2(cardWidth, cardHeight),
+                ImGui.GetColorU32(new Vector4(1.0f, 0.74f, 0.28f, 0.50f * alpha)),
+                14 * scale,
+                ImDrawFlags.None,
+                MathF.Max(1.5f, 2 * scale));
+            if (i == 0 && TryDrawMascot(drawList, cardPos + new Vector2(17 * scale, (cardHeight - iconSize) * 0.5f), iconSize, alpha))
+            {
+                drawList.AddCircle(
+                    cardPos + new Vector2(17 * scale + iconSize * 0.5f, cardHeight * 0.5f),
+                    iconSize * 0.52f,
+                    ImGui.GetColorU32(new Vector4(1.0f, 0.80f, 0.34f, 0.36f * alpha)),
+                    40,
+                    MathF.Max(1, 1.5f * scale));
+            }
+
             DrawOutlinedText(drawList, pos, text, fontSize, textColor, outlineColor, MathF.Round(2 * scale));
 
             if (i != 0)
                 continue;
 
-            var barWidth = Math.Min(maxWidth, Math.Max(260 * scale, textSize.X));
-            var barPos = PixelSnap(new Vector2(viewport.Pos.X + (viewport.Size.X - barWidth) * 0.5f, pos.Y + textSize.Y + 10 * scale));
+            var barWidth = cardWidth - 34 * scale;
+            var barPos = PixelSnap(new Vector2(cardPos.X + 17 * scale, cardPos.Y + cardHeight - 9 * scale));
             drawList.AddRectFilled(
                 barPos,
                 barPos + new Vector2(barWidth, 4 * scale),
-                ImGui.GetColorU32(new Vector4(0, 0, 0, 0.52f)),
+                ImGui.GetColorU32(new Vector4(0, 0, 0, 0.48f)),
                 2 * scale);
             drawList.AddRectFilled(
                 barPos,
@@ -1083,11 +1147,19 @@ public sealed class Plugin : IDalamudPlugin
 
     private void DrawInactivePanel(float scale)
     {
-        var size = new Vector2(470 * scale, 52 * scale);
+        var size = new Vector2(470 * scale, 62 * scale);
         var pos = ImGui.GetCursorScreenPos();
         var drawList = ImGui.GetWindowDrawList();
-        DrawPanel(drawList, pos, size, scale, new Vector4(0.055f, 0.06f, 0.065f, Configuration.Opacity));
-        DrawText(drawList, pos + new Vector2(14 * scale, 16 * scale), "Chocobot ready", new Vector4(0.80f, 0.88f, 0.92f, 1));
+        DrawPanel(drawList, pos, size, scale, new Vector4(0.045f, 0.052f, 0.058f, Configuration.Opacity));
+        DrawChocobotFrame(drawList, pos, size, scale, Configuration.Opacity);
+        DrawMascotWatermark(drawList, pos + new Vector2(size.X - 78 * scale, size.Y - 78 * scale), 72 * scale, 0.13f * Configuration.Opacity);
+        DrawMascotBadge(drawList, pos + new Vector2(14 * scale, 16 * scale), 30 * scale, 1);
+        DrawTextShadow(drawList, pos + new Vector2(54 * scale, 22 * scale), "Chocobot ready", new Vector4(0.94f, 0.96f, 0.92f, 1), scale);
+        drawList.AddLine(
+            pos + new Vector2(54 * scale, 44 * scale),
+            pos + new Vector2(size.X - 20 * scale, 44 * scale),
+            ImGui.GetColorU32(new Vector4(1.0f, 0.74f, 0.28f, 0.30f * Configuration.Opacity)),
+            MathF.Max(1, scale));
         ImGui.Dummy(size);
     }
 
@@ -1123,18 +1195,26 @@ public sealed class Plugin : IDalamudPlugin
     private void DrawUpcomingPanel(float scale, IReadOnlyList<ActiveAlert> pendingAlerts, IReadOnlyList<UpcomingTimelineRow> timelineRows, DateTime now)
     {
         var rowCount = pendingAlerts.Count + timelineRows.Count;
-        var size = new Vector2(430 * scale, 42 * scale + rowCount * 34 * scale);
+        var size = new Vector2(460 * scale, 54 * scale + rowCount * 38 * scale);
         var pos = ImGui.GetCursorScreenPos();
         var drawList = ImGui.GetWindowDrawList();
-        DrawPanel(drawList, pos, size, scale, new Vector4(0.055f, 0.06f, 0.065f, Configuration.Opacity));
-        DrawTextShadow(drawList, pos + new Vector2(14 * scale, 12 * scale), "Upcoming", new Vector4(0.80f, 0.88f, 0.92f, 1), scale);
+        DrawPanel(drawList, pos, size, scale, new Vector4(0.045f, 0.052f, 0.058f, Configuration.Opacity));
+        DrawChocobotFrame(drawList, pos, size, scale, Configuration.Opacity);
+        DrawMascotWatermark(drawList, pos + new Vector2(size.X - 82 * scale, size.Y - 82 * scale), 74 * scale, 0.16f * Configuration.Opacity);
+        DrawMascotBadge(drawList, pos + new Vector2(12 * scale, 10 * scale), 30 * scale, 1);
+        DrawTextShadow(drawList, pos + new Vector2(50 * scale, 16 * scale), "Upcoming", new Vector4(0.94f, 0.96f, 0.92f, 1), scale);
+        drawList.AddLine(
+            pos + new Vector2(50 * scale, 38 * scale),
+            pos + new Vector2(size.X - 18 * scale, 38 * scale),
+            ImGui.GetColorU32(new Vector4(1.0f, 0.74f, 0.28f, 0.38f * Configuration.Opacity)),
+            MathF.Max(1, scale));
 
         var rowIndex = 0;
         for (var i = 0; i < pendingAlerts.Count; i++)
         {
             var alert = pendingAlerts[i];
-            var rowY = 38 * scale + rowIndex * 34 * scale;
-            var text = FitTextScaled(alert.Text, size.X - 112 * scale, ImGui.GetFontSize());
+            var rowY = 52 * scale + rowIndex * 38 * scale;
+            var text = FitTextScaled(alert.Text, size.X - 138 * scale, ImGui.GetFontSize());
             var remaining = $"{alert.CountdownRemaining(now).TotalSeconds:0.0}s";
             var textColor = i == 0
                 ? new Vector4(1.0f, 0.96f, 0.72f, 1)
@@ -1143,21 +1223,22 @@ public sealed class Plugin : IDalamudPlugin
                 ? new Vector4(1.0f, 0.74f, 0.28f, 1)
                 : new Vector4(0.70f, 0.78f, 0.84f, 1);
 
-            DrawTextShadow(drawList, pos + new Vector2(14 * scale, rowY), text, textColor, scale);
-            DrawTextRightShadow(drawList, pos.X + size.X - 14 * scale, pos.Y + rowY, remaining, timeColor, scale);
+            DrawUpcomingRowChrome(drawList, pos + new Vector2(12 * scale, rowY - 4 * scale), new Vector2(size.X - 24 * scale, 30 * scale), scale, i == 0, new Vector4(1.0f, 0.70f, 0.18f, 1), Configuration.Opacity);
+            DrawTextShadow(drawList, pos + new Vector2(32 * scale, rowY), text, textColor, scale);
+            DrawTextRightShadow(drawList, pos.X + size.X - 18 * scale, pos.Y + rowY, remaining, timeColor, scale);
 
-            var barPos = pos + new Vector2(14 * scale, rowY + 21 * scale);
-            var barSize = new Vector2(size.X - 28 * scale, 3 * scale);
+            var barPos = pos + new Vector2(32 * scale, rowY + 22 * scale);
+            var barSize = new Vector2(size.X - 64 * scale, 4 * scale);
             var remainingProgress = 1 - alert.CountdownProgress(now);
             drawList.AddRectFilled(
                 barPos,
                 barPos + barSize,
-                ImGui.GetColorU32(new Vector4(1, 1, 1, 0.12f)),
+                ImGui.GetColorU32(new Vector4(1, 1, 1, 0.10f)),
                 2 * scale);
             drawList.AddRectFilled(
                 barPos,
                 barPos + new Vector2(barSize.X * remainingProgress, barSize.Y),
-                ImGui.GetColorU32(new Vector4(1.0f, 0.72f, 0.22f, 0.92f)),
+                ImGui.GetColorU32(new Vector4(1.0f, 0.72f, 0.22f, 0.95f)),
                 2 * scale);
             rowIndex++;
         }
@@ -1165,8 +1246,8 @@ public sealed class Plugin : IDalamudPlugin
         for (var i = 0; i < timelineRows.Count; i++)
         {
             var row = timelineRows[i];
-            var rowY = 38 * scale + rowIndex * 34 * scale;
-            var text = FitTextScaled(row.Text, size.X - 112 * scale, ImGui.GetFontSize());
+            var rowY = 52 * scale + rowIndex * 38 * scale;
+            var text = FitTextScaled(row.Text, size.X - 138 * scale, ImGui.GetFontSize());
             var remaining = row.AtUtc - now;
             var remainingText = FormatCountdown(remaining);
             var textColor = rowIndex == 0
@@ -1176,11 +1257,12 @@ public sealed class Plugin : IDalamudPlugin
                 ? new Vector4(1.0f, 0.74f, 0.28f, 1)
                 : new Vector4(0.70f, 0.78f, 0.84f, 1);
 
-            DrawTextShadow(drawList, pos + new Vector2(14 * scale, rowY), text, textColor, scale);
-            DrawTextRightShadow(drawList, pos.X + size.X - 14 * scale, pos.Y + rowY, remainingText, timeColor, scale);
+            DrawUpcomingRowChrome(drawList, pos + new Vector2(12 * scale, rowY - 4 * scale), new Vector2(size.X - 24 * scale, 30 * scale), scale, rowIndex == 0, new Vector4(0.42f, 0.78f, 1.0f, 1), Configuration.Opacity);
+            DrawTextShadow(drawList, pos + new Vector2(32 * scale, rowY), text, textColor, scale);
+            DrawTextRightShadow(drawList, pos.X + size.X - 18 * scale, pos.Y + rowY, remainingText, timeColor, scale);
 
-            var barPos = pos + new Vector2(14 * scale, rowY + 21 * scale);
-            var barSize = new Vector2(size.X - 28 * scale, 3 * scale);
+            var barPos = pos + new Vector2(32 * scale, rowY + 22 * scale);
+            var barSize = new Vector2(size.X - 64 * scale, 4 * scale);
             var timelineProgress = TimelineProgress(row, now);
             drawList.AddRectFilled(
                 barPos,
@@ -1221,6 +1303,91 @@ public sealed class Plugin : IDalamudPlugin
         var opacity = Math.Clamp(color.W, 0f, 1f);
         drawList.AddRectFilled(pos, pos + size, ImGui.GetColorU32(color), 8 * scale);
         drawList.AddRect(pos, pos + size, ImGui.GetColorU32(new Vector4(1, 1, 1, 0.16f * opacity)), 8 * scale);
+        drawList.AddLine(
+            pos + new Vector2(10 * scale, 1 * scale),
+            pos + new Vector2(size.X - 10 * scale, 1 * scale),
+            ImGui.GetColorU32(new Vector4(1.0f, 0.76f, 0.30f, 0.22f * opacity)),
+            MathF.Max(1, scale));
+    }
+
+    private void DrawChocobotFrame(ImDrawListPtr drawList, Vector2 pos, Vector2 size, float scale, float opacity)
+    {
+        opacity = Math.Clamp(opacity, 0f, 1f);
+        var outer = ImGui.GetColorU32(new Vector4(0.92f, 0.96f, 1.0f, 0.30f * opacity));
+        var inner = ImGui.GetColorU32(new Vector4(0.42f, 0.78f, 1.0f, 0.42f * opacity));
+        var shadow = ImGui.GetColorU32(new Vector4(0, 0, 0, 0.40f * opacity));
+        var inset = 6 * scale;
+        var rounding = 12 * scale;
+
+        drawList.AddRect(pos + new Vector2(3 * scale, 4 * scale), pos + size + new Vector2(3 * scale, 4 * scale), shadow, 12 * scale, ImDrawFlags.None, MathF.Max(2, 3 * scale));
+        drawList.AddRect(
+            pos + new Vector2(inset),
+            pos + size - new Vector2(inset),
+            outer,
+            rounding,
+            ImDrawFlags.None,
+            MathF.Max(1.5f, 2 * scale));
+        drawList.AddRect(
+            pos + new Vector2(inset + 4 * scale),
+            pos + size - new Vector2(inset + 4 * scale),
+            inner,
+            MathF.Max(1, rounding - 4 * scale),
+            ImDrawFlags.None,
+            MathF.Max(1, scale));
+    }
+
+    private static void DrawUpcomingRowChrome(ImDrawListPtr drawList, Vector2 pos, Vector2 size, float scale, bool highlighted, Vector4 accent, float opacity)
+    {
+        opacity = Math.Clamp(opacity, 0f, 1f);
+        var bgAlpha = (highlighted ? 0.18f : 0.10f) * opacity;
+        var borderAlpha = (highlighted ? 0.30f : 0.16f) * opacity;
+        drawList.AddRectFilled(
+            pos,
+            pos + size,
+            ImGui.GetColorU32(new Vector4(0.10f, 0.12f, 0.13f, bgAlpha)),
+            6 * scale);
+        drawList.AddRect(
+            pos,
+            pos + size,
+            ImGui.GetColorU32(new Vector4(accent.X, accent.Y, accent.Z, borderAlpha)),
+            6 * scale);
+        drawList.AddRectFilled(
+            pos,
+            pos + new Vector2(4 * scale, size.Y),
+            ImGui.GetColorU32(new Vector4(accent.X, accent.Y, accent.Z, 0.72f * opacity)),
+            6 * scale);
+        drawList.AddCircleFilled(
+            pos + new Vector2(12 * scale, size.Y * 0.5f),
+            3.5f * scale,
+            ImGui.GetColorU32(new Vector4(accent.X, accent.Y, accent.Z, 0.95f)));
+    }
+
+    private void DrawMascotBadge(ImDrawListPtr drawList, Vector2 pos, float size, float alpha)
+    {
+        var center = pos + new Vector2(size * 0.5f);
+        drawList.AddCircleFilled(center, size * 0.56f, ImGui.GetColorU32(new Vector4(0.09f, 0.075f, 0.035f, 0.74f * alpha)), 40);
+        drawList.AddCircle(center, size * 0.58f, ImGui.GetColorU32(new Vector4(1.0f, 0.77f, 0.22f, 0.58f * alpha)), 40, MathF.Max(1, 1.5f * (size / 30f)));
+        TryDrawMascot(drawList, pos, size, alpha);
+    }
+
+    private void DrawMascotWatermark(ImDrawListPtr drawList, Vector2 pos, float size, float alpha)
+    {
+        TryDrawMascot(drawList, pos, size, alpha);
+    }
+
+    private bool TryDrawMascot(ImDrawListPtr drawList, Vector2 pos, float size, float alpha)
+    {
+        if (mascotTexture is null || !mascotTexture.TryGetWrap(out IDalamudTextureWrap? wrap, out _))
+            return false;
+
+        drawList.AddImage(
+            wrap.Handle,
+            pos,
+            pos + new Vector2(size, size),
+            Vector2.Zero,
+            Vector2.One,
+            ImGui.GetColorU32(new Vector4(1, 1, 1, Math.Clamp(alpha, 0f, 1f))));
+        return true;
     }
 
     private static void DrawText(ImDrawListPtr drawList, Vector2 pos, string text, Vector4 color)

@@ -3,71 +3,71 @@
 - cactbot source: `/tmp/chocobot-cactbot-import`
 - output: `src/Chocobot/Assets/cactbot-imported-triggers.json`
 - timeline output: `src/Chocobot/Assets/cactbot-imported-timelines.json`
-- imported triggers: 3210
+- imported triggers: 4049
 - imported timelines: 246
-- files with imports: 326 / 346
-- skipped trigger objects: 2932
+- files with imports: 329 / 346
+- skipped trigger objects: 2115
 
 ## Skipped Reasons
 
-- missing static alert text: 2445
+- missing static alert text: 1365
 - missing static netRegex id: 457
-- dynamic alert text: 29
+- dynamic alert text: 292
 - missing id: 1
 
 ## File Summary
 
 - `00-misc/general.ts`: skipped 9
 - `00-misc/test.ts`: skipped 12
-- `00-misc/the_masked_carnivale.ts`: imported 82, skipped 27
-- `02-arr/alliance/the_world_of_darkness.ts`: imported 5, skipped 4
+- `00-misc/the_masked_carnivale.ts`: imported 88, skipped 21
+- `02-arr/alliance/the_world_of_darkness.ts`: imported 6, skipped 3
 - `02-arr/dungeon/amdapor_keep.ts`: imported 1, skipped 2
-- `02-arr/dungeon/amdapor_keep_hard.ts`: imported 2, skipped 2
-- `02-arr/dungeon/aurum_vale.ts`: skipped 1
-- `02-arr/dungeon/brayfloxs_longstop.ts`: imported 2, skipped 10
+- `02-arr/dungeon/amdapor_keep_hard.ts`: imported 3, skipped 1
+- `02-arr/dungeon/aurum_vale.ts`: imported 1
+- `02-arr/dungeon/brayfloxs_longstop.ts`: imported 4, skipped 8
 - `02-arr/dungeon/cutters_cry.ts`: imported 2
 - `02-arr/dungeon/halatali_hard.ts`: imported 2
 - `02-arr/dungeon/haukke_manor.ts`: imported 3, skipped 5
 - `02-arr/dungeon/haukke_manor_hard.ts`: imported 1, skipped 1
 - `02-arr/dungeon/hullbreaker_isle.ts`: imported 2
-- `02-arr/dungeon/pharos_sirius.ts`: imported 2, skipped 2
+- `02-arr/dungeon/pharos_sirius.ts`: imported 3, skipped 1
 - `02-arr/dungeon/sastasha_hard.ts`: skipped 2
 - `02-arr/dungeon/snowcloak.ts`: imported 1
-- `02-arr/dungeon/the_lost_city_of_amdapor.ts`: imported 1, skipped 2
+- `02-arr/dungeon/the_lost_city_of_amdapor.ts`: imported 2, skipped 1
 - `02-arr/dungeon/the_stone_vigil.ts`: imported 1
 - `02-arr/dungeon/the_stone_vigil_hard.ts`: imported 3
 - `02-arr/dungeon/the_sunken_temple_of_quarn.ts`: skipped 1
 - `02-arr/dungeon/the_sunken_temple_of_quarn_hard.ts`: imported 1
 - `02-arr/dungeon/the_tam_tara_depocraft_hard.ts`: imported 1
 - `02-arr/dungeon/the_wanderers_palace_hard.ts`: imported 2, skipped 1
-- `02-arr/raid/t1.ts`: imported 3, skipped 4
-- `02-arr/raid/t10.ts`: imported 2, skipped 4
-- `02-arr/raid/t11.ts`: imported 6, skipped 8
-- `02-arr/raid/t12.ts`: imported 1, skipped 7
-- `02-arr/raid/t13.ts`: imported 2, skipped 5
-- `02-arr/raid/t2.ts`: imported 3, skipped 2
-- `02-arr/raid/t4.ts`: skipped 4
-- `02-arr/raid/t5.ts`: imported 6, skipped 6
-- `02-arr/raid/t6.ts`: imported 4, skipped 8
-- `02-arr/raid/t7.ts`: imported 7, skipped 5
-- `02-arr/raid/t8.ts`: skipped 8
-- `02-arr/raid/t9.ts`: imported 7, skipped 13
+- `02-arr/raid/t1.ts`: imported 5, skipped 2
+- `02-arr/raid/t10.ts`: imported 6, skipped 2
+- `02-arr/raid/t11.ts`: imported 7, skipped 7
+- `02-arr/raid/t12.ts`: imported 7, skipped 3
+- `02-arr/raid/t13.ts`: imported 8, skipped 1
+- `02-arr/raid/t2.ts`: imported 5, skipped 1
+- `02-arr/raid/t4.ts`: imported 2, skipped 2
+- `02-arr/raid/t5.ts`: imported 13, skipped 2
+- `02-arr/raid/t6.ts`: imported 8, skipped 5
+- `02-arr/raid/t7.ts`: imported 11, skipped 2
+- `02-arr/raid/t8.ts`: imported 4, skipped 6
+- `02-arr/raid/t9.ts`: imported 11, skipped 9
 - `02-arr/trial/ifrit-nm.ts`: skipped 2
 - `02-arr/trial/levi-ex.ts`: imported 2, skipped 13
-- `02-arr/trial/shiva-ex.ts`: imported 10, skipped 9
+- `02-arr/trial/shiva-ex.ts`: imported 11, skipped 8
 - `02-arr/trial/shiva-hm.ts`: imported 3, skipped 2
-- `02-arr/trial/titan-ex.ts`: imported 1, skipped 2
+- `02-arr/trial/titan-ex.ts`: imported 2, skipped 1
 - `02-arr/trial/titan-hm.ts`: skipped 2
-- `02-arr/trial/titan-nm.ts`: imported 1, skipped 2
-- `02-arr/trial/ultima-ex.ts`: imported 2, skipped 6
-- `03-hw/alliance/dun_scaith.ts`: imported 23, skipped 18
-- `03-hw/alliance/weeping_city.ts`: imported 13, skipped 13
+- `02-arr/trial/titan-nm.ts`: imported 2, skipped 1
+- `02-arr/trial/ultima-ex.ts`: imported 4, skipped 4
+- `03-hw/alliance/dun_scaith.ts`: imported 29, skipped 12
+- `03-hw/alliance/weeping_city.ts`: imported 17, skipped 9
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_001-010.ts`: imported 1
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_011-020.ts`: imported 2, skipped 1
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_021-030.ts`: imported 5
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_031-040.ts`: imported 1, skipped 1
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_041-050.ts`: imported 5, skipped 3
-- `03-hw/deepdungeon/the_palace_of_the_dead_floors_051-060.ts`: imported 2, skipped 3
+- `03-hw/deepdungeon/the_palace_of_the_dead_floors_051-060.ts`: imported 3, skipped 2
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_061-070.ts`: imported 1
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_071-080.ts`: imported 2
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_081-090.ts`: skipped 2
@@ -77,7 +77,7 @@
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_121-130.ts`: imported 5
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_131-140.ts`: imported 2, skipped 1
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_141-150.ts`: imported 3, skipped 4
-- `03-hw/deepdungeon/the_palace_of_the_dead_floors_151-160.ts`: imported 2, skipped 3
+- `03-hw/deepdungeon/the_palace_of_the_dead_floors_151-160.ts`: imported 3, skipped 2
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_161-170.ts`: imported 1, skipped 1
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_171-180.ts`: imported 2, skipped 1
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_181-190.ts`: skipped 4
@@ -86,40 +86,40 @@
 - `03-hw/dungeon/aetherochemical_research_facility.ts`: imported 5, skipped 3
 - `03-hw/dungeon/baelsars_wall.ts`: imported 6, skipped 5
 - `03-hw/dungeon/fractal_continuum.ts`: imported 6, skipped 2
-- `03-hw/dungeon/gubal_library_hard.ts`: imported 7, skipped 6
+- `03-hw/dungeon/gubal_library_hard.ts`: imported 12, skipped 1
 - `03-hw/dungeon/sohm_al.ts`: imported 1, skipped 4
-- `03-hw/dungeon/sohm_al_hard.ts`: imported 9, skipped 5
-- `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts`: imported 10, skipped 10
-- `03-hw/dungeon/the_vault.ts`: imported 5, skipped 6
-- `03-hw/dungeon/xelphatol.ts`: imported 5, skipped 3
+- `03-hw/dungeon/sohm_al_hard.ts`: imported 10, skipped 4
+- `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts`: imported 12, skipped 8
+- `03-hw/dungeon/the_vault.ts`: imported 6, skipped 5
+- `03-hw/dungeon/xelphatol.ts`: imported 6, skipped 2
 - `03-hw/map/the_aquapolis.ts`: imported 4, skipped 2
 - `03-hw/pvp/shatter.ts`: skipped 4
-- `03-hw/raid/a10n.ts`: imported 6, skipped 3
-- `03-hw/raid/a10s.ts`: imported 8, skipped 10
-- `03-hw/raid/a11s.ts`: imported 7, skipped 14
-- `03-hw/raid/a12n.ts`: imported 5, skipped 3
-- `03-hw/raid/a12s.ts`: imported 7, skipped 10
-- `03-hw/raid/a1s.ts`: imported 2, skipped 8
-- `03-hw/raid/a2s.ts`: imported 1, skipped 5
-- `03-hw/raid/a3n.ts`: imported 4, skipped 8
-- `03-hw/raid/a3s.ts`: imported 5, skipped 10
-- `03-hw/raid/a4s.ts`: imported 3, skipped 5
-- `03-hw/raid/a5s.ts`: imported 3, skipped 12
-- `03-hw/raid/a6n.ts`: imported 6, skipped 6
-- `03-hw/raid/a6s.ts`: imported 13, skipped 11
-- `03-hw/raid/a7s.ts`: imported 2, skipped 12
-- `03-hw/raid/a8n.ts`: imported 9, skipped 10
-- `03-hw/raid/a8s.ts`: imported 15, skipped 31
-- `03-hw/raid/a9s.ts`: imported 3, skipped 7
+- `03-hw/raid/a10n.ts`: imported 7, skipped 2
+- `03-hw/raid/a10s.ts`: imported 11, skipped 8
+- `03-hw/raid/a11s.ts`: imported 12, skipped 11
+- `03-hw/raid/a12n.ts`: imported 6, skipped 2
+- `03-hw/raid/a12s.ts`: imported 11, skipped 6
+- `03-hw/raid/a1s.ts`: imported 3, skipped 7
+- `03-hw/raid/a2s.ts`: imported 2, skipped 4
+- `03-hw/raid/a3n.ts`: imported 5, skipped 7
+- `03-hw/raid/a3s.ts`: imported 11, skipped 5
+- `03-hw/raid/a4s.ts`: imported 7, skipped 2
+- `03-hw/raid/a5s.ts`: imported 8, skipped 7
+- `03-hw/raid/a6n.ts`: imported 10, skipped 2
+- `03-hw/raid/a6s.ts`: imported 20, skipped 4
+- `03-hw/raid/a7s.ts`: imported 8, skipped 7
+- `03-hw/raid/a8n.ts`: imported 15, skipped 5
+- `03-hw/raid/a8s.ts`: imported 38, skipped 11
+- `03-hw/raid/a9s.ts`: imported 6, skipped 4
 - `03-hw/trial/bismarck-ex.ts`: imported 1
 - `03-hw/trial/ravana-ex.ts`: skipped 2
-- `03-hw/trial/sephirot-ex.ts`: imported 8, skipped 13
+- `03-hw/trial/sephirot-ex.ts`: imported 12, skipped 9
 - `03-hw/trial/sephirot.ts`: imported 6, skipped 1
 - `03-hw/trial/sophia-ex.ts`: excluded
-- `03-hw/trial/thordan-ex.ts`: imported 2, skipped 15
-- `03-hw/trial/zurvan-ex.ts`: imported 10, skipped 12
-- `04-sb/alliance/orbonne_monastery.ts`: imported 31, skipped 17
-- `04-sb/alliance/ridorana_lighthouse.ts`: imported 16, skipped 18
+- `03-hw/trial/thordan-ex.ts`: imported 7, skipped 10
+- `03-hw/trial/zurvan-ex.ts`: imported 13, skipped 9
+- `04-sb/alliance/orbonne_monastery.ts`: imported 39, skipped 9
+- `04-sb/alliance/ridorana_lighthouse.ts`: imported 19, skipped 15
 - `04-sb/alliance/royal_city_of_rabanastre.ts`: imported 20, skipped 4
 - `04-sb/deepdungeon/heaven-on-high_floors_01-10.ts`: imported 2, skipped 1
 - `04-sb/deepdungeon/heaven-on-high_floors_11-20.ts`: imported 2
@@ -127,253 +127,253 @@
 - `04-sb/deepdungeon/heaven-on-high_floors_31-40.ts`: imported 1
 - `04-sb/deepdungeon/heaven-on-high_floors_41-50.ts`: imported 3
 - `04-sb/deepdungeon/heaven-on-high_floors_51-60.ts`: imported 2, skipped 1
-- `04-sb/deepdungeon/heaven-on-high_floors_61-70.ts`: imported 5, skipped 2
+- `04-sb/deepdungeon/heaven-on-high_floors_61-70.ts`: imported 7
 - `04-sb/deepdungeon/heaven-on-high_floors_71-80.ts`: imported 3, skipped 2
 - `04-sb/deepdungeon/heaven-on-high_floors_81-90.ts`: imported 9, skipped 4
 - `04-sb/deepdungeon/heaven-on-high_floors_91-100.ts`: imported 4, skipped 3
 - `04-sb/deepdungeon/heaven-on-high_general.ts`: imported 1, skipped 4
-- `04-sb/dungeon/ala_mhigo.ts`: imported 7, skipped 2
-- `04-sb/dungeon/bardams_mettle.ts`: imported 10, skipped 3
+- `04-sb/dungeon/ala_mhigo.ts`: imported 8, skipped 1
+- `04-sb/dungeon/bardams_mettle.ts`: imported 12, skipped 1
 - `04-sb/dungeon/castrum_abania.ts`: imported 8, skipped 4
-- `04-sb/dungeon/doma_castle.ts`: imported 2, skipped 3
-- `04-sb/dungeon/drowned_city_of_skalla.ts`: imported 10, skipped 3
-- `04-sb/dungeon/fractal_continuum_hard.ts`: imported 16, skipped 7
-- `04-sb/dungeon/ghimlyt_dark.ts`: imported 11, skipped 4
-- `04-sb/dungeon/ghimlyt_dark64.ts`: imported 11, skipped 4
-- `04-sb/dungeon/hells_lid.ts`: imported 5, skipped 3
-- `04-sb/dungeon/kugane_castle.ts`: imported 3, skipped 4
-- `04-sb/dungeon/shisui_of_the_violet_tides.ts`: imported 3, skipped 4
+- `04-sb/dungeon/doma_castle.ts`: imported 3, skipped 2
+- `04-sb/dungeon/drowned_city_of_skalla.ts`: imported 12, skipped 1
+- `04-sb/dungeon/fractal_continuum_hard.ts`: imported 17, skipped 6
+- `04-sb/dungeon/ghimlyt_dark.ts`: imported 12, skipped 3
+- `04-sb/dungeon/ghimlyt_dark64.ts`: imported 12, skipped 3
+- `04-sb/dungeon/hells_lid.ts`: imported 6, skipped 2
+- `04-sb/dungeon/kugane_castle.ts`: imported 4, skipped 3
+- `04-sb/dungeon/shisui_of_the_violet_tides.ts`: imported 4, skipped 3
 - `04-sb/dungeon/sirensong_sea.ts`: imported 8, skipped 3
-- `04-sb/dungeon/st_mocianne_hard.ts`: imported 12, skipped 4
-- `04-sb/dungeon/swallows_compass.ts`: imported 10, skipped 10
-- `04-sb/dungeon/temple_of_the_fist.ts`: imported 7, skipped 7
-- `04-sb/dungeon/the_burn.ts`: imported 11, skipped 4
-- `04-sb/dungeon/the_burn64.ts`: imported 11, skipped 4
-- `04-sb/eureka/eureka_anemos.ts`: imported 11, skipped 5
-- `04-sb/eureka/eureka_hydatos.ts`: imported 28, skipped 25
+- `04-sb/dungeon/st_mocianne_hard.ts`: imported 14, skipped 2
+- `04-sb/dungeon/swallows_compass.ts`: imported 14, skipped 6
+- `04-sb/dungeon/temple_of_the_fist.ts`: imported 9, skipped 5
+- `04-sb/dungeon/the_burn.ts`: imported 13, skipped 2
+- `04-sb/dungeon/the_burn64.ts`: imported 13, skipped 2
+- `04-sb/eureka/eureka_anemos.ts`: imported 12, skipped 4
+- `04-sb/eureka/eureka_hydatos.ts`: imported 35, skipped 18
 - `04-sb/eureka/eureka_pagos.ts`: skipped 1
 - `04-sb/eureka/eureka_pyros.ts`: imported 1, skipped 2
 - `04-sb/hunts/yanxia.ts`: imported 2
 - `04-sb/map/the_hidden_canals_of_uznair.ts`: skipped 3
 - `04-sb/map/the_lost_canals_of_uznair.ts`: imported 4, skipped 2
 - `04-sb/map/the_shifting_altars_of_uznair.ts`: imported 26, skipped 9
-- `04-sb/raid/o10n.ts`: imported 7, skipped 6
-- `04-sb/raid/o10s.ts`: imported 3, skipped 7
-- `04-sb/raid/o11n.ts`: imported 5, skipped 6
-- `04-sb/raid/o11s.ts`: imported 7, skipped 4
-- `04-sb/raid/o12n.ts`: imported 7, skipped 7
-- `04-sb/raid/o12s.ts`: imported 17, skipped 32
+- `04-sb/raid/o10n.ts`: imported 10, skipped 3
+- `04-sb/raid/o10s.ts`: imported 8, skipped 2
+- `04-sb/raid/o11n.ts`: imported 8, skipped 3
+- `04-sb/raid/o11s.ts`: imported 9, skipped 2
+- `04-sb/raid/o12n.ts`: imported 11, skipped 3
+- `04-sb/raid/o12s.ts`: imported 36, skipped 15
 - `04-sb/raid/o1n.ts`: imported 7, skipped 2
 - `04-sb/raid/o1s.ts`: imported 6, skipped 1
-- `04-sb/raid/o2n.ts`: imported 8, skipped 4
-- `04-sb/raid/o2s.ts`: imported 8, skipped 9
-- `04-sb/raid/o3n.ts`: imported 8, skipped 7
-- `04-sb/raid/o3s.ts`: imported 8, skipped 14
-- `04-sb/raid/o4n.ts`: imported 10, skipped 4
-- `04-sb/raid/o4s.ts`: imported 24, skipped 21
-- `04-sb/raid/o5n.ts`: imported 4, skipped 6
-- `04-sb/raid/o5s.ts`: imported 2, skipped 6
-- `04-sb/raid/o6n.ts`: imported 3, skipped 2
-- `04-sb/raid/o6s.ts`: imported 2, skipped 5
+- `04-sb/raid/o2n.ts`: imported 11, skipped 1
+- `04-sb/raid/o2s.ts`: imported 14, skipped 3
+- `04-sb/raid/o3n.ts`: imported 10, skipped 5
+- `04-sb/raid/o3s.ts`: imported 15, skipped 7
+- `04-sb/raid/o4n.ts`: imported 11, skipped 3
+- `04-sb/raid/o4s.ts`: imported 34, skipped 11
+- `04-sb/raid/o5n.ts`: imported 7, skipped 3
+- `04-sb/raid/o5s.ts`: imported 4, skipped 4
+- `04-sb/raid/o6n.ts`: imported 4, skipped 1
+- `04-sb/raid/o6s.ts`: imported 4, skipped 3
 - `04-sb/raid/o7n.ts`: imported 8, skipped 2
-- `04-sb/raid/o7s.ts`: imported 8, skipped 9
-- `04-sb/raid/o8n.ts`: imported 13, skipped 5
-- `04-sb/raid/o8s.ts`: imported 14, skipped 19
-- `04-sb/raid/o9n.ts`: imported 10, skipped 5
-- `04-sb/raid/o9s.ts`: imported 12, skipped 16
-- `04-sb/trial/byakko-ex.ts`: imported 7, skipped 11
+- `04-sb/raid/o7s.ts`: imported 14, skipped 4
+- `04-sb/raid/o8n.ts`: imported 14, skipped 4
+- `04-sb/raid/o8s.ts`: imported 19, skipped 15
+- `04-sb/raid/o9n.ts`: imported 13, skipped 2
+- `04-sb/raid/o9s.ts`: imported 18, skipped 10
+- `04-sb/trial/byakko-ex.ts`: imported 12, skipped 6
 - `04-sb/trial/byakko.ts`: imported 4, skipped 2
-- `04-sb/trial/lakshmi-ex.ts`: imported 11, skipped 3
-- `04-sb/trial/lakshmi.ts`: imported 8, skipped 5
+- `04-sb/trial/lakshmi-ex.ts`: imported 13, skipped 1
+- `04-sb/trial/lakshmi.ts`: imported 10, skipped 3
 - `04-sb/trial/rathalos-ex.ts`: imported 7, skipped 5
 - `04-sb/trial/rathalos.ts`: imported 7, skipped 3
-- `04-sb/trial/seiryu-ex.ts`: imported 9, skipped 11
-- `04-sb/trial/seiryu.ts`: imported 6, skipped 6
-- `04-sb/trial/shinryu-ex.ts`: imported 18, skipped 13
-- `04-sb/trial/shinryu.ts`: imported 12, skipped 3
-- `04-sb/trial/susano-ex.ts`: imported 5, skipped 6
-- `04-sb/trial/susano.ts`: imported 2, skipped 3
+- `04-sb/trial/seiryu-ex.ts`: imported 12, skipped 8
+- `04-sb/trial/seiryu.ts`: imported 8, skipped 4
+- `04-sb/trial/shinryu-ex.ts`: imported 24, skipped 8
+- `04-sb/trial/shinryu.ts`: imported 14, skipped 1
+- `04-sb/trial/susano-ex.ts`: imported 6, skipped 5
+- `04-sb/trial/susano.ts`: imported 3, skipped 2
 - `04-sb/trial/suzaku-ex.ts`: imported 3, skipped 2
-- `04-sb/trial/suzaku.ts`: imported 6, skipped 2
-- `04-sb/trial/tsukuyomi-ex.ts`: imported 8, skipped 9
-- `04-sb/trial/tsukuyomi.ts`: imported 6, skipped 4
-- `04-sb/trial/yojimbo.ts`: imported 2, skipped 3
-- `04-sb/ultimate/ultima_weapon_ultimate.ts`: imported 19, skipped 30
-- `04-sb/ultimate/unending_coil_ultimate.ts`: imported 12, skipped 63
-- `05-shb/alliance/the_copied_factory.ts`: imported 28, skipped 22
-- `05-shb/alliance/the_puppets_bunker.ts`: imported 34, skipped 18
-- `05-shb/alliance/the_tower_at_paradigms_breach.ts`: imported 22, skipped 19
-- `05-shb/dungeon/akadaemia_anyder.ts`: imported 10, skipped 2
+- `04-sb/trial/suzaku.ts`: imported 7, skipped 1
+- `04-sb/trial/tsukuyomi-ex.ts`: imported 11, skipped 6
+- `04-sb/trial/tsukuyomi.ts`: imported 7, skipped 3
+- `04-sb/trial/yojimbo.ts`: imported 4, skipped 1
+- `04-sb/ultimate/ultima_weapon_ultimate.ts`: imported 21, skipped 28
+- `04-sb/ultimate/unending_coil_ultimate.ts`: imported 21, skipped 54
+- `05-shb/alliance/the_copied_factory.ts`: imported 32, skipped 18
+- `05-shb/alliance/the_puppets_bunker.ts`: imported 39, skipped 13
+- `05-shb/alliance/the_tower_at_paradigms_breach.ts`: imported 27, skipped 14
+- `05-shb/dungeon/akadaemia_anyder.ts`: imported 11, skipped 1
 - `05-shb/dungeon/amaurot.ts`: imported 5, skipped 1
 - `05-shb/dungeon/anamnesis_anyder.ts`: imported 12, skipped 2
 - `05-shb/dungeon/dohn_mheg.ts`: imported 8, skipped 5
-- `05-shb/dungeon/heroes_gauntlet.ts`: imported 13, skipped 3
+- `05-shb/dungeon/heroes_gauntlet.ts`: imported 14, skipped 2
 - `05-shb/dungeon/holminster_switch.ts`: imported 9, skipped 5
 - `05-shb/dungeon/malikahs_well.ts`: imported 7, skipped 2
-- `05-shb/dungeon/matoyas_relict.ts`: imported 13, skipped 3
+- `05-shb/dungeon/matoyas_relict.ts`: imported 14, skipped 2
 - `05-shb/dungeon/mt_gulg.ts`: imported 14, skipped 3
-- `05-shb/dungeon/paglthan.ts`: imported 9, skipped 9
-- `05-shb/dungeon/qitana_ravel.ts`: imported 11, skipped 4
-- `05-shb/dungeon/the_grand_cosmos.ts`: imported 12, skipped 8
+- `05-shb/dungeon/paglthan.ts`: imported 13, skipped 5
+- `05-shb/dungeon/qitana_ravel.ts`: imported 13, skipped 2
+- `05-shb/dungeon/the_grand_cosmos.ts`: imported 14, skipped 6
 - `05-shb/dungeon/twinning.ts`: imported 12, skipped 3
 - `05-shb/etc/the_diadem.ts`: skipped 3
-- `05-shb/eureka/bozjan_southern_front.ts`: imported 14, skipped 12
-- `05-shb/eureka/delubrum_reginae.ts`: imported 44, skipped 17
-- `05-shb/eureka/delubrum_reginae_savage.ts`: imported 41, skipped 44
-- `05-shb/eureka/zadnor.ts`: imported 83, skipped 29
+- `05-shb/eureka/bozjan_southern_front.ts`: imported 15, skipped 11
+- `05-shb/eureka/delubrum_reginae.ts`: imported 54, skipped 7
+- `05-shb/eureka/delubrum_reginae_savage.ts`: imported 51, skipped 34
+- `05-shb/eureka/zadnor.ts`: imported 93, skipped 19
 - `05-shb/hunts/amh_araeng.ts`: imported 11, skipped 1
 - `05-shb/hunts/il_mheg.ts`: imported 8, skipped 3
 - `05-shb/hunts/kholusia.ts`: imported 10, skipped 5
 - `05-shb/hunts/lakeland.ts`: imported 9, skipped 4
 - `05-shb/hunts/ss_rank.ts`: imported 3, skipped 2
 - `05-shb/hunts/the_raktika_greatwood.ts`: imported 11, skipped 2
-- `05-shb/hunts/the_tempest.ts`: imported 9, skipped 4
+- `05-shb/hunts/the_tempest.ts`: imported 10, skipped 3
 - `05-shb/map/the_dungeons_of_lyhe_ghiah.ts`: skipped 3
 - `05-shb/map/the_shifting_oubliettes_of_lyhe_ghiah.ts`: imported 20, skipped 8
-- `05-shb/raid/e10n.ts`: imported 10, skipped 5
+- `05-shb/raid/e10n.ts`: imported 11, skipped 4
 - `05-shb/raid/e10s.ts`: imported 30, skipped 9
 - `05-shb/raid/e11n.ts`: imported 9, skipped 7
 - `05-shb/raid/e11s.ts`: imported 19, skipped 12
 - `05-shb/raid/e12n.ts`: imported 7, skipped 9
-- `05-shb/raid/e12s.ts`: imported 15, skipped 36
-- `05-shb/raid/e1n.ts`: imported 7, skipped 2
-- `05-shb/raid/e1s.ts`: imported 18, skipped 9
-- `05-shb/raid/e2n.ts`: imported 6, skipped 15
+- `05-shb/raid/e12s.ts`: imported 20, skipped 31
+- `05-shb/raid/e1n.ts`: imported 8, skipped 1
+- `05-shb/raid/e1s.ts`: imported 19, skipped 8
+- `05-shb/raid/e2n.ts`: imported 10, skipped 11
 - `05-shb/raid/e2s.ts`: imported 26, skipped 14
-- `05-shb/raid/e3n.ts`: imported 9, skipped 5
-- `05-shb/raid/e3s.ts`: imported 20, skipped 10
+- `05-shb/raid/e3n.ts`: imported 10, skipped 4
+- `05-shb/raid/e3s.ts`: imported 26, skipped 4
 - `05-shb/raid/e4n.ts`: imported 7, skipped 1
-- `05-shb/raid/e4s.ts`: imported 15, skipped 18
-- `05-shb/raid/e5n.ts`: imported 8, skipped 2
-- `05-shb/raid/e5s.ts`: imported 14, skipped 6
-- `05-shb/raid/e6n.ts`: imported 8, skipped 4
-- `05-shb/raid/e6s.ts`: imported 11, skipped 11
-- `05-shb/raid/e7n.ts`: imported 6, skipped 6
-- `05-shb/raid/e7s.ts`: imported 8, skipped 22
-- `05-shb/raid/e8n.ts`: imported 16, skipped 11
-- `05-shb/raid/e8s.ts`: imported 19, skipped 37
-- `05-shb/raid/e9n.ts`: imported 12, skipped 5
-- `05-shb/raid/e9s.ts`: imported 12, skipped 22
+- `05-shb/raid/e4s.ts`: imported 25, skipped 8
+- `05-shb/raid/e5n.ts`: imported 9, skipped 1
+- `05-shb/raid/e5s.ts`: imported 19, skipped 1
+- `05-shb/raid/e6n.ts`: imported 11, skipped 1
+- `05-shb/raid/e6s.ts`: imported 16, skipped 6
+- `05-shb/raid/e7n.ts`: imported 10, skipped 2
+- `05-shb/raid/e7s.ts`: imported 14, skipped 16
+- `05-shb/raid/e8n.ts`: imported 19, skipped 8
+- `05-shb/raid/e8s.ts`: imported 31, skipped 25
+- `05-shb/raid/e9n.ts`: imported 13, skipped 4
+- `05-shb/raid/e9s.ts`: imported 18, skipped 16
 - `05-shb/trial/diamond_weapon-ex.ts`: imported 18, skipped 3
-- `05-shb/trial/diamond_weapon.ts`: imported 8, skipped 6
-- `05-shb/trial/emerald_weapon-ex.ts`: imported 7, skipped 16
-- `05-shb/trial/emerald_weapon.ts`: imported 5, skipped 6
-- `05-shb/trial/hades-ex.ts`: imported 30, skipped 17
-- `05-shb/trial/hades.ts`: imported 10, skipped 16
-- `05-shb/trial/innocence-ex.ts`: imported 13, skipped 9
-- `05-shb/trial/innocence.ts`: imported 8, skipped 2
+- `05-shb/trial/diamond_weapon.ts`: imported 10, skipped 4
+- `05-shb/trial/emerald_weapon-ex.ts`: imported 14, skipped 9
+- `05-shb/trial/emerald_weapon.ts`: imported 8, skipped 3
+- `05-shb/trial/hades-ex.ts`: imported 39, skipped 8
+- `05-shb/trial/hades.ts`: imported 13, skipped 13
+- `05-shb/trial/innocence-ex.ts`: imported 17, skipped 5
+- `05-shb/trial/innocence.ts`: imported 9, skipped 1
 - `05-shb/trial/levi-un.ts`: imported 2, skipped 13
-- `05-shb/trial/ruby_weapon-ex.ts`: imported 17, skipped 15
-- `05-shb/trial/ruby_weapon.ts`: imported 12, skipped 3
-- `05-shb/trial/shiva-un.ts`: imported 10, skipped 9
-- `05-shb/trial/titan-un.ts`: imported 1, skipped 2
+- `05-shb/trial/ruby_weapon-ex.ts`: imported 21, skipped 11
+- `05-shb/trial/ruby_weapon.ts`: imported 13, skipped 2
+- `05-shb/trial/shiva-un.ts`: imported 11, skipped 8
+- `05-shb/trial/titan-un.ts`: imported 2, skipped 1
 - `05-shb/trial/titania-ex.ts`: imported 18, skipped 8
-- `05-shb/trial/titania.ts`: imported 13, skipped 4
-- `05-shb/trial/varis-ex.ts`: imported 9, skipped 10
-- `05-shb/trial/wol-ex.ts`: imported 18, skipped 25
-- `05-shb/trial/wol.ts`: imported 10, skipped 12
-- `05-shb/ultimate/the_epic_of_alexander.ts`: imported 31, skipped 59
-- `06-ew/alliance/aglaia.ts`: imported 27, skipped 21
-- `06-ew/alliance/euphrosyne.ts`: imported 19, skipped 32
-- `06-ew/alliance/thaleia.ts`: imported 35, skipped 19
+- `05-shb/trial/titania.ts`: imported 14, skipped 3
+- `05-shb/trial/varis-ex.ts`: imported 11, skipped 8
+- `05-shb/trial/wol-ex.ts`: imported 22, skipped 21
+- `05-shb/trial/wol.ts`: imported 15, skipped 7
+- `05-shb/ultimate/the_epic_of_alexander.ts`: imported 51, skipped 39
+- `06-ew/alliance/aglaia.ts`: imported 33, skipped 15
+- `06-ew/alliance/euphrosyne.ts`: imported 26, skipped 25
+- `06-ew/alliance/thaleia.ts`: imported 38, skipped 16
 - `06-ew/deepdungeon/eureka_orthos_floors_01-10.ts`: imported 4
 - `06-ew/deepdungeon/eureka_orthos_floors_11-20.ts`: skipped 1
-- `06-ew/deepdungeon/eureka_orthos_floors_21-30.ts`: imported 4, skipped 4
+- `06-ew/deepdungeon/eureka_orthos_floors_21-30.ts`: imported 5, skipped 3
 - `06-ew/deepdungeon/eureka_orthos_floors_31-40.ts`: imported 14
-- `06-ew/deepdungeon/eureka_orthos_floors_41-50.ts`: imported 3, skipped 11
+- `06-ew/deepdungeon/eureka_orthos_floors_41-50.ts`: imported 5, skipped 9
 - `06-ew/deepdungeon/eureka_orthos_floors_51-60.ts`: imported 7, skipped 8
-- `06-ew/deepdungeon/eureka_orthos_floors_61-70.ts`: imported 8, skipped 5
-- `06-ew/deepdungeon/eureka_orthos_floors_71-80.ts`: imported 11, skipped 11
+- `06-ew/deepdungeon/eureka_orthos_floors_61-70.ts`: imported 9, skipped 4
+- `06-ew/deepdungeon/eureka_orthos_floors_71-80.ts`: imported 12, skipped 10
 - `06-ew/deepdungeon/eureka_orthos_floors_81-90.ts`: imported 14, skipped 10
-- `06-ew/deepdungeon/eureka_orthos_floors_91-100.ts`: imported 19, skipped 9
+- `06-ew/deepdungeon/eureka_orthos_floors_91-100.ts`: imported 22, skipped 6
 - `06-ew/deepdungeon/eureka_orthos_general.ts`: imported 3, skipped 5
 - `06-ew/dungeon/aetherfont.ts`: imported 14, skipped 3
-- `06-ew/dungeon/aloalo_island.ts`: imported 29, skipped 17
+- `06-ew/dungeon/aloalo_island.ts`: imported 34, skipped 12
 - `06-ew/dungeon/alzadaals_legacy.ts`: imported 11, skipped 5
-- `06-ew/dungeon/another_aloalo_island-savage.ts`: imported 19, skipped 45
-- `06-ew/dungeon/another_aloalo_island.ts`: imported 20, skipped 44
-- `06-ew/dungeon/another_mount_rokkon-savage.ts`: imported 30, skipped 57
-- `06-ew/dungeon/another_mount_rokkon.ts`: imported 30, skipped 57
-- `06-ew/dungeon/another_sildihn_subterrane-savage.ts`: imported 29, skipped 45
-- `06-ew/dungeon/another_sildihn_subterrane.ts`: imported 29, skipped 45
-- `06-ew/dungeon/ktisis_hyperboreia.ts`: imported 9, skipped 5
+- `06-ew/dungeon/another_aloalo_island-savage.ts`: imported 28, skipped 36
+- `06-ew/dungeon/another_aloalo_island.ts`: imported 29, skipped 35
+- `06-ew/dungeon/another_mount_rokkon-savage.ts`: imported 39, skipped 48
+- `06-ew/dungeon/another_mount_rokkon.ts`: imported 39, skipped 48
+- `06-ew/dungeon/another_sildihn_subterrane-savage.ts`: imported 39, skipped 35
+- `06-ew/dungeon/another_sildihn_subterrane.ts`: imported 39, skipped 35
+- `06-ew/dungeon/ktisis_hyperboreia.ts`: imported 10, skipped 4
 - `06-ew/dungeon/lapis_manalis.ts`: imported 15, skipped 9
-- `06-ew/dungeon/mount_rokkon.ts`: imported 24, skipped 18
-- `06-ew/dungeon/smileton.ts`: imported 12, skipped 5
-- `06-ew/dungeon/stigma_dreamscape.ts`: imported 12, skipped 13
+- `06-ew/dungeon/mount_rokkon.ts`: imported 31, skipped 11
+- `06-ew/dungeon/smileton.ts`: imported 13, skipped 4
+- `06-ew/dungeon/stigma_dreamscape.ts`: imported 18, skipped 7
 - `06-ew/dungeon/the_aitiascope.ts`: imported 11, skipped 5
 - `06-ew/dungeon/the_dead_ends.ts`: imported 14, skipped 6
 - `06-ew/dungeon/the_fell_court_of_troia.ts`: imported 16, skipped 3
-- `06-ew/dungeon/the_lunar_subterrane.ts`: imported 12, skipped 11
-- `06-ew/dungeon/the_sildihn_subterrane.ts`: imported 40, skipped 11
-- `06-ew/dungeon/the_tower_of_babil.ts`: imported 4, skipped 14
+- `06-ew/dungeon/the_lunar_subterrane.ts`: imported 14, skipped 9
+- `06-ew/dungeon/the_sildihn_subterrane.ts`: imported 42, skipped 9
+- `06-ew/dungeon/the_tower_of_babil.ts`: imported 13, skipped 5
 - `06-ew/dungeon/the_tower_of_zot.ts`: imported 6, skipped 5
 - `06-ew/dungeon/vanaspati.ts`: imported 13, skipped 3
 - `06-ew/hunts/elpis.ts`: imported 9, skipped 5
 - `06-ew/hunts/garlemald.ts`: imported 2, skipped 2
 - `06-ew/hunts/labyrinthos.ts`: imported 9
-- `06-ew/hunts/mare_lamentorum.ts`: imported 13, skipped 8
+- `06-ew/hunts/mare_lamentorum.ts`: imported 14, skipped 7
 - `06-ew/hunts/ss_rank.ts`: imported 5, skipped 3
-- `06-ew/hunts/thavnair.ts`: imported 15, skipped 13
-- `06-ew/hunts/ultima_thule.ts`: imported 22, skipped 7
+- `06-ew/hunts/thavnair.ts`: imported 20, skipped 8
+- `06-ew/hunts/ultima_thule.ts`: imported 23, skipped 6
 - `06-ew/map/the_excitatron_6000.ts`: imported 9, skipped 8
-- `06-ew/map/the_shifting_gymnasion_agonon.ts`: imported 38, skipped 13
-- `06-ew/raid/p10n.ts`: imported 6, skipped 8
-- `06-ew/raid/p10s.ts`: imported 5, skipped 24
-- `06-ew/raid/p11n.ts`: imported 8, skipped 8
-- `06-ew/raid/p11s.ts`: imported 20, skipped 18
-- `06-ew/raid/p12n.ts`: imported 4, skipped 9
-- `06-ew/raid/p12s.ts`: imported 9, skipped 82
-- `06-ew/raid/p1n.ts`: imported 6, skipped 5
-- `06-ew/raid/p1s.ts`: imported 8, skipped 19
-- `06-ew/raid/p2n.ts`: imported 5, skipped 6
-- `06-ew/raid/p2s.ts`: imported 8, skipped 11
+- `06-ew/map/the_shifting_gymnasion_agonon.ts`: imported 39, skipped 12
+- `06-ew/raid/p10n.ts`: imported 8, skipped 6
+- `06-ew/raid/p10s.ts`: imported 11, skipped 18
+- `06-ew/raid/p11n.ts`: imported 11, skipped 5
+- `06-ew/raid/p11s.ts`: imported 24, skipped 14
+- `06-ew/raid/p12n.ts`: imported 5, skipped 8
+- `06-ew/raid/p12s.ts`: imported 25, skipped 66
+- `06-ew/raid/p1n.ts`: imported 8, skipped 3
+- `06-ew/raid/p1s.ts`: imported 20, skipped 7
+- `06-ew/raid/p2n.ts`: imported 7, skipped 4
+- `06-ew/raid/p2s.ts`: imported 10, skipped 9
 - `06-ew/raid/p3n.ts`: imported 9, skipped 5
 - `06-ew/raid/p3s.ts`: imported 18, skipped 9
 - `06-ew/raid/p4n.ts`: imported 18, skipped 1
-- `06-ew/raid/p4s.ts`: imported 23, skipped 23
-- `06-ew/raid/p5n.ts`: imported 9, skipped 7
-- `06-ew/raid/p5s.ts`: imported 6, skipped 14
-- `06-ew/raid/p6n.ts`: imported 4, skipped 8
-- `06-ew/raid/p6s.ts`: imported 7, skipped 21
+- `06-ew/raid/p4s.ts`: imported 27, skipped 19
+- `06-ew/raid/p5n.ts`: imported 10, skipped 6
+- `06-ew/raid/p5s.ts`: imported 7, skipped 13
+- `06-ew/raid/p6n.ts`: imported 6, skipped 6
+- `06-ew/raid/p6s.ts`: imported 11, skipped 17
 - `06-ew/raid/p7n.ts`: imported 10, skipped 6
-- `06-ew/raid/p7s.ts`: imported 7, skipped 16
+- `06-ew/raid/p7s.ts`: imported 8, skipped 15
 - `06-ew/raid/p8n.ts`: imported 6, skipped 10
-- `06-ew/raid/p8s.ts`: imported 15, skipped 47
-- `06-ew/raid/p9n.ts`: imported 12, skipped 5
-- `06-ew/raid/p9s.ts`: imported 8, skipped 27
-- `06-ew/trial/barbariccia-ex.ts`: imported 12, skipped 16
-- `06-ew/trial/barbariccia.ts`: imported 8, skipped 7
-- `06-ew/trial/endsinger-ex.ts`: imported 5, skipped 20
-- `06-ew/trial/endsinger.ts`: imported 7, skipped 9
-- `06-ew/trial/golbez-ex.ts`: imported 7, skipped 22
+- `06-ew/raid/p8s.ts`: imported 31, skipped 31
+- `06-ew/raid/p9n.ts`: imported 14, skipped 3
+- `06-ew/raid/p9s.ts`: imported 18, skipped 17
+- `06-ew/trial/barbariccia-ex.ts`: imported 19, skipped 9
+- `06-ew/trial/barbariccia.ts`: imported 9, skipped 6
+- `06-ew/trial/endsinger-ex.ts`: imported 8, skipped 17
+- `06-ew/trial/endsinger.ts`: imported 9, skipped 7
+- `06-ew/trial/golbez-ex.ts`: imported 14, skipped 15
 - `06-ew/trial/golbez.ts`: imported 7, skipped 3
-- `06-ew/trial/hydaelyn-ex.ts`: imported 10, skipped 15
-- `06-ew/trial/hydaelyn.ts`: imported 9, skipped 7
-- `06-ew/trial/rubicante-ex.ts`: imported 15, skipped 21
+- `06-ew/trial/hydaelyn-ex.ts`: imported 11, skipped 14
+- `06-ew/trial/hydaelyn.ts`: imported 10, skipped 6
+- `06-ew/trial/rubicante-ex.ts`: imported 16, skipped 20
 - `06-ew/trial/rubicante.ts`: imported 8, skipped 5
-- `06-ew/trial/sephirot-un.ts`: imported 8, skipped 13
-- `06-ew/trial/sophia-un.ts`: imported 8, skipped 12
-- `06-ew/trial/thordan-un.ts`: imported 2, skipped 15
-- `06-ew/trial/ultima-un.ts`: imported 2, skipped 6
-- `06-ew/trial/zeromus-ex.ts`: imported 9, skipped 23
-- `06-ew/trial/zeromus.ts`: imported 10, skipped 9
-- `06-ew/trial/zodiark-ex.ts`: imported 5, skipped 19
+- `06-ew/trial/sephirot-un.ts`: imported 12, skipped 9
+- `06-ew/trial/sophia-un.ts`: imported 9, skipped 11
+- `06-ew/trial/thordan-un.ts`: imported 7, skipped 10
+- `06-ew/trial/ultima-un.ts`: imported 4, skipped 4
+- `06-ew/trial/zeromus-ex.ts`: imported 18, skipped 14
+- `06-ew/trial/zeromus.ts`: imported 11, skipped 8
+- `06-ew/trial/zodiark-ex.ts`: imported 10, skipped 14
 - `06-ew/trial/zodiark.ts`: imported 3, skipped 1
-- `06-ew/trial/zurvan-un.ts`: imported 10, skipped 12
-- `06-ew/ultimate/dragonsongs_reprise_ultimate.ts`: imported 30, skipped 47
-- `06-ew/ultimate/the_omega_protocol.ts`: imported 10, skipped 56
+- `06-ew/trial/zurvan-un.ts`: imported 13, skipped 9
+- `06-ew/ultimate/dragonsongs_reprise_ultimate.ts`: imported 40, skipped 37
+- `06-ew/ultimate/the_omega_protocol.ts`: imported 21, skipped 45
 
 ## Skipped Trigger Details
 
-- `00-misc/general.ts` `General Provoke`: missing static alert text
-- `00-misc/general.ts` `General Frog Legs`: missing static alert text
-- `00-misc/general.ts` `General Shirk`: missing static alert text
+- `00-misc/general.ts` `General Provoke`: dynamic alert text
+- `00-misc/general.ts` `General Frog Legs`: dynamic alert text
+- `00-misc/general.ts` `General Shirk`: dynamic alert text
 - `00-misc/general.ts` `General Holmgang`: missing static netRegex id
 - `00-misc/general.ts` `General Hallowed`: missing static netRegex id
-- `00-misc/general.ts` `General Superbolide`: missing static alert text
-- `00-misc/general.ts` `General Living`: missing static alert text
-- `00-misc/general.ts` `General Walking`: missing static alert text
+- `00-misc/general.ts` `General Superbolide`: dynamic alert text
+- `00-misc/general.ts` `General Living`: dynamic alert text
+- `00-misc/general.ts` `General Walking`: dynamic alert text
 - `00-misc/general.ts` `General Ready Check`: missing static netRegex id
 - `00-misc/test.ts` `Test Poke`: missing static netRegex id
 - `00-misc/test.ts` `Test Psych`: missing static netRegex id
@@ -400,28 +400,19 @@
 - `00-misc/the_masked_carnivale.ts` `Carnivale S24 A3 Epilogi Bone Shaker`: missing static alert text
 - `00-misc/the_masked_carnivale.ts` `Carnivale S25 A2 Azulmagia Blazing Angon`: missing static netRegex id
 - `00-misc/the_masked_carnivale.ts` `Carnivale S26 A1 Arena Mirrorknight Alternate Plumage`: missing static netRegex id
-- `00-misc/the_masked_carnivale.ts` `Carnivale S26 A2 Papa Humbaba Raw Instinct`: missing static alert text
-- `00-misc/the_masked_carnivale.ts` `Carnivale S26 A2 Papa Humbaba Void Thunder III`: missing static alert text
+- `00-misc/the_masked_carnivale.ts` `Carnivale S26 A2 Papa Humbaba Raw Instinct`: dynamic alert text
 - `00-misc/the_masked_carnivale.ts` `Carnivale S28 A1 Durinn March of the Draugar`: missing static alert text
 - `00-misc/the_masked_carnivale.ts` `Carnivale S28 A1 Durinn Brainstorm`: missing static netRegex id
 - `00-misc/the_masked_carnivale.ts` `Carnivale S29 A1 Shikigami of the Pyre Pyretic`: missing static alert text
 - `00-misc/the_masked_carnivale.ts` `Carnivale S29 A1 Shikigami of the Pyre Pillar of Flame 1`: missing static alert text
-- `00-misc/the_masked_carnivale.ts` `Carnivale S29 A2 Shikigami of the Undertow Throttle`: missing static alert text
-- `00-misc/the_masked_carnivale.ts` `Carnivale S29 A2 Shikigami of the Undertow Ferrofluid`: missing static alert text
 - `00-misc/the_masked_carnivale.ts` `Carnivale S29 A2 Shikigami of the Undertow Watery Grasp Adds`: missing static alert text
-- `00-misc/the_masked_carnivale.ts` `Carnivale S30 A1,3 Siegfried Ankle Graze`: missing static alert text
-- `00-misc/the_masked_carnivale.ts` `Carnivale S31 A1 Gogo, Master of Mimicry Mimicked Raw Instinct`: missing static alert text
-- `00-misc/the_masked_carnivale.ts` `Carnivale S31 A2 Gogo, Master of Mimicry Icestorm`: missing static alert text
-- `00-misc/the_masked_carnivale.ts` `Carnivale S32 A1-2 Goldor Goldor Thunder III`: missing static alert text
-- `02-arr/alliance/the_world_of_darkness.ts` `Angra Mainyu Double Vision`: missing static alert text
+- `00-misc/the_masked_carnivale.ts` `Carnivale S31 A1 Gogo, Master of Mimicry Mimicked Raw Instinct`: dynamic alert text
 - `02-arr/alliance/the_world_of_darkness.ts` `Angra Mainyu Gain Doom`: missing static netRegex id
 - `02-arr/alliance/the_world_of_darkness.ts` `Angra Mainyu Level 100 Flare Marker`: missing static alert text
 - `02-arr/alliance/the_world_of_darkness.ts` `Angra Mainyu Level 150 Death Marker`: missing static alert text
 - `02-arr/dungeon/amdapor_keep.ts` `Amdapor Keep Liquefy Middle`: missing static alert text
 - `02-arr/dungeon/amdapor_keep.ts` `Amdapor Keep Liquefy Sides`: missing static alert text
-- `02-arr/dungeon/amdapor_keep_hard.ts` `Amdapor Keep Hard Boss2 Headmarker on YOU`: missing static alert text
 - `02-arr/dungeon/amdapor_keep_hard.ts` `Amdapor Keep Hard Imobilize`: missing static alert text
-- `02-arr/dungeon/aurum_vale.ts` `Aurum Vale GoldLungs/Burrs`: missing static alert text
 - `02-arr/dungeon/brayfloxs_longstop.ts` `Brayflox Normal Numbing Breath`: missing static alert text
 - `02-arr/dungeon/brayfloxs_longstop.ts` `Brayflox Normal Pelican Poison Collect`: missing static netRegex id
 - `02-arr/dungeon/brayfloxs_longstop.ts` `Brayflox Normal Pelican Poison Healer`: missing static netRegex id
@@ -429,86 +420,50 @@
 - `02-arr/dungeon/brayfloxs_longstop.ts` `Brayflox Normal Ashdrake Burning Cyclone`: missing static alert text
 - `02-arr/dungeon/brayfloxs_longstop.ts` `Brayflox Normal Tempest Biast`: missing static netRegex id
 - `02-arr/dungeon/brayfloxs_longstop.ts` `Brayflox Normal Inferno Drake Burning Cyclone`: missing static alert text
-- `02-arr/dungeon/brayfloxs_longstop.ts` `Brayflox Normal Hellbender Effluvium`: missing static alert text
 - `02-arr/dungeon/brayfloxs_longstop.ts` `Brayflox Normal Aiatar Dragon Breath`: missing static alert text
-- `02-arr/dungeon/brayfloxs_longstop.ts` `Brayflox Normal Aiatar Poison Healer`: missing static alert text
 - `02-arr/dungeon/haukke_manor.ts` `Haukke Normal Dark Mist Stun`: missing static alert text
 - `02-arr/dungeon/haukke_manor.ts` `Haukke Normal Steward Soul Drain Stun`: missing static alert text
 - `02-arr/dungeon/haukke_manor.ts` `Haukke Normal Void Lamps`: missing static netRegex id
 - `02-arr/dungeon/haukke_manor.ts` `Haukke Normal Ladys Candle`: missing static netRegex id
 - `02-arr/dungeon/haukke_manor.ts` `Haukke Normal Ladys Handmaiden`: missing static netRegex id
 - `02-arr/dungeon/haukke_manor_hard.ts` `Haukke Manor Hard Beguiling Mist`: missing static alert text
-- `02-arr/dungeon/pharos_sirius.ts` `Pharos Sirius Corrupted Crystal`: missing static alert text
-- `02-arr/dungeon/pharos_sirius.ts` `Pharos Sirius Doom`: missing static alert text
-- `02-arr/dungeon/sastasha_hard.ts` `Sastasha Hard Slime`: missing static alert text
-- `02-arr/dungeon/sastasha_hard.ts` `Sastasha Hard Tail Screw`: missing static alert text
+- `02-arr/dungeon/pharos_sirius.ts` `Pharos Sirius Doom`: dynamic alert text
+- `02-arr/dungeon/sastasha_hard.ts` `Sastasha Hard Slime`: dynamic alert text
+- `02-arr/dungeon/sastasha_hard.ts` `Sastasha Hard Tail Screw`: dynamic alert text
 - `02-arr/dungeon/the_lost_city_of_amdapor.ts` `Lost City Amdapor Devour`: missing static alert text
-- `02-arr/dungeon/the_lost_city_of_amdapor.ts` `Lost City Amdapor Graviball`: missing static alert text
 - `02-arr/dungeon/the_sunken_temple_of_quarn.ts` `Sunken Quarn Doom`: missing static netRegex id
 - `02-arr/dungeon/the_wanderers_palace_hard.ts` `Wanderer's Palace Hard Doom`: missing static netRegex id
-- `02-arr/raid/t1.ts` `T1 Regorge`: missing static alert text
 - `02-arr/raid/t1.ts` `T1 Split`: missing static netRegex id
-- `02-arr/raid/t1.ts` `T1 Hood Swing`: missing static alert text
 - `02-arr/raid/t1.ts` `T1 Slime Timer`: missing static netRegex id
 - `02-arr/raid/t10.ts` `T10 Phase Change`: missing static alert text
-- `02-arr/raid/t10.ts` `T10 Wild Charge`: missing static alert text
-- `02-arr/raid/t10.ts` `T10 Cyclonic Tether`: missing static alert text
-- `02-arr/raid/t11.ts` `T11 Secondary Head`: missing static alert text
-- `02-arr/raid/t11.ts` `T11 Forked Lightning`: missing static alert text
+- `02-arr/raid/t11.ts` `T11 Secondary Head`: dynamic alert text
 - `02-arr/raid/t11.ts` `T11 Tether Accumulate A`: missing static alert text
 - `02-arr/raid/t11.ts` `T11 Tether Accumulate B`: missing static alert text
-- `02-arr/raid/t11.ts` `T11 Tether A`: missing static alert text
-- `02-arr/raid/t11.ts` `T11 Tether B`: missing static alert text
+- `02-arr/raid/t11.ts` `T11 Tether A`: dynamic alert text
+- `02-arr/raid/t11.ts` `T11 Tether B`: dynamic alert text
 - `02-arr/raid/t11.ts` `T11 Tether Cleanup`: missing static alert text
 - `02-arr/raid/t12.ts` `T12 Phase 3`: missing static alert text
 - `02-arr/raid/t12.ts` `T12 Bennu`: missing static netRegex id
-- `02-arr/raid/t12.ts` `T12 Revelation`: missing static alert text
-- `02-arr/raid/t12.ts` `T12 Whitefire`: missing static alert text
-- `02-arr/raid/t12.ts` `T12 Bluefire`: missing static alert text
-- `02-arr/raid/t12.ts` `T12 Chain`: missing static alert text
-- `02-arr/raid/t13.ts` `T13 Gigaflare Phase Change`: missing static alert text
-- `02-arr/raid/t13.ts` `T13 Flatten`: missing static alert text
-- `02-arr/raid/t13.ts` `T13 Megaflare Share`: missing static alert text
-- `02-arr/raid/t13.ts` `T13 Akh Morn`: missing static alert text
-- `02-arr/raid/t2.ts` `T2 Rot`: missing static alert text
 - `02-arr/raid/t2.ts` `T2 Lost Rot`: missing static alert text
-- `02-arr/raid/t4.ts` `T4 Gravity Thrust`: missing static alert text
-- `02-arr/raid/t4.ts` `T4 Pox`: missing static alert text
 - `02-arr/raid/t4.ts` `T4 Reminder`: missing static netRegex id
 - `02-arr/raid/t5.ts` `T5 Twintania Phase Change Watcher`: missing static netRegex id
-- `02-arr/raid/t5.ts` `T5 Fireball`: missing static alert text
-- `02-arr/raid/t5.ts` `T5 Conflagration`: missing static alert text
-- `02-arr/raid/t5.ts` `T5 Dreadknight`: missing static alert text
-- `02-arr/raid/t5.ts` `T5 Hatch`: missing static alert text
 - `02-arr/raid/t6.ts` `T6 Thorn Whip Collect`: missing static alert text
 - `02-arr/raid/t6.ts` `T6 Thorn Whip`: dynamic alert text
 - `02-arr/raid/t6.ts` `T6 Honey Off`: missing static alert text
-- `02-arr/raid/t6.ts` `T6 Flower`: missing static alert text
 - `02-arr/raid/t6.ts` `T6 Blighted`: missing static alert text
-- `02-arr/raid/t6.ts` `T6 Swarm`: missing static alert text
-- `02-arr/raid/t6.ts` `T6 Rotten Stench`: missing static alert text
 - `02-arr/raid/t7.ts` `T7 Renaud`: missing static netRegex id
-- `02-arr/raid/t7.ts` `T7 Cursed Voice`: missing static alert text
-- `02-arr/raid/t7.ts` `T7 Cursed Shriek`: missing static alert text
-- `02-arr/raid/t7.ts` `T7 Cursed Shriek Reminder`: missing static alert text
 - `02-arr/raid/t8.ts` `T8 Stack`: missing static alert text
 - `02-arr/raid/t8.ts` `T8 Landmine Start`: missing static netRegex id
-- `02-arr/raid/t8.ts` `T8 Landmine Explosion`: missing static alert text
-- `02-arr/raid/t8.ts` `T8 Homing Missile Warning`: missing static alert text
-- `02-arr/raid/t8.ts` `T8 Brainjack`: missing static alert text
-- `02-arr/raid/t8.ts` `T8 Allagan Field`: missing static alert text
+- `02-arr/raid/t8.ts` `T8 Landmine Explosion`: dynamic alert text
+- `02-arr/raid/t8.ts` `T8 Homing Missile Warning`: dynamic alert text
 - `02-arr/raid/t8.ts` `T8 Dreadnaught`: missing static netRegex id
-- `02-arr/raid/t9.ts` `T9 Raven Blight You`: missing static alert text
-- `02-arr/raid/t9.ts` `T9 Raven Blight Not You`: missing static alert text
+- `02-arr/raid/t9.ts` `T9 Raven Blight Not You`: dynamic alert text
 - `02-arr/raid/t9.ts` `T9 Meteor`: missing static alert text
-- `02-arr/raid/t9.ts` `T9 Stack`: missing static alert text
 - `02-arr/raid/t9.ts` `T9 Garotte Twist Lose`: missing static alert text
 - `02-arr/raid/t9.ts` `T9 Dragon Locations`: missing static netRegex id
 - `02-arr/raid/t9.ts` `T9 Final Phase Reset`: missing static alert text
-- `02-arr/raid/t9.ts` `T9 Dragon Marks`: missing static alert text
-- `02-arr/raid/t9.ts` `T9 Tether`: missing static alert text
-- `02-arr/raid/t9.ts` `T9 Thunder`: missing static alert text
-- `02-arr/raid/t9.ts` `T9 Dragon Safe Zone`: missing static alert text
+- `02-arr/raid/t9.ts` `T9 Dragon Marks`: dynamic alert text
+- `02-arr/raid/t9.ts` `T9 Dragon Safe Zone`: dynamic alert text
 - `02-arr/raid/t9.ts` `T9 Dragon Marker`: dynamic alert text
 - `02-arr/trial/levi-ex.ts` `LeviEx Dive Counter Tidal Wave Reset`: missing static alert text
 - `02-arr/trial/levi-ex.ts` `LeviEx Dive Counter Body Slam Reset`: missing static alert text
@@ -527,38 +482,24 @@
 - `02-arr/trial/shiva-ex.ts` `ShivaEx Blunt Resistance Down Gain`: missing static alert text
 - `02-arr/trial/shiva-ex.ts` `ShivaEx Blunt Resistance Down Lose`: missing static alert text
 - `02-arr/trial/shiva-ex.ts` `ShivaEx Current Tank`: missing static alert text
-- `02-arr/trial/shiva-ex.ts` `ShivaEx Avalanche Marker Me`: missing static alert text
 - `02-arr/trial/shiva-ex.ts` `ShivaEx Shiva Circles`: missing static alert text
-- `02-arr/trial/shiva-ex.ts` `ShivaEx Ice Boulder`: missing static alert text
-- `02-arr/trial/shiva-hm.ts` `ShivaHm Ice Boulder`: missing static alert text
-- `02-arr/trial/titan-ex.ts` `TitanEx Rock Throw`: missing static alert text
+- `02-arr/trial/shiva-ex.ts` `ShivaEx Ice Boulder`: dynamic alert text
+- `02-arr/trial/shiva-hm.ts` `ShivaHm Ice Boulder`: dynamic alert text
 - `02-arr/trial/titan-hm.ts` `TitanHm Damage Down`: missing static netRegex id
-- `02-arr/trial/titan-nm.ts` `TitanNm Gaols`: missing static alert text
 - `02-arr/trial/ultima-ex.ts` `Ultima EX Viscous Aetheroplasm`: missing static alert text
 - `02-arr/trial/ultima-ex.ts` `Ultima EX Homing Aetheroplasm Collect`: missing static alert text
-- `02-arr/trial/ultima-ex.ts` `Ultima EX Homing Aetheroplasm Call`: missing static alert text
 - `02-arr/trial/ultima-ex.ts` `Ultima EX Homing Aetheroplasm Cleanup`: missing static alert text
-- `02-arr/trial/ultima-ex.ts` `Ultima EX Aetheric Boom Orbs`: missing static alert text
 - `03-hw/alliance/dun_scaith.ts` `Dun Scaith Generic Stack-up`: missing static alert text
 - `03-hw/alliance/dun_scaith.ts` `Dun Scaith Void Sprite`: missing static netRegex id
-- `03-hw/alliance/dun_scaith.ts` `Dun Scaith Aero 2`: missing static alert text
-- `03-hw/alliance/dun_scaith.ts` `Dun Scaith Scythe Drop`: missing static alert text
 - `03-hw/alliance/dun_scaith.ts` `Dun Scaith Atomos Setup`: missing static netRegex id
 - `03-hw/alliance/dun_scaith.ts` `Dun Scaith Atomos Compile`: missing static alert text
-- `03-hw/alliance/dun_scaith.ts` `Dun Scaith Atomos Response`: missing static alert text
 - `03-hw/alliance/dun_scaith.ts` `Dun Scaith Atomos Cleanup`: missing static alert text
-- `03-hw/alliance/dun_scaith.ts` `Dun Scaith Prey Markers`: missing static alert text
 - `03-hw/alliance/dun_scaith.ts` `Dun Scaith Bit Circles`: missing static netRegex id
 - `03-hw/alliance/dun_scaith.ts` `Dun Scaith Aether Collectors`: missing static netRegex id
 - `03-hw/alliance/dun_scaith.ts` `Dun Scaith Shadow Links`: missing static netRegex id
 - `03-hw/alliance/dun_scaith.ts` `Dun Scaith Shadow Limb Spawn`: missing static netRegex id
-- `03-hw/alliance/dun_scaith.ts` `Dun Scaith Nox Orbs`: missing static alert text
 - `03-hw/alliance/dun_scaith.ts` `Dun Scaith Deathgates`: missing static netRegex id
-- `03-hw/alliance/dun_scaith.ts` `Dun Scaith Hollow Night`: missing static alert text
 - `03-hw/alliance/dun_scaith.ts` `Dun Scaith Blindside`: missing static alert text
-- `03-hw/alliance/weeping_city.ts` `Weeping City Dark Eruption`: missing static alert text
-- `03-hw/alliance/weeping_city.ts` `Weeping City Meteor Impact`: missing static alert text
-- `03-hw/alliance/weeping_city.ts` `Weeping City Tank Lasers`: missing static alert text
 - `03-hw/alliance/weeping_city.ts` `Weeping City Flare Star Orbs`: missing static netRegex id
 - `03-hw/alliance/weeping_city.ts` `Weeping City Acceleration Bomb`: missing static alert text
 - `03-hw/alliance/weeping_city.ts` `Weeping City Coif Change Left`: missing static alert text
@@ -567,7 +508,6 @@
 - `03-hw/alliance/weeping_city.ts` `Weeping City Living Lock Scythes`: missing static netRegex id
 - `03-hw/alliance/weeping_city.ts` `Weeping City Entanglement`: missing static netRegex id
 - `03-hw/alliance/weeping_city.ts` `Weeping City Garrotte`: missing static alert text
-- `03-hw/alliance/weeping_city.ts` `Weeping City Particle Beam`: missing static alert text
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_011-020.ts` `PotD 011-020 Spurge Adds Spawn`: missing static netRegex id
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_031-040.ts` `PotD 031-040 Ixtab Adds Spawn`: missing static netRegex id
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_041-050.ts` `PotD 041-050 Nightmare Bhoot Paralyze III`: missing static alert text
@@ -575,7 +515,6 @@
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_041-050.ts` `PotD 041-050 Nightmare Wraith Scream`: missing static alert text
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_051-060.ts` `PotD 051-060 Palace Imp Ice Spikes Cast`: missing static alert text
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_051-060.ts` `PotD 051-060 Palace Imp Ice Spikes Gain`: missing static netRegex id
-- `03-hw/deepdungeon/the_palace_of_the_dead_floors_051-060.ts` `PotD 051-060 The Black Rider Valfodr`: missing static alert text
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_081-090.ts` `PotD 081-090 Grey Bomb Spawn`: missing static netRegex id
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_081-090.ts` `PotD 081-090 Giddy Bomb Spawn`: missing static netRegex id
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_091-100.ts` `PotD 091-100 Palace Wraith Scream`: missing static alert text
@@ -589,51 +528,40 @@
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_141-150.ts` `PotD 141-150 Deep Palace Succubus Void Fire IV`: missing static alert text
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_151-160.ts` `PotD 151-160 Deep Palace Devilet Ice Spikes Cast`: missing static alert text
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_151-160.ts` `PotD 151-160 Deep Palace Devilet Ice Spikes Gain`: missing static netRegex id
-- `03-hw/deepdungeon/the_palace_of_the_dead_floors_151-160.ts` `PotD 151-160 Todesritter Valfodr`: missing static alert text
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_161-170.ts` `PotD 161-170 Deep Palace Diplocaulus Mucin`: missing static alert text
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_171-180.ts` `PotD 171-180 Bird of the Deep Palace Tropical Wind`: missing static alert text
-- `03-hw/deepdungeon/the_palace_of_the_dead_floors_181-190.ts` `PotD 181-190 Deep Palace Garm Ram's Voice`: missing static alert text
-- `03-hw/deepdungeon/the_palace_of_the_dead_floors_181-190.ts` `PotD 181-190 Deep Palace Garm Dragon's Voice`: missing static alert text
+- `03-hw/deepdungeon/the_palace_of_the_dead_floors_181-190.ts` `PotD 181-190 Deep Palace Garm Ram's Voice`: dynamic alert text
+- `03-hw/deepdungeon/the_palace_of_the_dead_floors_181-190.ts` `PotD 181-190 Deep Palace Garm Dragon's Voice`: dynamic alert text
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_181-190.ts` `PotD 181-190 Remedy Bomb Spawn`: missing static netRegex id
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_181-190.ts` `PotD 181-190 Lava Bomb Spawn`: missing static netRegex id
 - `03-hw/deepdungeon/the_palace_of_the_dead_floors_191-200.ts` `PotD 191-200 Deep Palace Wraith Scream`: missing static alert text
 - `03-hw/deepdungeon/the_palace_of_the_dead_general.ts` `PotD General Mimic Spawn`: missing static netRegex id
 - `03-hw/deepdungeon/the_palace_of_the_dead_general.ts` `PotD General Mimic Infatuation`: missing static alert text
-- `03-hw/deepdungeon/the_palace_of_the_dead_general.ts` `PotD General Pomander Duplicate`: missing static alert text
+- `03-hw/deepdungeon/the_palace_of_the_dead_general.ts` `PotD General Pomander Duplicate`: dynamic alert text
 - `03-hw/dungeon/aetherochemical_research_facility.ts` `Facility Inertia Stream`: missing static alert text
 - `03-hw/dungeon/aetherochemical_research_facility.ts` `Facility Chaosphere`: missing static netRegex id
 - `03-hw/dungeon/baelsars_wall.ts` `Baelsar Needle Burst`: missing static alert text
 - `03-hw/dungeon/baelsars_wall.ts` `Baelsar Dynamic Sensory Jammer`: missing static alert text
 - `03-hw/dungeon/baelsars_wall.ts` `Baelsar Big Boot`: missing static alert text
-- `03-hw/dungeon/baelsars_wall.ts` `Baelsar Restraint Collar`: missing static alert text
+- `03-hw/dungeon/baelsars_wall.ts` `Baelsar Restraint Collar`: dynamic alert text
 - `03-hw/dungeon/fractal_continuum.ts` `Fractal Alarums`: missing static netRegex id
-- `03-hw/dungeon/gubal_library_hard.ts` `Gubal Hard Ferrofluid`: missing static alert text
-- `03-hw/dungeon/gubal_library_hard.ts` `Gubal Hard Slosh`: missing static alert text
-- `03-hw/dungeon/gubal_library_hard.ts` `Gubal Hard Sunseal`: missing static alert text
-- `03-hw/dungeon/gubal_library_hard.ts` `Gubal Hard Moonseal`: missing static alert text
-- `03-hw/dungeon/gubal_library_hard.ts` `Gubal Hard Condensed Libra`: missing static alert text
 - `03-hw/dungeon/sohm_al.ts` `Sohm Al Myath Stack`: missing static alert text
 - `03-hw/dungeon/sohm_al.ts` `Sohm Al Myath Chyme`: missing static netRegex id
 - `03-hw/dungeon/sohm_al.ts` `Sohm Al Tioman Meteor`: missing static alert text
 - `03-hw/dungeon/sohm_al_hard.ts` `Sohm Al Hard Excretion`: missing static netRegex id
 - `03-hw/dungeon/sohm_al_hard.ts` `Sohm Al Hard Tail Smash`: missing static alert text
-- `03-hw/dungeon/sohm_al_hard.ts` `Sohm Al Hard Flying Press`: missing static alert text
 - `03-hw/dungeon/sohm_al_hard.ts` `Sohm Al Hard Hiss`: missing static alert text
-- `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts` `LostCityHard Gremlin Bad-Mouth`: missing static alert text
+- `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts` `LostCityHard Gremlin Bad-Mouth`: dynamic alert text
 - `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts` `LostCityHard Void Monk Water III`: missing static alert text
-- `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts` `LostCityHard Winged Lion Wind Resist Down II Gain`: missing static alert text
 - `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts` `LostCityHard Winged Lion Wind Resist Down II Lose`: missing static alert text
-- `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts` `LostCityHard Winged Lion Earth Resist Down II Gain`: missing static alert text
 - `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts` `LostCityHard Winged Lion Earth Resist Down II Lose`: missing static alert text
 - `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts` `LostCityHard Winged Lion Ancient Stone`: missing static alert text
 - `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts` `LostCityHard Winged Lion Ancient Aero`: missing static alert text
 - `03-hw/dungeon/the_lost_city_of_amdapor_hard.ts` `LostCityHard Light Sprite Banish 3`: missing static alert text
-- `03-hw/dungeon/the_vault.ts` `The Vault Holy Shield Bash`: missing static alert text
+- `03-hw/dungeon/the_vault.ts` `The Vault Holy Shield Bash`: dynamic alert text
 - `03-hw/dungeon/the_vault.ts` `The Vault Execution`: missing static alert text
 - `03-hw/dungeon/the_vault.ts` `The Vault Black Nebula`: missing static alert text
-- `03-hw/dungeon/the_vault.ts` `The Vault Dimensional Torsion`: missing static alert text
 - `03-hw/dungeon/the_vault.ts` `The Vault Knights March`: missing static netRegex id
-- `03-hw/dungeon/xelphatol.ts` `Xelphatol Dark Wings`: missing static alert text
 - `03-hw/dungeon/xelphatol.ts` `Xelphatol Hawk`: missing static alert text
 - `03-hw/map/the_aquapolis.ts` `Aquapolis Goblin Treasure Hunter Spawn`: missing static netRegex id
 - `03-hw/map/the_aquapolis.ts` `Aquapolis Arges Spawn`: missing static netRegex id
@@ -642,209 +570,117 @@
 - `03-hw/pvp/shatter.ts` `Shatter Big Ice Southeast`: missing static netRegex id
 - `03-hw/pvp/shatter.ts` `Shatter Big Ice Southwest`: missing static netRegex id
 - `03-hw/raid/a10n.ts` `A10N Bomb Toss`: missing static alert text
-- `03-hw/raid/a10n.ts` `A10N Gobslash Slicetops`: missing static alert text
 - `03-hw/raid/a10s.ts` `A10S Charge Marker`: missing static alert text
 - `03-hw/raid/a10s.ts` `A10S Charge 1`: missing static alert text
 - `03-hw/raid/a10s.ts` `A10S Charge Double Triple`: missing static alert text
 - `03-hw/raid/a10s.ts` `A10S Charge Clear`: missing static alert text
-- `03-hw/raid/a10s.ts` `A10S Slicetops Tether`: missing static alert text
 - `03-hw/raid/a10s.ts` `A10S Gobsnick Leghops`: missing static alert text
 - `03-hw/raid/a10s.ts` `A10S Brighteyes Tracker`: missing static alert text
 - `03-hw/raid/a10s.ts` `A10S Brighteyes Cleanup`: missing static alert text
-- `03-hw/raid/a10s.ts` `A10S Brighteyes Prey Marker`: missing static alert text
 - `03-hw/raid/a11s.ts` `A11S Left Laser Sword`: missing static alert text
 - `03-hw/raid/a11s.ts` `A11S Right Laser Sword`: missing static alert text
 - `03-hw/raid/a11s.ts` `A11S EDD Add`: missing static netRegex id
 - `03-hw/raid/a11s.ts` `A11S Armored Pauldron Add`: missing static netRegex id
-- `03-hw/raid/a11s.ts` `A11S GA-100`: missing static alert text
 - `03-hw/raid/a11s.ts` `A11S Limit Cut Collect`: missing static netRegex id
 - `03-hw/raid/a11s.ts` `A11S Limit Cut Number`: missing static netRegex id
 - `03-hw/raid/a11s.ts` `A11S Limit Cut Mechanic`: missing static netRegex id
 - `03-hw/raid/a11s.ts` `A11S Limit Cut Cleanup`: missing static alert text
-- `03-hw/raid/a11s.ts` `A11S Laser X Sword`: missing static alert text
 - `03-hw/raid/a11s.ts` `A11S Plasma Shield`: missing static netRegex id
 - `03-hw/raid/a11s.ts` `A11S Plasma Shield Shattered`: missing static netRegex id
-- `03-hw/raid/a11s.ts` `A11S Blassty Charge`: missing static alert text
 - `03-hw/raid/a12n.ts` `A12N Heat And Solidarity`: missing static alert text
-- `03-hw/raid/a12n.ts` `A12N Communion Tether`: missing static alert text
 - `03-hw/raid/a12s.ts` `A12S Blazing Scourge Collect`: missing static alert text
-- `03-hw/raid/a12s.ts` `A12S Blazing Scourge Report`: missing static alert text
+- `03-hw/raid/a12s.ts` `A12S Blazing Scourge Report`: dynamic alert text
 - `03-hw/raid/a12s.ts` `A12S Incinerating Heat`: missing static alert text
-- `03-hw/raid/a12s.ts` `A12S House Arrest`: missing static alert text
-- `03-hw/raid/a12s.ts` `A12S Restraining Order`: missing static alert text
-- `03-hw/raid/a12s.ts` `A12S Shared Sentence`: missing static alert text
-- `03-hw/raid/a12s.ts` `A12S Defamation`: missing static alert text
-- `03-hw/raid/a12s.ts` `A12S Judgment Crystal`: missing static alert text
-- `03-hw/raid/a12s.ts` `A12S Communion Tether`: missing static alert text
+- `03-hw/raid/a12s.ts` `A12S House Arrest`: dynamic alert text
+- `03-hw/raid/a12s.ts` `A12S Restraining Order`: dynamic alert text
 - `03-hw/raid/a1s.ts` `A1S Hydrothermal Collect`: missing static alert text
-- `03-hw/raid/a1s.ts` `A1S Hydrothermal You`: missing static alert text
-- `03-hw/raid/a1s.ts` `A1S Hydrothermal Healer`: missing static alert text
+- `03-hw/raid/a1s.ts` `A1S Hydrothermal Healer`: dynamic alert text
 - `03-hw/raid/a1s.ts` `A1S Hydrothermal Cleanup`: missing static alert text
 - `03-hw/raid/a1s.ts` `A1S Hypercompressed Collect`: missing static alert text
 - `03-hw/raid/a1s.ts` `A1S Hypercompressed Other`: missing static alert text
 - `03-hw/raid/a1s.ts` `A1S Hypercompressed Delete`: missing static alert text
 - `03-hw/raid/a2s.ts` `A2S Bomb`: missing static netRegex id
-- `03-hw/raid/a2s.ts` `A2S Prey`: missing static alert text
-- `03-hw/raid/a2s.ts` `A2S Prey You`: missing static alert text
+- `03-hw/raid/a2s.ts` `A2S Prey`: dynamic alert text
 - `03-hw/raid/a2s.ts` `A2S Soldier Spawn`: missing static netRegex id
 - `03-hw/raid/a3n.ts` `A3N Wash Away`: missing static alert text
-- `03-hw/raid/a3n.ts` `A3N Sluice`: missing static alert text
 - `03-hw/raid/a3n.ts` `A3N Fluid Strike 3`: missing static netRegex id
 - `03-hw/raid/a3n.ts` `A3N Ferrofluid Tether`: missing static alert text
 - `03-hw/raid/a3n.ts` `A3N Ferrofluid Signs`: missing static alert text
-- `03-hw/raid/a3n.ts` `A3N Ferrofluid Call`: missing static alert text
+- `03-hw/raid/a3n.ts` `A3N Ferrofluid Call`: dynamic alert text
 - `03-hw/raid/a3n.ts` `A3N FerrofluidCleanup`: missing static alert text
-- `03-hw/raid/a3s.ts` `A3S Sluice`: missing static alert text
-- `03-hw/raid/a3s.ts` `A3S Digititis Tank`: missing static alert text
-- `03-hw/raid/a3s.ts` `A3S Digititis Healer`: missing static alert text
-- `03-hw/raid/a3s.ts` `A3S Digititis Damage`: missing static alert text
 - `03-hw/raid/a3s.ts` `A3S Ferrofluid Tether`: missing static alert text
 - `03-hw/raid/a3s.ts` `A3S Ferrofluid Signs`: missing static alert text
-- `03-hw/raid/a3s.ts` `A3S Ferrofluid`: missing static alert text
-- `03-hw/raid/a3s.ts` `A3S Throttle`: missing static alert text
-- `03-hw/raid/a3s.ts` `A3S Fluid Claw`: missing static alert text
-- `03-hw/raid/a4s.ts` `A4S Discord Marker`: missing static alert text
+- `03-hw/raid/a3s.ts` `A3S Ferrofluid`: dynamic alert text
+- `03-hw/raid/a3s.ts` `A3S Throttle`: dynamic alert text
 - `03-hw/raid/a4s.ts` `A4S Stun Leg`: missing static netRegex id
-- `03-hw/raid/a4s.ts` `A4S Judgment Nisi A`: missing static alert text
-- `03-hw/raid/a4s.ts` `A4S Judgment Nisi B`: missing static alert text
 - `03-hw/raid/a5s.ts` `A5S Gobcut Stack`: missing static alert text
-- `03-hw/raid/a5s.ts` `A5S Bomb Direction`: missing static alert text
 - `03-hw/raid/a5s.ts` `A5S Boost Count`: missing static alert text
 - `03-hw/raid/a5s.ts` `A5S Bomb`: missing static netRegex id
-- `03-hw/raid/a5s.ts` `A5S Prey`: missing static alert text
-- `03-hw/raid/a5s.ts` `A5S Prey Healer`: missing static alert text
-- `03-hw/raid/a5s.ts` `A5S Glupgloop`: missing static alert text
+- `03-hw/raid/a5s.ts` `A5S Prey Healer`: dynamic alert text
 - `03-hw/raid/a5s.ts` `A5S Snake Adds`: missing static netRegex id
 - `03-hw/raid/a5s.ts` `A5S Steel Scales`: missing static alert text
-- `03-hw/raid/a5s.ts` `A5S Anti-Coagulant Cleanse`: missing static alert text
-- `03-hw/raid/a5s.ts` `A5S Gobbledygroper`: missing static alert text
-- `03-hw/raid/a6n.ts` `A6N Low Arithmeticks`: missing static alert text
-- `03-hw/raid/a6n.ts` `A6N High Arithmeticks`: missing static alert text
-- `03-hw/raid/a6n.ts` `A6N Enumeration`: missing static alert text
-- `03-hw/raid/a6n.ts` `A6N Ice Marker`: missing static alert text
-- `03-hw/raid/a6n.ts` `A6N Compressed Water Initial`: missing static alert text
-- `03-hw/raid/a6s.ts` `A6S Hidden Minefield`: missing static alert text
-- `03-hw/raid/a6s.ts` `A6S Blinder`: missing static alert text
-- `03-hw/raid/a6s.ts` `A6S Power Tackle`: missing static alert text
-- `03-hw/raid/a6s.ts` `A6S Low Arithmeticks`: missing static alert text
-- `03-hw/raid/a6s.ts` `A6S High Arithmeticks`: missing static alert text
+- `03-hw/raid/a6n.ts` `A6N Enumeration`: dynamic alert text
 - `03-hw/raid/a6s.ts` `A6S Midan Hardhelm`: missing static alert text
 - `03-hw/raid/a6s.ts` `A6S Midan Hardmind`: missing static alert text
-- `03-hw/raid/a6s.ts` `A6S Enumeration`: missing static alert text
-- `03-hw/raid/a6s.ts` `A6S Ice Marker`: missing static alert text
-- `03-hw/raid/a6s.ts` `A6S Fire Beam`: missing static alert text
+- `03-hw/raid/a6s.ts` `A6S Enumeration`: dynamic alert text
 - `03-hw/raid/a7s.ts` `A7S Phase Counter`: missing static netRegex id
-- `03-hw/raid/a7s.ts` `A7S Sizzlebeam`: missing static alert text
-- `03-hw/raid/a7s.ts` `A7S Bomb Tether`: missing static alert text
-- `03-hw/raid/a7s.ts` `A7S Jail Prey`: missing static alert text
-- `03-hw/raid/a7s.ts` `A7S Jail Tether`: missing static alert text
 - `03-hw/raid/a7s.ts` `A7S Kugelblitz`: missing static alert text
 - `03-hw/raid/a7s.ts` `A7S Zoomdoom Clear`: missing static alert text
 - `03-hw/raid/a7s.ts` `A7S Gobbie Grab`: missing static alert text
 - `03-hw/raid/a7s.ts` `A7S Stickyloom`: missing static alert text
 - `03-hw/raid/a7s.ts` `A7S Padlock`: missing static netRegex id
-- `03-hw/raid/a7s.ts` `A7S Searing Wind`: missing static alert text
-- `03-hw/raid/a8n.ts` `A8N Low Arithmeticks`: missing static alert text
-- `03-hw/raid/a8n.ts` `A8N High Arithmeticks`: missing static alert text
-- `03-hw/raid/a8n.ts` `A8N Enumeration`: missing static alert text
+- `03-hw/raid/a8n.ts` `A8N Enumeration`: dynamic alert text
 - `03-hw/raid/a8n.ts` `A8N Brute Active Tank`: missing static alert text
 - `03-hw/raid/a8n.ts` `A8N Long Needle Toggle`: missing static alert text
 - `03-hw/raid/a8n.ts` `A8N Long Needle Party`: missing static alert text
-- `03-hw/raid/a8n.ts` `A8N Super Jump`: missing static alert text
-- `03-hw/raid/a8n.ts` `A8N Mirage Marker`: missing static alert text
-- `03-hw/raid/a8n.ts` `A8N Ice Missile Marker`: missing static alert text
 - `03-hw/raid/a8s.ts` `A8S Blaster Mirage`: missing static netRegex id
-- `03-hw/raid/a8s.ts` `A8S Low Arithmeticks`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S High Arithmeticks`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Compressed Lightning`: missing static alert text
 - `03-hw/raid/a8s.ts` `A8S Compressed Lightning Lose`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Compressed Lightning Soon`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Enumeration`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Double Rocket Punch`: missing static alert text
+- `03-hw/raid/a8s.ts` `A8S Compressed Lightning Soon`: dynamic alert text
+- `03-hw/raid/a8s.ts` `A8S Enumeration`: dynamic alert text
 - `03-hw/raid/a8s.ts` `A8S Long Needle Stack Collect`: missing static alert text
 - `03-hw/raid/a8s.ts` `A8S Long Needle Prey Collect`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Long Needle`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Super Jump`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Mirage Marker`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Ice Missile Marker`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Mirage Blinder`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Mirage Power Tackle`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Verdict Min HP`: missing static alert text
 - `03-hw/raid/a8s.ts` `A8S Verdict Min HP Collect`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Verdict Min HP Tornado`: missing static alert text
 - `03-hw/raid/a8s.ts` `A8S Verdict Max HP Collect`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Verdict Max HP`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Verdict Penalty 1`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Verdict Penalty 2`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Verdict Penalty 3`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Verdict Penalty 3 Orb`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Verdict Nisi A`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Verdict Nisi B`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Compressed Water`: missing static alert text
 - `03-hw/raid/a8s.ts` `A8S Compressed Water Lose`: missing static alert text
-- `03-hw/raid/a8s.ts` `A8S Compressed Water Soon`: missing static alert text
+- `03-hw/raid/a8s.ts` `A8S Compressed Water Soon`: dynamic alert text
 - `03-hw/raid/a9s.ts` `A9S Stockpile Count`: missing static alert text
-- `03-hw/raid/a9s.ts` `A9S Scrapline`: missing static alert text
-- `03-hw/raid/a9s.ts` `A9S Scrap Rock`: missing static alert text
 - `03-hw/raid/a9s.ts` `A9S Scrap Bomb Stack`: missing static alert text
 - `03-hw/raid/a9s.ts` `A9S Auto`: missing static alert text
-- `03-hw/raid/a9s.ts` `A9S Power Generator Add Tether`: missing static alert text
 - `03-hw/trial/sephirot-ex.ts` `SephirotEx Main Tank`: missing static alert text
-- `03-hw/trial/sephirot-ex.ts` `SephirotEx Fiendish Rage`: missing static alert text
-- `03-hw/trial/sephirot-ex.ts` `SephirotEx Force Against Might`: missing static alert text
-- `03-hw/trial/sephirot-ex.ts` `SephirotEx Force Against Magic`: missing static alert text
+- `03-hw/trial/sephirot-ex.ts` `SephirotEx Force Against Might`: dynamic alert text
+- `03-hw/trial/sephirot-ex.ts` `SephirotEx Force Against Magic`: dynamic alert text
 - `03-hw/trial/sephirot-ex.ts` `SephirotEx Gevurah Chesed`: missing static alert text
 - `03-hw/trial/sephirot-ex.ts` `SephirotEx Chesed Gevurah`: missing static alert text
-- `03-hw/trial/sephirot-ex.ts` `SephirotEx Fiendish Wail`: missing static alert text
-- `03-hw/trial/sephirot-ex.ts` `SephirotEx Da'at Tethers`: missing static alert text
 - `03-hw/trial/sephirot-ex.ts` `SephirotEx Force Against Lose`: missing static alert text
 - `03-hw/trial/sephirot-ex.ts` `SephirotEx Earth Shaker Collect`: missing static alert text
-- `03-hw/trial/sephirot-ex.ts` `SephirotEx Earth Shaker Call`: missing static alert text
 - `03-hw/trial/sephirot-ex.ts` `SephirotEx Earth Shaker Cleanup`: missing static alert text
 - `03-hw/trial/sephirot.ts` `Sephirot Fiendish Rage`: missing static alert text
 - `03-hw/trial/thordan-ex.ts` `ThordanEX Intermission Phase`: dynamic alert text
 - `03-hw/trial/thordan-ex.ts` `ThordanEX Triple Spiral Thrust Collect`: missing static alert text
-- `03-hw/trial/thordan-ex.ts` `ThordanEX Triple Spiral Thrust Call`: missing static alert text
-- `03-hw/trial/thordan-ex.ts` `ThordanEX Sword Of The Heavens`: missing static alert text
+- `03-hw/trial/thordan-ex.ts` `ThordanEX Triple Spiral Thrust Call`: dynamic alert text
+- `03-hw/trial/thordan-ex.ts` `ThordanEX Sword Of The Heavens`: dynamic alert text
 - `03-hw/trial/thordan-ex.ts` `ThordanEX Shield Of The Heavens`: missing static alert text
 - `03-hw/trial/thordan-ex.ts` `ThordanEX Holy Bladedance Collect`: missing static alert text
-- `03-hw/trial/thordan-ex.ts` `ThordanEX Holy Bladedance Call`: missing static alert text
 - `03-hw/trial/thordan-ex.ts` `ThordanEX Skyward Leap`: dynamic alert text
-- `03-hw/trial/thordan-ex.ts` `ThordanEX Spiral Pierce`: missing static alert text
-- `03-hw/trial/thordan-ex.ts` `ThordanEX Hiemal Storm`: missing static alert text
-- `03-hw/trial/thordan-ex.ts` `ThordanEX Comet Puddles`: missing static alert text
-- `03-hw/trial/thordan-ex.ts` `ThordanEX Fury Spear`: missing static alert text
-- `03-hw/trial/thordan-ex.ts` `ThordanEX Single Spiral Thrust`: missing static alert text
-- `03-hw/trial/thordan-ex.ts` `ThordanEX Faith Unmoving Off Center`: missing static alert text
-- `03-hw/trial/zurvan-ex.ts` `ZurvanEX Wave Cannon Avoid`: missing static alert text
+- `03-hw/trial/thordan-ex.ts` `ThordanEX Single Spiral Thrust`: dynamic alert text
+- `03-hw/trial/thordan-ex.ts` `ThordanEX Faith Unmoving Off Center`: dynamic alert text
 - `03-hw/trial/zurvan-ex.ts` `ZurvanEX Wave Cannon Stack`: missing static alert text
 - `03-hw/trial/zurvan-ex.ts` `ZurvanEX Wave Cannon Stack Cleanup`: missing static alert text
-- `03-hw/trial/zurvan-ex.ts` `ZurvanEX Demon Claw`: missing static alert text
 - `03-hw/trial/zurvan-ex.ts` `ZurvanEX Demonic Dive`: missing static alert text
-- `03-hw/trial/zurvan-ex.ts` `ZurvanEX Cool Flame Call`: missing static alert text
 - `03-hw/trial/zurvan-ex.ts` `ZurvanEX Cool Flame Cleanup`: missing static alert text
-- `03-hw/trial/zurvan-ex.ts` `ZurvanEX Infinite Tethers`: missing static alert text
+- `03-hw/trial/zurvan-ex.ts` `ZurvanEX Infinite Tethers`: dynamic alert text
 - `03-hw/trial/zurvan-ex.ts` `ZurvanEX Infinite Debuffs`: dynamic alert text
-- `03-hw/trial/zurvan-ex.ts` `ZurvanEX Broken Seal`: missing static alert text
+- `03-hw/trial/zurvan-ex.ts` `ZurvanEX Broken Seal`: dynamic alert text
 - `03-hw/trial/zurvan-ex.ts` `ZurvanEX Seal Cleanup`: missing static alert text
 - `04-sb/alliance/orbonne_monastery.ts` `Orbonne Mustadio Right Handgonne`: missing static alert text
 - `04-sb/alliance/orbonne_monastery.ts` `Orbonne Mustadio Left Handgonne`: missing static alert text
-- `04-sb/alliance/orbonne_monastery.ts` `Orbonne Mustadio Searchlight`: missing static alert text
 - `04-sb/alliance/orbonne_monastery.ts` `Orbonne Agrias Cleansing Strike`: missing static alert text
 - `04-sb/alliance/orbonne_monastery.ts` `Orbonne Agrias Halidom Inside`: missing static alert text
-- `04-sb/alliance/orbonne_monastery.ts` `Orbonne Agrias Halidom Outside`: missing static alert text
-- `04-sb/alliance/orbonne_monastery.ts` `Orbonne Agrias Hallowed Bolt`: missing static alert text
 - `04-sb/alliance/orbonne_monastery.ts` `Orbonne Agrias Extra Adds`: missing static netRegex id
-- `04-sb/alliance/orbonne_monastery.ts` `Orbonne Cid Crush Armor`: missing static alert text
-- `04-sb/alliance/orbonne_monastery.ts` `Orbonne Cid Shadowblade Bubble`: missing static alert text
-- `04-sb/alliance/orbonne_monastery.ts` `Orbonne Cid Hallowed Bolt`: missing static alert text
-- `04-sb/alliance/orbonne_monastery.ts` `Orbonne Cid Divine Ruination`: missing static alert text
 - `04-sb/alliance/orbonne_monastery.ts` `Orbonne Cid Holy Sword Thunder Left`: missing static alert text
 - `04-sb/alliance/orbonne_monastery.ts` `Orbonne Cid Holy Sword Thunder Right`: missing static alert text
-- `04-sb/alliance/orbonne_monastery.ts` `Orbonne Ultima Eruption`: missing static alert text
 - `04-sb/alliance/orbonne_monastery.ts` `Orbonne Ultima Acceleration Bomb`: missing static alert text
 - `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Famfrit Dark Rain`: missing static netRegex id
-- `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Belias Hand of Time`: missing static alert text
 - `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Belias Gigas`: missing static netRegex id
 - `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Construct Accelerate Stack`: missing static alert text
 - `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Construct Accelerate Cleanup`: missing static alert text
@@ -856,8 +692,6 @@
 - `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Construct Divide By Three`: missing static alert text
 - `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Construct Indivisible`: missing static alert text
 - `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Construct Acceleration Bomb`: missing static alert text
-- `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Yiazmat Magnetic Negative`: missing static alert text
-- `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Yiazmat Magnetic Positive`: missing static alert text
 - `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Yiazmat Archaeodemon`: missing static netRegex id
 - `04-sb/alliance/ridorana_lighthouse.ts` `Ridorana Yiazmat Heart`: missing static netRegex id
 - `04-sb/alliance/royal_city_of_rabanastre.ts` `Rab Mateus Breathless`: dynamic alert text
@@ -865,12 +699,10 @@
 - `04-sb/alliance/royal_city_of_rabanastre.ts` `Rab Argath Command Turn`: missing static alert text
 - `04-sb/deepdungeon/heaven-on-high_floors_01-10.ts` `HoH 01-10 Heavenly Amikiri Shuck`: missing static alert text
 - `04-sb/deepdungeon/heaven-on-high_floors_51-60.ts` `HoH 51-60 Heavenly Gowan Electromagnetism`: missing static alert text
-- `04-sb/deepdungeon/heaven-on-high_floors_61-70.ts` `HoH 61-70 Kenko Hound out of Hell`: missing static alert text
-- `04-sb/deepdungeon/heaven-on-high_floors_61-70.ts` `HoH 61-70 Kenko Devour`: missing static alert text
 - `04-sb/deepdungeon/heaven-on-high_floors_71-80.ts` `HoH 71-80 Heavenly Ichijama Scream`: missing static alert text
 - `04-sb/deepdungeon/heaven-on-high_floors_71-80.ts` `HoH 71-80 Heavenly Tofu Golden Tongue`: missing static alert text
-- `04-sb/deepdungeon/heaven-on-high_floors_81-90.ts` `HoH 81-90 Heavenly Mukai-inu Ram's Voice`: missing static alert text
-- `04-sb/deepdungeon/heaven-on-high_floors_81-90.ts` `HoH 81-90 Heavenly Mukai-inu Dragon's Voice`: missing static alert text
+- `04-sb/deepdungeon/heaven-on-high_floors_81-90.ts` `HoH 81-90 Heavenly Mukai-inu Ram's Voice`: dynamic alert text
+- `04-sb/deepdungeon/heaven-on-high_floors_81-90.ts` `HoH 81-90 Heavenly Mukai-inu Dragon's Voice`: dynamic alert text
 - `04-sb/deepdungeon/heaven-on-high_floors_81-90.ts` `HoH 81-90 Heavenly Shinzei Thunder II`: missing static alert text
 - `04-sb/deepdungeon/heaven-on-high_floors_81-90.ts` `HoH 81-90 Heavenly Ryujin Elbow Drop`: missing static alert text
 - `04-sb/deepdungeon/heaven-on-high_floors_91-100.ts` `HoH 91-100 Heavenly Jaki Charybdis`: missing static alert text
@@ -878,66 +710,41 @@
 - `04-sb/deepdungeon/heaven-on-high_floors_91-100.ts` `HoH 91-100 Heavenly Tenma Nicker`: missing static alert text
 - `04-sb/deepdungeon/heaven-on-high_general.ts` `HoH General Quivering Coffer Spawn`: missing static netRegex id
 - `04-sb/deepdungeon/heaven-on-high_general.ts` `HoH General Quivering Coffer Malice`: missing static alert text
-- `04-sb/deepdungeon/heaven-on-high_general.ts` `HoH General Pomander Duplicate`: missing static alert text
-- `04-sb/deepdungeon/heaven-on-high_general.ts` `HoH General Magicite Duplicate`: missing static alert text
-- `04-sb/dungeon/ala_mhigo.ts` `Ala Mhigo Lightless Spark`: missing static alert text
-- `04-sb/dungeon/bardams_mettle.ts` `Bardam's Mettle Rush`: missing static alert text
-- `04-sb/dungeon/bardams_mettle.ts` `Bardam's Mettle Wingbeat You`: missing static alert text
+- `04-sb/deepdungeon/heaven-on-high_general.ts` `HoH General Pomander Duplicate`: dynamic alert text
+- `04-sb/deepdungeon/heaven-on-high_general.ts` `HoH General Magicite Duplicate`: dynamic alert text
 - `04-sb/dungeon/castrum_abania.ts` `CastrumAbania Magna Roader Mark XLIII Mini Cannon`: missing static netRegex id
 - `04-sb/dungeon/castrum_abania.ts` `CastrumAbania Subject Number XXIV Fire II`: missing static alert text
 - `04-sb/dungeon/castrum_abania.ts` `CastrumAbania Inferno Adds`: missing static netRegex id
 - `04-sb/dungeon/doma_castle.ts` `Doma Castle Magitek Hexadrone 2-Tonze Magitek Missile`: missing static alert text
-- `04-sb/dungeon/doma_castle.ts` `Doma Castle Hypertuned Grynewaht Thermobaric Charge`: missing static alert text
-- `04-sb/dungeon/drowned_city_of_skalla.ts` `Skalla Ring Of Chaos`: missing static alert text
-- `04-sb/dungeon/drowned_city_of_skalla.ts` `Skalla Cross Of Chaos`: missing static alert text
-- `04-sb/dungeon/fractal_continuum_hard.ts` `Fractal Hard Ratzon`: missing static alert text
 - `04-sb/dungeon/fractal_continuum_hard.ts` `Fractal Hard Dischord Collect`: missing static alert text
 - `04-sb/dungeon/fractal_continuum_hard.ts` `Fractal Hard Dischord Resolve`: dynamic alert text
 - `04-sb/dungeon/fractal_continuum_hard.ts` `Fractal Hard Dischord Cleanup`: missing static alert text
 - `04-sb/dungeon/fractal_continuum_hard.ts` `Fractal Hard Mass Aetheroplasm`: missing static alert text
 - `04-sb/dungeon/fractal_continuum_hard.ts` `Fractal Hard Allagan Flare`: missing static alert text
 - `04-sb/dungeon/ghimlyt_dark.ts` `Ghimlyt Dark Magitek Ray`: missing static alert text
-- `04-sb/dungeon/ghimlyt_dark.ts` `Ghimlyt Dark Magitek Slash`: missing static alert text
 - `04-sb/dungeon/ghimlyt_dark.ts` `Ghimlyt Dark Freezing Missile`: missing static alert text
 - `04-sb/dungeon/ghimlyt_dark64.ts` `Ghimlyt64 Magitek Ray`: missing static alert text
-- `04-sb/dungeon/ghimlyt_dark64.ts` `Ghimlyt64 Magitek Slash`: missing static alert text
 - `04-sb/dungeon/ghimlyt_dark64.ts` `Ghimlyt64 Freezing Missile`: missing static alert text
-- `04-sb/dungeon/hells_lid.ts` `Hells Lid Targeted Leap`: missing static alert text
 - `04-sb/dungeon/hells_lid.ts` `Hells Lid Rolling Winds`: missing static alert text
 - `04-sb/dungeon/kugane_castle.ts` `Kugane Castle Helm Crack`: missing static alert text
-- `04-sb/dungeon/kugane_castle.ts` `Kugane Castle Cordage`: missing static alert text
 - `04-sb/dungeon/kugane_castle.ts` `Kugane Castle Dragons Lair`: missing static alert text
 - `04-sb/dungeon/shisui_of_the_violet_tides.ts` `Shisui Amikiri Kamikiri Add`: missing static netRegex id
-- `04-sb/dungeon/shisui_of_the_violet_tides.ts` `Shisui Ruby Princess Geothermal Flatulence`: missing static alert text
 - `04-sb/dungeon/shisui_of_the_violet_tides.ts` `Shisui Shisui Yohi Naishi-No-Kami`: missing static netRegex id
 - `04-sb/dungeon/sirensong_sea.ts` `Sirensong Lugat Hydroball`: missing static alert text
 - `04-sb/dungeon/sirensong_sea.ts` `Sirensong Fleshless Captive Seductive Scream`: missing static alert text
-- `04-sb/dungeon/st_mocianne_hard.ts` `St Mocianne Hard Sludge Bomb`: missing static alert text
 - `04-sb/dungeon/st_mocianne_hard.ts` `St Mocianne Hard Fault Warren`: missing static alert text
-- `04-sb/dungeon/st_mocianne_hard.ts` `St Mocianne Hard Quagmire`: missing static alert text
 - `04-sb/dungeon/swallows_compass.ts` `Swallows Compass Ember Spawn`: missing static netRegex id
 - `04-sb/dungeon/swallows_compass.ts` `Swallows Compass Right Palm`: missing static alert text
 - `04-sb/dungeon/swallows_compass.ts` `Swallows Compass Left Palm`: missing static alert text
-- `04-sb/dungeon/swallows_compass.ts` `Swallows Compass Mirage`: missing static alert text
-- `04-sb/dungeon/swallows_compass.ts` `Swallows Compass Six Fulms Under`: missing static alert text
-- `04-sb/dungeon/swallows_compass.ts` `Swallows Compass Both Ends Call`: missing static alert text
 - `04-sb/dungeon/swallows_compass.ts` `Swallows Compass Five Fingered Punishment`: missing static alert text
 - `04-sb/dungeon/swallows_compass.ts` `Swallows Compass Long End Collect`: missing static alert text
-- `04-sb/dungeon/swallows_compass.ts` `Swallows Compass Long End Call`: missing static alert text
-- `04-sb/dungeon/temple_of_the_fist.ts` `Temple Moonseal`: missing static alert text
-- `04-sb/dungeon/temple_of_the_fist.ts` `Temple Sunseal`: missing static alert text
 - `04-sb/dungeon/temple_of_the_fist.ts` `Temple Port And Star`: missing static alert text
 - `04-sb/dungeon/temple_of_the_fist.ts` `Temple Fore And Aft`: missing static alert text
-- `04-sb/dungeon/temple_of_the_fist.ts` `Temple Touch Of Slaughter`: missing static alert text
+- `04-sb/dungeon/temple_of_the_fist.ts` `Temple Touch Of Slaughter`: dynamic alert text
 - `04-sb/dungeon/temple_of_the_fist.ts` `Temple Rose Of Destruction`: missing static alert text
-- `04-sb/dungeon/the_burn.ts` `The Burn Shardstrike`: missing static alert text
 - `04-sb/dungeon/the_burn.ts` `The Burn Throttle`: missing static netRegex id
-- `04-sb/dungeon/the_burn.ts` `The Burn Frost Breath`: missing static alert text
-- `04-sb/dungeon/the_burn64.ts` `TheBurn64 Shardstrike`: missing static alert text
 - `04-sb/dungeon/the_burn64.ts` `TheBurn64 Throttle`: missing static netRegex id
-- `04-sb/dungeon/the_burn64.ts` `TheBurn64 Frost Breath`: missing static alert text
 - `04-sb/eureka/eureka_anemos.ts` `Eureka Sabotender Stack Marker`: missing static alert text
-- `04-sb/eureka/eureka_anemos.ts` `Eureka Voidscale Ice`: missing static alert text
 - `04-sb/eureka/eureka_anemos.ts` `Eureka Wraith Count`: missing static netRegex id
 - `04-sb/eureka/eureka_anemos.ts` `Eureka Pazuzu Pop`: missing static netRegex id
 - `04-sb/eureka/eureka_anemos.ts` `Eureka Falling Asleep`: missing static netRegex id
@@ -946,22 +753,15 @@
 - `04-sb/eureka/eureka_hydatos.ts` `BA Clear Data`: missing static alert text
 - `04-sb/eureka/eureka_hydatos.ts` `BA West Side`: missing static alert text
 - `04-sb/eureka/eureka_hydatos.ts` `BA East Side`: missing static alert text
-- `04-sb/eureka/eureka_hydatos.ts` `BA Art Orb Marker`: missing static alert text
 - `04-sb/eureka/eureka_hydatos.ts` `BA Owain Fire Element`: missing static netRegex id
 - `04-sb/eureka/eureka_hydatos.ts` `BA Owain Ice Element`: missing static netRegex id
 - `04-sb/eureka/eureka_hydatos.ts` `BA Silence Centaur`: missing static alert text
 - `04-sb/eureka/eureka_hydatos.ts` `BA Raiden Lateral 1`: missing static alert text
 - `04-sb/eureka/eureka_hydatos.ts` `BA Raiden Lateral 2`: missing static alert text
-- `04-sb/eureka/eureka_hydatos.ts` `BA AV Eidos Dark Bracelets`: missing static alert text
-- `04-sb/eureka/eureka_hydatos.ts` `BA AV Eidos Light Bracelets`: missing static alert text
-- `04-sb/eureka/eureka_hydatos.ts` `BA AV Eidos Impact Stream`: missing static alert text
 - `04-sb/eureka/eureka_hydatos.ts` `BA AV Eidos Relative Virtue Astral`: missing static netRegex id
 - `04-sb/eureka/eureka_hydatos.ts` `BA AV Eidos Relative Virtue Umbral`: missing static netRegex id
-- `04-sb/eureka/eureka_hydatos.ts` `BA AV Triple Impact Stream`: missing static alert text
 - `04-sb/eureka/eureka_hydatos.ts` `BA AV Call Wyvern`: missing static alert text
-- `04-sb/eureka/eureka_hydatos.ts` `BA Ozma Sphere Form`: missing static alert text
-- `04-sb/eureka/eureka_hydatos.ts` `BA Ozma Star Form 2`: missing static alert text
-- `04-sb/eureka/eureka_hydatos.ts` `BA Ozma Cube Form 2`: missing static alert text
+- `04-sb/eureka/eureka_hydatos.ts` `BA Ozma Sphere Form`: dynamic alert text
 - `04-sb/eureka/eureka_hydatos.ts` `BA Ozma Adds`: missing static alert text
 - `04-sb/eureka/eureka_hydatos.ts` `BA Ozma Acceleration Bomb`: missing static alert text
 - `04-sb/eureka/eureka_hydatos.ts` `BA Ozma Meteor`: missing static alert text
@@ -983,153 +783,72 @@
 - `04-sb/map/the_shifting_altars_of_uznair.ts` `Shifting Altars of Uznair Altar Airavata Buffet`: missing static alert text
 - `04-sb/map/the_shifting_altars_of_uznair.ts` `Shifting Altars of Uznair The Great Gold Whisker Fish out of Water`: missing static alert text
 - `04-sb/raid/o10n.ts` `O10N Spin Cleanup`: missing static alert text
-- `04-sb/raid/o10n.ts` `O10N Horizontal Spin 2`: missing static alert text
-- `04-sb/raid/o10n.ts` `O10N Vertical Spin 2`: missing static alert text
 - `04-sb/raid/o10n.ts` `O10N Akh Morn`: missing static alert text
-- `04-sb/raid/o10n.ts` `O10N Dry Ice`: missing static alert text
-- `04-sb/raid/o10s.ts` `O10S Fire Marker`: missing static alert text
-- `04-sb/raid/o10s.ts` `O10S Death From Below`: missing static alert text
-- `04-sb/raid/o10s.ts` `O10S Death From Above`: missing static alert text
 - `04-sb/raid/o10s.ts` `O10S Spin Cleanup`: missing static alert text
-- `04-sb/raid/o10s.ts` `O10S Horizontal Spin 2`: missing static alert text
-- `04-sb/raid/o10s.ts` `O10S Vertical Spin 2`: missing static alert text
 - `04-sb/raid/o11n.ts` `O11N Cannon Cleanup`: missing static alert text
-- `04-sb/raid/o11n.ts` `O11N Starboard Cannon 2`: missing static alert text
-- `04-sb/raid/o11n.ts` `O11N Larboard Cannon 2`: missing static alert text
-- `04-sb/raid/o11n.ts` `O11N Ballistic Missile`: missing static alert text
 - `04-sb/raid/o11n.ts` `O11N Electric Slide`: missing static alert text
 - `04-sb/raid/o11s.ts` `O11S Cannon Cleanup`: missing static alert text
-- `04-sb/raid/o11s.ts` `O11S Starboard Cannon 2`: missing static alert text
-- `04-sb/raid/o11s.ts` `O11S Larboard Cannon 2`: missing static alert text
 - `04-sb/raid/o12n.ts` `O12N Optimized Meteor`: missing static alert text
-- `04-sb/raid/o12n.ts` `O12N Ground Zero`: missing static alert text
-- `04-sb/raid/o12n.ts` `O12N Goo Instructions`: missing static alert text
 - `04-sb/raid/o12n.ts` `O12N Stack Marker`: missing static alert text
-- `04-sb/raid/o12n.ts` `O12N Packet Filter F`: missing static alert text
-- `04-sb/raid/o12n.ts` `O12N Packet Filter M`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Ion Efflux Phase Reset`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Beyond Defense Vuln`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Beyond Defense Stack`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Solar Ray Collect`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Solar Ray Not You`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Shield Blades Setup`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Synthetic Blades`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Synthetic Shield`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Electric Slide Marker`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Optimized Meteor`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Optimized Sagittarius Arrow`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Packet Filter F`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Packet Filter M`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Diffuse Wave Cannon Sides`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Diffuse Wave Cannon Front/Back`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Oversampled Wave Cannon Right`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Oversampled Wave Cannon Left`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Target Analysis Target`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Local Tethers`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Far Tethers`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Defamation`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Latent Defect`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Rot`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Hello World Stack`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Hello World Initial Debuff Collect`: missing static alert text
-- `04-sb/raid/o12s.ts` `O12S Hello World Tower Complete`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Archive All Marker Tracking`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Archive All No Marker`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Archive All Stack Marker`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Archive  Peripheral Tracking`: missing static alert text
 - `04-sb/raid/o12s.ts` `O12S Archive Peripheral`: missing static alert text
 - `04-sb/raid/o1n.ts` `O1N Blaze`: missing static alert text
-- `04-sb/raid/o2n.ts` `O2N Gravitational Manipulation Stack`: missing static alert text
-- `04-sb/raid/o2n.ts` `O2N Earthquake`: missing static alert text
-- `04-sb/raid/o2n.ts` `O2N Antilight`: missing static alert text
 - `04-sb/raid/o2s.ts` `O2S Phase Probe Tracker`: missing static alert text
 - `04-sb/raid/o2s.ts` `O2S 100Gs`: missing static alert text
-- `04-sb/raid/o2s.ts` `O2S Earthquake`: missing static alert text
-- `04-sb/raid/o2s.ts` `O2S Elevated`: missing static alert text
-- `04-sb/raid/o2s.ts` `O2S Maniacal Probe`: missing static alert text
-- `04-sb/raid/o2s.ts` `O2S Maniacal Probe You`: missing static alert text
-- `04-sb/raid/o2s.ts` `O2S Unstable Gravity`: missing static alert text
-- `04-sb/raid/o2s.ts` `O2S Unstable Gravity Delayed`: missing static alert text
 - `04-sb/raid/o3n.ts` `O3N Phase Tracker`: missing static alert text
-- `04-sb/raid/o3n.ts` `O3N Spellblade Holy Standard`: missing static alert text
 - `04-sb/raid/o3n.ts` `O3N Spellblade Holy Mindjack`: missing static alert text
 - `04-sb/raid/o3n.ts` `O3N Great Dragon`: missing static netRegex id
 - `04-sb/raid/o3n.ts` `O3N Game Counter Initialize`: missing static alert text
-- `04-sb/raid/o3n.ts` `O3N The Game`: missing static alert text
 - `04-sb/raid/o3s.ts` `O3S Panel Swap Phase Counter`: missing static alert text
 - `04-sb/raid/o3s.ts` `O3S Spellblade Holy Counter`: missing static alert text
 - `04-sb/raid/o3s.ts` `O3S Spellblade Holy`: missing static alert text
-- `04-sb/raid/o3s.ts` `O3S Library Spellblade`: missing static alert text
-- `04-sb/raid/o3s.ts` `O3S Right Face`: missing static alert text
-- `04-sb/raid/o3s.ts` `O3S Forward March`: missing static alert text
-- `04-sb/raid/o3s.ts` `O3S Left Face`: missing static alert text
-- `04-sb/raid/o3s.ts` `O3S About Face`: missing static alert text
 - `04-sb/raid/o3s.ts` `O3S Individual Adds`: missing static netRegex id
 - `04-sb/raid/o3s.ts` `O3S Iron Giant`: missing static netRegex id
-- `04-sb/raid/o3s.ts` `O3S The Queen's Waltz: Books`: missing static alert text
-- `04-sb/raid/o3s.ts` `O3S The Queen's Waltz: Tethers You`: missing static alert text
 - `04-sb/raid/o3s.ts` `O3S Soul Reaper`: missing static netRegex id
 - `04-sb/raid/o4n.ts` `O4N Empowered Fire`: missing static alert text
-- `04-sb/raid/o4n.ts` `O4N Flare`: missing static alert text
 - `04-sb/raid/o4n.ts` `O4N Holy`: missing static alert text
 - `04-sb/raid/o4s.ts` `O4S Exdeath Thunder III Counter`: missing static alert text
-- `04-sb/raid/o4s.ts` `O4S Exdeath Thunder III`: missing static alert text
 - `04-sb/raid/o4s.ts` `O4S Exdeath Ultimate Blizzard III`: missing static alert text
-- `04-sb/raid/o4s.ts` `O4S Exdeath Flare`: missing static alert text
 - `04-sb/raid/o4s.ts` `O4S Neo Grand Cross Alpha Tracker`: missing static alert text
 - `04-sb/raid/o4s.ts` `O4S Neo Grand Cross Delta Tracker`: missing static alert text
 - `04-sb/raid/o4s.ts` `O4S Neo Grand Cross Omega Tracker`: missing static alert text
-- `04-sb/raid/o4s.ts` `O4S Neo Flood of Naught: Colors Purple Blue`: missing static alert text
-- `04-sb/raid/o4s.ts` `O4S Neo Flood of Naught: Colors Blue Purple`: missing static alert text
 - `04-sb/raid/o4s.ts` `O4S Neo Laser Counter`: missing static alert text
-- `04-sb/raid/o4s.ts` `O4S Neo Flood of Naught: Charge`: missing static alert text
-- `04-sb/raid/o4s.ts` `O4S Neo Double Attack`: missing static alert text
-- `04-sb/raid/o4s.ts` `O4S Neo Grand Cross Delta`: missing static alert text
 - `04-sb/raid/o4s.ts` `O4S Neo Grand Cross Omega`: missing static alert text
 - `04-sb/raid/o4s.ts` `O4S Neo Water Tracker`: missing static alert text
-- `04-sb/raid/o4s.ts` `O4S Neo Beyond Death Delta Tank`: missing static alert text
-- `04-sb/raid/o4s.ts` `O4S Neo Off Balance Omega`: missing static alert text
+- `04-sb/raid/o4s.ts` `O4S Neo Off Balance Omega`: dynamic alert text
 - `04-sb/raid/o4s.ts` `O4S Neo Delta Attack`: missing static alert text
-- `04-sb/raid/o4s.ts` `O4S Neo Almagest`: missing static alert text
-- `04-sb/raid/o4s.ts` `O4S Neo Flare`: missing static alert text
 - `04-sb/raid/o5n.ts` `O5N Stop Combat`: missing static netRegex id
 - `04-sb/raid/o5n.ts` `O5N Diabolic Headlamp`: missing static alert text
-- `04-sb/raid/o5n.ts` `O5N Ghost Tether`: missing static alert text
-- `04-sb/raid/o5n.ts` `O5N Diabolic Light`: missing static alert text
-- `04-sb/raid/o5n.ts` `O5N Throttle`: missing static alert text
 - `04-sb/raid/o5s.ts` `O5S Stop Combat`: missing static netRegex id
 - `04-sb/raid/o5s.ts` `O5S Diabolic Headlamp`: missing static alert text
-- `04-sb/raid/o5s.ts` `O5S Diabolic Light`: missing static alert text
-- `04-sb/raid/o5s.ts` `O5S Diabolic Wind`: missing static alert text
 - `04-sb/raid/o5s.ts` `O5S Remorse`: missing static netRegex id
-- `04-sb/raid/o6n.ts` `O6N Demonic Stone`: missing static alert text
 - `04-sb/raid/o6s.ts` `O6S Storms Grip`: missing static netRegex id
-- `04-sb/raid/o6s.ts` `O6S Demonic Stone`: missing static alert text
 - `04-sb/raid/o6s.ts` `O6S Last Kiss Tracker`: missing static alert text
-- `04-sb/raid/o6s.ts` `O6S Last Kiss Marker`: missing static alert text
 - `04-sb/raid/o7n.ts` `O7N Kill Phase Adds`: missing static netRegex id
 - `04-sb/raid/o7s.ts` `O7S Dadaluma Simulation`: missing static alert text
 - `04-sb/raid/o7s.ts` `O7S Bibliotaph Simulation`: missing static alert text
-- `04-sb/raid/o7s.ts` `O7S Orb Marker`: missing static alert text
-- `04-sb/raid/o7s.ts` `O7S Blue Marker`: missing static alert text
-- `04-sb/raid/o7s.ts` `O7S Abandonment`: missing static alert text
-- `04-sb/raid/o7s.ts` `O7S Rot`: missing static alert text
 - `04-sb/raid/o7s.ts` `O7S Load`: missing static alert text
-- `04-sb/raid/o7s.ts` `O7S Run`: missing static alert text
 - `04-sb/raid/o8n.ts` `O8N Gravitational Wave`: missing static alert text
 - `04-sb/raid/o8n.ts` `O8N Intemperate Will`: missing static alert text
-- `04-sb/raid/o8n.ts` `O8N Flagrant Fire Single`: missing static alert text
 - `04-sb/raid/o8n.ts` `O8N Flagrant Fire Stack`: missing static alert text
 - `04-sb/raid/o8s.ts` `O8S Intemperate Will`: missing static alert text
 - `04-sb/raid/o8s.ts` `O8S Gravitational Wave`: missing static alert text
 - `04-sb/raid/o8s.ts` `O8S Pulse Wave You`: missing static alert text
-- `04-sb/raid/o8s.ts` `O8S Wings of Destruction`: missing static alert text
-- `04-sb/raid/o8s.ts` `O8S Ultimate Embrace`: missing static alert text
-- `04-sb/raid/o8s.ts` `O8S Indulgent Will`: missing static alert text
-- `04-sb/raid/o8s.ts` `O8S Idyllic Will`: missing static alert text
 - `04-sb/raid/o8s.ts` `O8S Jester Cleanup`: missing static alert text
 - `04-sb/raid/o8s.ts` `O8S Mana Charge`: missing static alert text
-- `04-sb/raid/o8s.ts` `O8S Mana Release`: missing static alert text
+- `04-sb/raid/o8s.ts` `O8S Mana Release`: dynamic alert text
 - `04-sb/raid/o8s.ts` `O8S Fire Head Marker`: missing static alert text
 - `04-sb/raid/o8s.ts` `O8S Fire Stack`: missing static alert text
 - `04-sb/raid/o8s.ts` `O8S Thrumming Thunder Real`: missing static alert text
@@ -1138,42 +857,24 @@
 - `04-sb/raid/o8s.ts` `O8S Blizzard True Donut`: missing static alert text
 - `04-sb/raid/o8s.ts` `O8S Blizzard Fake Near`: missing static alert text
 - `04-sb/raid/o8s.ts` `O8S Blizzard True Near`: missing static alert text
-- `04-sb/raid/o9n.ts` `O9N Dynamic Fluid`: missing static alert text
-- `04-sb/raid/o9n.ts` `O9N Knockdown`: missing static alert text
 - `04-sb/raid/o9n.ts` `O9N Stack Collect`: missing static alert text
-- `04-sb/raid/o9n.ts` `O9N Stack`: missing static alert text
-- `04-sb/raid/o9s.ts` `O9S Longitudinal Implosion`: missing static alert text
-- `04-sb/raid/o9s.ts` `O9S Latitudinal Implosion`: missing static alert text
-- `04-sb/raid/o9s.ts` `O9S Orbs Fiend`: missing static alert text
 - `04-sb/raid/o9s.ts` `O9S Fire Phase Tracking`: missing static alert text
 - `04-sb/raid/o9s.ts` `O9S Water Phase Tracking`: missing static alert text
 - `04-sb/raid/o9s.ts` `O9S Wind Phase Tracking`: missing static alert text
 - `04-sb/raid/o9s.ts` `O9S Headwind`: missing static alert text
 - `04-sb/raid/o9s.ts` `O9S Tailwind`: missing static alert text
-- `04-sb/raid/o9s.ts` `O9S Cyclone Knockback`: missing static alert text
 - `04-sb/raid/o9s.ts` `O9S Earth Phase Tracking`: missing static alert text
-- `04-sb/raid/o9s.ts` `O9S Accretion`: missing static alert text
 - `04-sb/raid/o9s.ts` `O9S Primordial Crust Cleanup`: missing static alert text
 - `04-sb/raid/o9s.ts` `O9S Orb Phase Tracking`: missing static alert text
-- `04-sb/raid/o9s.ts` `O9S Orb Entropy`: missing static alert text
 - `04-sb/raid/o9s.ts` `O9S Enrage Phase Tracking`: missing static alert text
 - `04-sb/trial/byakko-ex.ts` `ByaEx Roar Counter`: missing static alert text
-- `04-sb/trial/byakko-ex.ts` `ByaEx Roar of Thunder`: missing static alert text
-- `04-sb/trial/byakko-ex.ts` `ByaEx Bubble`: missing static alert text
-- `04-sb/trial/byakko-ex.ts` `ByaEx Ominous Wind`: missing static alert text
-- `04-sb/trial/byakko-ex.ts` `ByaEx Puddle Marker`: missing static alert text
-- `04-sb/trial/byakko-ex.ts` `ByaEx G100`: missing static alert text
 - `04-sb/trial/byakko-ex.ts` `ByaEx Tiger Add`: missing static netRegex id
 - `04-sb/trial/byakko-ex.ts` `ByaEx Stake Counter`: missing static alert text
 - `04-sb/trial/byakko-ex.ts` `ByaEx Stake Counter Cleanup`: missing static alert text
-- `04-sb/trial/byakko-ex.ts` `ByaEx Highest Stakes`: missing static alert text
+- `04-sb/trial/byakko-ex.ts` `ByaEx Highest Stakes`: dynamic alert text
 - `04-sb/trial/byakko.ts` `Byakko White Herald`: missing static alert text
-- `04-sb/trial/lakshmi-ex.ts` `LakshmiEx Pall of Light`: missing static alert text
-- `04-sb/trial/lakshmi-ex.ts` `LakshmiEx Water III`: missing static alert text
 - `04-sb/trial/lakshmi.ts` `Lakshmi Headmarker Collect`: missing static netRegex id
 - `04-sb/trial/lakshmi.ts` `Lakshmi Headmarker Cleanup`: missing static alert text
-- `04-sb/trial/lakshmi.ts` `Lakshmi Pall of Light`: missing static alert text
-- `04-sb/trial/lakshmi.ts` `Lakshmi Hand of Grace`: missing static alert text
 - `04-sb/trial/rathalos-ex.ts` `RathEx Adds`: missing static netRegex id
 - `04-sb/trial/rathalos-ex.ts` `RathEx Garula Add`: missing static netRegex id
 - `04-sb/trial/rathalos-ex.ts` `RathEx Garula Targetable`: missing static netRegex id
@@ -1182,19 +883,14 @@
 - `04-sb/trial/rathalos.ts` `Rathalos Garula Add`: missing static netRegex id
 - `04-sb/trial/rathalos.ts` `Rathalos Garula Targetable`: missing static netRegex id
 - `04-sb/trial/rathalos.ts` `Rathalos Fireball`: missing static alert text
-- `04-sb/trial/seiryu-ex.ts` `SeiryuEx Cursekeeper`: missing static alert text
 - `04-sb/trial/seiryu-ex.ts` `SeiryuEx Ascending Tracking`: missing static alert text
 - `04-sb/trial/seiryu-ex.ts` `SeiryuEx Ascending Marker Tracking`: missing static alert text
-- `04-sb/trial/seiryu-ex.ts` `SeiryuEx Ascending Marker You`: missing static alert text
-- `04-sb/trial/seiryu-ex.ts` `SeiryuEx Ascending Tower You`: missing static alert text
 - `04-sb/trial/seiryu-ex.ts` `SeiryuEx Handprint East`: missing static alert text
 - `04-sb/trial/seiryu-ex.ts` `SeiryuEx Handprint West`: missing static alert text
 - `04-sb/trial/seiryu-ex.ts` `SeiryuEx Stack`: missing static netRegex id
 - `04-sb/trial/seiryu-ex.ts` `SeiryuEx Sigil In Out 1`: missing static alert text
 - `04-sb/trial/seiryu-ex.ts` `SeiryuEx Sigil Out In 1`: missing static alert text
 - `04-sb/trial/seiryu.ts` `Seiryu Blue Bolt`: missing static alert text
-- `04-sb/trial/seiryu.ts` `Seiryu Red Rush`: missing static alert text
-- `04-sb/trial/seiryu.ts` `Seiryu Kanabo`: missing static alert text
 - `04-sb/trial/seiryu.ts` `Seiryu Handprint East`: missing static alert text
 - `04-sb/trial/seiryu.ts` `Seiryu Handprint West`: missing static alert text
 - `04-sb/trial/shinryu-ex.ts` `ShinryuEx Heart Cleanup`: missing static netRegex id
@@ -1202,37 +898,21 @@
 - `04-sb/trial/shinryu-ex.ts` `ShinryuEx Phase 2`: missing static alert text
 - `04-sb/trial/shinryu-ex.ts` `ShinryuEx Phase 3`: missing static alert text
 - `04-sb/trial/shinryu-ex.ts` `ShinryuEx Phase 4`: missing static alert text
-- `04-sb/trial/shinryu-ex.ts` `ShinryuEx Akh Morn`: missing static alert text
 - `04-sb/trial/shinryu-ex.ts` `ShinryuEx Hypernova`: missing static alert text
-- `04-sb/trial/shinryu-ex.ts` `ShinryuEx Levinbolt`: missing static alert text
 - `04-sb/trial/shinryu-ex.ts` `ShinryuEx Heart`: missing static netRegex id
-- `04-sb/trial/shinryu-ex.ts` `ShinryuEx Death Sentence`: missing static alert text
-- `04-sb/trial/shinryu-ex.ts` `ShinryuEx Tail Marker`: missing static alert text
-- `04-sb/trial/shinryu-ex.ts` `ShinryuEx Shakers`: missing static alert text
-- `04-sb/trial/shinryu.ts` `Shinryu Normal Akh Morn`: missing static alert text
-- `04-sb/trial/shinryu.ts` `Shinryu Normal Slap Marker`: missing static alert text
 - `04-sb/trial/susano-ex.ts` `SusEx Thundercloud Tracker`: missing static netRegex id
-- `04-sb/trial/susano-ex.ts` `SusEx Knockback`: missing static alert text
 - `04-sb/trial/susano-ex.ts` `SusEx Brightstorm Stack`: missing static alert text
-- `04-sb/trial/susano-ex.ts` `SusEx Levinbolt Stun`: missing static alert text
+- `04-sb/trial/susano-ex.ts` `SusEx Levinbolt Stun`: dynamic alert text
 - `04-sb/trial/susano-ex.ts` `SusEx Churning`: missing static alert text
 - `04-sb/trial/susano.ts` `Susano Brightstorm`: missing static alert text
-- `04-sb/trial/susano.ts` `Susano Seasplitter`: missing static alert text
 - `04-sb/trial/suzaku-ex.ts` `SuzEx Phantom Flurry`: missing static alert text
-- `04-sb/trial/suzaku.ts` `Suzaku Primary Target`: missing static alert text
-- `04-sb/trial/tsukuyomi-ex.ts` `TsukuyomiEx Torment`: missing static alert text
-- `04-sb/trial/tsukuyomi-ex.ts` `TsukuyomiEx Dark Blade`: missing static alert text
-- `04-sb/trial/tsukuyomi-ex.ts` `TsukuyomiEx Bright Blade`: missing static alert text
 - `04-sb/trial/tsukuyomi-ex.ts` `TsukuyomiEx Meteor Marker`: missing static alert text
 - `04-sb/trial/tsukuyomi-ex.ts` `TsukuyomiEx Dance of the Dead`: missing static netRegex id
 - `04-sb/trial/tsukuyomi-ex.ts` `TsukuyomiEx Supreme Selenomancy`: missing static alert text
 - `04-sb/trial/tsukuyomi-ex.ts` `TsukuyomiEx Moonlit Debuff Logic`: missing static alert text
 - `04-sb/trial/tsukuyomi-ex.ts` `TsukuyomiEx Moonshadowed Debuff Logic`: missing static alert text
 - `04-sb/trial/tsukuyomi.ts` `Tsukuyomi Midnight Haze`: missing static netRegex id
-- `04-sb/trial/tsukuyomi.ts` `Tsukuyomi Lead Of The Underworld`: missing static alert text
 - `04-sb/trial/tsukuyomi.ts` `Tsukuyomi Lunacy`: missing static alert text
-- `04-sb/trial/yojimbo.ts` `Yojimbo Giga Jump`: missing static alert text
-- `04-sb/trial/yojimbo.ts` `Yojimbo Gekko`: missing static alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Phase Tracker`: missing static alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Phase Tracker Finale`: missing static alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Titan Woken`: missing static alert text
@@ -1241,27 +921,25 @@
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Beyond Limits Gain`: missing static alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Beyond Limits Lose`: missing static alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Garuda Downburst`: missing static alert text
-- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Garuda Mistral Song Marker`: missing static alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Garuda Spiny Plume`: missing static netRegex id
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Garuda Wicked Wheel`: missing static alert text
-- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Garuda Sisters Location`: missing static alert text
+- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Garuda Sisters Location`: dynamic alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ultima Mesohigh Tether`: missing static alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Possible ID Locator`: missing static alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Initial Dash Collector`: missing static netRegex id
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Initial Radiant Plume Collector`: missing static alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Nail Adds`: missing static netRegex id
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Nail Deaths`: missing static alert text
-- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Fetters`: missing static alert text
-- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Searing Wind`: missing static alert text
+- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Fetters`: dynamic alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Name Toggle Counter`: missing static netRegex id
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Dash Safe Spot 1`: missing static netRegex id
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Dash Safe Spot 2 Adjust`: missing static netRegex id
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Ifrit Dash Safe Spot 2`: missing static netRegex id
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Titan Bury Direction`: missing static netRegex id
-- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Titan Gaols`: missing static alert text
-- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Titan Bomb Failure`: missing static alert text
+- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Titan Gaols`: dynamic alert text
+- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Titan Bomb Failure`: dynamic alert text
 - `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Caster LB`: missing static netRegex id
-- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Predation`: missing static alert text
+- `04-sb/ultimate/ultima_weapon_ultimate.ts` `UWU Predation`: dynamic alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Fireball Counter`: missing static alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Quickmarch Phase`: missing static alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Blackfire Phase`: missing static alert text
@@ -1271,9 +949,9 @@
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Octet Phase`: missing static alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Ragnarok Party Tracker`: missing static alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Hatch Collect`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Hatch Marker YOU`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Hatch Callouts`: missing static alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Hatch Callouts`: dynamic alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Hatch Cleanup`: missing static alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Twintania Phase Change Watcher`: dynamic alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Quote 1`: missing static netRegex id
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Quote 2`: missing static netRegex id
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Quote 3`: missing static netRegex id
@@ -1289,41 +967,32 @@
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Quote 13`: missing static netRegex id
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Quote 14`: missing static netRegex id
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Thunder Collect`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Thunderstruck`: missing static alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Your Doom`: missing static netRegex id
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Doom Init`: missing static netRegex id
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Doom Cleanup`: missing static netRegex id
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Cleanse Callout`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Fireball 1`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Fireball 2`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Fireball 3`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Fireball 4`: missing static alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Cleanse Callout`: dynamic alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Dragon Tracker`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Dragon Placement`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Dragon Dive Marker Me`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Dragon Dive Marker Others`: missing static alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Dragon Placement`: dynamic alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Dragon Dive Marker Me`: dynamic alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Dragon Dive Marker Others`: dynamic alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Nael Dragon Dive Marker Counter`: missing static alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Octet Marker Tracking`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Octet Nael Marker`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Octet Dragon Marker`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Octet Baha Marker`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Octet Twin Marker`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Quickmarch Dive Dir`: missing static alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Octet Nael Marker`: dynamic alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Octet Dragon Marker`: dynamic alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Octet Baha Marker`: dynamic alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Quickmarch Dive Dir`: dynamic alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU P3 Nael Collect`: missing static alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU P3 Bahamut Collect`: missing static alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU P3 Twintania Collect`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Blackfire Party Dir`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Megaflare Stack Me`: missing static alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Blackfire Party Dir`: dynamic alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Megaflare Stack Tracking`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Megaflare Tower`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Megaflare Twin Tower`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Heavensfall Nael Spot`: missing static alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Megaflare Twin Tower`: dynamic alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Heavensfall Nael Spot`: dynamic alert text
 - `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Earthshaker Tracking`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Earthshaker Not Me`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Grand Octet Run & Rotate`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Morn Afah`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Akh Morn`: missing static alert text
-- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Exaflare`: missing static alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Grand Octet Run & Rotate`: dynamic alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Morn Afah`: dynamic alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Akh Morn`: dynamic alert text
+- `04-sb/ultimate/unending_coil_ultimate.ts` `UCU Exaflare`: dynamic alert text
 - `05-shb/alliance/the_copied_factory.ts` `Copied Serial Centrifugal Spin`: missing static alert text
 - `05-shb/alliance/the_copied_factory.ts` `Copied Serial Sidestriking Spin`: missing static alert text
 - `05-shb/alliance/the_copied_factory.ts` `Copied Hobbes Right Arm`: missing static netRegex id
@@ -1335,38 +1004,369 @@
 - `05-shb/alliance/the_copied_factory.ts` `Copied Hobbes Conveyer Belts`: missing static netRegex id
 - `05-shb/alliance/the_copied_factory.ts` `Copied Hobbes Oil 1`: missing static netRegex id
 - `05-shb/alliance/the_copied_factory.ts` `Copied Hobbes Oil 2`: missing static netRegex id
-- `05-shb/alliance/the_copied_factory.ts` `Copied Goliath Tank Exploder`: missing static alert text
 - `05-shb/alliance/the_copied_factory.ts` `Copied Engels Marx Smash Right`: missing static alert text
 - `05-shb/alliance/the_copied_factory.ts` `Copied Engels Marx Smash Left`: missing static alert text
-- `05-shb/alliance/the_copied_factory.ts` `Copied Engels Incendiary Bombing`: missing static alert text
-- `05-shb/alliance/the_copied_factory.ts` `Copied Engels Guided Missile`: missing static alert text
-- `05-shb/alliance/the_copied_factory.ts` `Copied 9S Goliath Laser Turret`: missing static alert text
 - `05-shb/alliance/the_copied_factory.ts` `Copied 9S Fore-Hind Cannons`: missing static alert text
 - `05-shb/alliance/the_copied_factory.ts` `Copied 9S Dual-Flank Cannons`: missing static alert text
 - `05-shb/alliance/the_copied_factory.ts` `Copied 9S Serial-Jointed Service Models`: missing static alert text
 - `05-shb/alliance/the_copied_factory.ts` `Copied 9S Engage Goliath Tank Support`: missing static alert text
 - `05-shb/alliance/the_puppets_bunker.ts` `Puppet Aegis Anti-Personnel Laser Collect`: missing static alert text
-- `05-shb/alliance/the_puppets_bunker.ts` `Puppet Aegis Anti-Personnel Laser Not You`: missing static alert text
 - `05-shb/alliance/the_puppets_bunker.ts` `Puppet Light Maneuver Martial Arm Collect`: missing static alert text
 - `05-shb/alliance/the_puppets_bunker.ts` `Puppet Light Maneuver Martial Arm Healer`: missing static alert text
 - `05-shb/alliance/the_puppets_bunker.ts` `Puppet Superior Shield Protocol`: missing static alert text
 - `05-shb/alliance/the_puppets_bunker.ts` `Puppet Superior Precision Guided Missile Collect`: missing static alert text
-- `05-shb/alliance/the_puppets_bunker.ts` `Puppet Superior Precision Guided Missile Not You`: missing static alert text
 - `05-shb/alliance/the_puppets_bunker.ts` `Puppet Superior Sliding Swipe First`: missing static alert text
 - `05-shb/alliance/the_puppets_bunker.ts` `Puppet Superior Sliding Swipe Others`: missing static alert text
-- `05-shb/alliance/the_puppets_bunker.ts` `Puppet Heavy Unconventional Voltage`: missing static alert text
 - `05-shb/alliance/the_puppets_bunker.ts` `Puppet Heavy High-Powered Laser`: missing static alert text
-- `05-shb/alliance/the_puppets_bunker.ts` `Puppet Heavy Support Pod`: missing static alert text
-- `05-shb/alliance/the_puppets_bunker.ts` `Puppet Hallway Targeted Laser`: missing static alert text
 - `05-shb/alliance/the_puppets_bunker.ts` `Puppet Compound Mechanical Dissection`: missing static alert text
 - `05-shb/alliance/the_puppets_bunker.ts` `Puppet Compound 2P R012: Laser Not You`: missing static alert text
 - `05-shb/alliance/the_puppets_bunker.ts` `Puppet Compound 2P Three Parts Disdain`: missing static alert text
-- `05-shb/alliance/the_puppets_bunker.ts` `Puppet Compound 2P Four Parts Resolve`: missing static alert text
+- `05-shb/alliance/the_puppets_bunker.ts` `Puppet Compound 2P Four Parts Resolve`: dynamic alert text
 - `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm Knave Colossal Impact Sides`: missing static alert text
 - `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm Copied Knave Colossal Impact Sides`: missing static alert text
 - `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm Knave Magic Artillery Beta Collect`: missing static alert text
-- `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm Knave Magic Artillery Beta`: missing static alert text
-- ... 1932 more skipped triggers omitted from this report
+- `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm Hansel/Gretel Seed Of Magic Alpha`: missing static alert text
+- `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm Hansel/Gretel Riot Of Magic`: missing static alert text
+- `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm Hansel/Gretel Bloody Sweep`: missing static alert text
+- `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm Meng-Zi/Xun-Zi Deploy Armaments Collect`: missing static alert text
+- `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm False Idol Made Magic Left`: missing static alert text
+- `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm False Idol Made Magic Right`: missing static alert text
+- `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm False Idol Darker Note Collect`: missing static alert text
+- `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm Her Inflorescence Recreate Signal`: missing static alert text
+- `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm Her Inflorescence Heavy Arms Middle`: missing static alert text
+- `05-shb/alliance/the_tower_at_paradigms_breach.ts` `Paradigm Her Inflorescence Heavy Arms Sides`: missing static alert text
+- `05-shb/dungeon/anamnesis_anyder.ts` `AnAnyder Open Hearth Flying Fount`: missing static alert text
+- `05-shb/dungeon/dohn_mheg.ts` `Dohn Mheg Straight Punch`: missing static alert text
+- `05-shb/dungeon/dohn_mheg.ts` `Dohn Mheg Proboscis`: missing static alert text
+- `05-shb/dungeon/dohn_mheg.ts` `Dohn Mheg Torpedo`: missing static alert text
+- `05-shb/dungeon/dohn_mheg.ts` `Dohn Mheg Leap Stack`: missing static alert text
+- `05-shb/dungeon/heroes_gauntlet.ts` `Heroes Gauntlet Wild Anguish Collect`: missing static alert text
+- `05-shb/dungeon/holminster_switch.ts` `Holminster Exorcise Stack`: missing static alert text
+- `05-shb/dungeon/holminster_switch.ts` `Holminster Chain Down`: dynamic alert text
+- `05-shb/dungeon/holminster_switch.ts` `Holminster Left Knout`: missing static alert text
+- `05-shb/dungeon/holminster_switch.ts` `Holminster Right Knout`: missing static alert text
+- `05-shb/dungeon/malikahs_well.ts` `Malikah Head Toss Stack`: missing static alert text
+- `05-shb/dungeon/matoyas_relict.ts` `Matoyas Mudman Falling Rock`: missing static alert text
+- `05-shb/dungeon/mt_gulg.ts` `Gulg Left Palm`: missing static alert text
+- `05-shb/dungeon/mt_gulg.ts` `Gulg Right Palm`: missing static alert text
+- `05-shb/dungeon/paglthan.ts` `Paglthan Lightning Rod Lose`: missing static alert text
+- `05-shb/dungeon/paglthan.ts` `Paglthan Akh Morn`: missing static alert text
+- `05-shb/dungeon/paglthan.ts` `Paglthan Lunar Flare Reset`: missing static alert text
+- `05-shb/dungeon/paglthan.ts` `Paglthan Lunar Flare Collect`: missing static alert text
+- `05-shb/dungeon/qitana_ravel.ts` `Qitana Confession of Faith Stack`: missing static alert text
+- `05-shb/dungeon/the_grand_cosmos.ts` `Cosmos Dark Pulse`: missing static alert text
+- `05-shb/dungeon/the_grand_cosmos.ts` `Cosmos Direct Seeding Mistake`: missing static alert text
+- `05-shb/dungeon/the_grand_cosmos.ts` `Cosmos Ronkan Cure II`: missing static alert text
+- `05-shb/dungeon/the_grand_cosmos.ts` `Cosmos Scorching Left`: missing static alert text
+- `05-shb/dungeon/the_grand_cosmos.ts` `Cosmos Scorching Right`: missing static alert text
+- `05-shb/dungeon/twinning.ts` `Twinning Main Head`: missing static alert text
+- `05-shb/dungeon/twinning.ts` `Twinning Charge Eradicated`: missing static alert text
+- `05-shb/etc/the_diadem.ts` `Diadem Falling Asleep`: missing static netRegex id
+- `05-shb/etc/the_diadem.ts` `Diadem Found Gather Point`: missing static netRegex id
+- `05-shb/etc/the_diadem.ts` `Diadem Flag Alert`: missing static netRegex id
+- `05-shb/eureka/bozjan_southern_front.ts` `Bozja South Falling Asleep`: missing static netRegex id
+- `05-shb/eureka/bozjan_southern_front.ts` `Bozja South Critical Engagement`: missing static netRegex id
+- `05-shb/eureka/bozjan_southern_front.ts` `unknown`: missing id
+- `05-shb/eureka/bozjan_southern_front.ts` `Bozja South Castrum Adrammelech Orb Collector`: missing static netRegex id
+- `05-shb/eureka/bozjan_southern_front.ts` `Bozja South Castrum Adrammelech Curse of the Fiend Orbs`: missing static alert text
+- `05-shb/eureka/bozjan_southern_front.ts` `Bozja South Castrum Adrammelech Accursed Becoming Orb 1`: missing static alert text
+- `05-shb/eureka/bozjan_southern_front.ts` `Bozja South Castrum Adrammelech Accursed Becoming Orb 2`: missing static alert text
+- `05-shb/eureka/bozjan_southern_front.ts` `Bozja South Castrum Adrammelech Electric Charge Collector`: missing static netRegex id
+- `05-shb/eureka/bozjan_southern_front.ts` `Bozja South Castrum Adrammelech Shock`: missing static netRegex id
+- `05-shb/eureka/bozjan_southern_front.ts` `Bozja South Castrum Lyon Passage`: missing static netRegex id
+- `05-shb/eureka/delubrum_reginae.ts` `Delubrum Seeker Sword Cleanup`: missing static alert text
+- `05-shb/eureka/delubrum_reginae.ts` `Delubrum Seeker Baleful Swath`: missing static alert text
+- `05-shb/eureka/delubrum_reginae.ts` `Delubrum Avowed Hot And Cold`: missing static alert text
+- `05-shb/eureka/delubrum_reginae.ts` `Delubrum Avowed Hot And Cold Cleaves`: missing static alert text
+- `05-shb/eureka/delubrum_reginae.ts` `Delubrum Avowed Gleaming Arrow Collect`: missing static alert text
+- `05-shb/eureka/delubrum_reginae.ts` `Delubrum Queen Cleansing Slash Bleed`: dynamic alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Seeker Phase`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Seeker Sword Cleanup`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Seeker First Mercy`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Seeker Mercy Swords`: dynamic alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Seeker Baleful Swath`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Seeker Baleful Onslaught Buster`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Seeker Baleful Comet Cleanup`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Seeker Burning Chains`: missing static netRegex id
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Seeker Merciful Arc`: missing static netRegex id
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Dahu Spit Flame`: missing static netRegex id
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Dahu Flare`: missing static netRegex id
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Dahu Hysteric Assault`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Guard Fiery Portent`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Guard Icy Portent`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Phantom Stuffy Wrath`: missing static netRegex id
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Avowed Wrath Of Bozja`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Avowed Hot And Cold Cleanup`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Avowed Temperature Collect`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Avowed Brand Collect`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Avowed March Collect`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Avowed Blade of Entropy Collect`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Avowed Hot And Cold Unwavering Apparations`: dynamic alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Avowed Gleaming Arrow Collect`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Lord Foe Splitter`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Lord Rapid Bolts`: missing static netRegex id
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Lord Labyrinthine Fate Collect`: missing static netRegex id
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Lord Fateful Words`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Queen Cleansing Slash`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Queen Cleansing Slash Doom`: dynamic alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Queen Ball Lightning`: missing static netRegex id
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Queen Ball Lightning Bubble`: missing static netRegex id
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Queen Fiery Portent`: missing static alert text
+- `05-shb/eureka/delubrum_reginae_savage.ts` `DelubrumSav Queen Icy Portent`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Falling Asleep`: missing static netRegex id
+- `05-shb/eureka/zadnor.ts` `Zadnor Critical Engagement`: missing static netRegex id
+- `05-shb/eureka/zadnor.ts` `Zadnor Grave Soul Purge`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Grave Soul Purge Second`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Grave Crimson Blade`: missing static netRegex id
+- `05-shb/eureka/zadnor.ts` `Zadnor Grave War Wraith`: missing static netRegex id
+- `05-shb/eureka/zadnor.ts` `Zadnor Diremite Hailfire You`: dynamic alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Cavalry Raw Steel`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Cavalry Magitek Blaster`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Machines Fore-Hind Cannons`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Looks Twisting Winds`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Sartauvoir Pyrocrisis`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Sartauvoir Pyrodoxy`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Sartauvoir Left Brand`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Sartauvoir Right Brand`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Saunion Missile Salvo`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Diablo Advanced Death Ray`: missing static alert text
+- `05-shb/eureka/zadnor.ts` `Zadnor Diablo Acceleration Bomb Stop`: missing static alert text
+- `05-shb/hunts/amh_araeng.ts` `Hunt Sugaar Tail Snap`: missing static alert text
+- `05-shb/hunts/il_mheg.ts` `Hunt Pauldia Tail Drive`: missing static alert text
+- `05-shb/hunts/il_mheg.ts` `Hunt Mudman Gravity Force`: missing static alert text
+- `05-shb/hunts/il_mheg.ts` `Hunt Aglaope Song of Torment`: missing static alert text
+- `05-shb/hunts/kholusia.ts` `Hunt Lil Murderer Gobthunder III`: missing static alert text
+- `05-shb/hunts/kholusia.ts` `Hunt Huracan Winter Rain`: missing static alert text
+- `05-shb/hunts/kholusia.ts` `Hunt Huracan Spring Breeze`: missing static alert text
+- `05-shb/hunts/kholusia.ts` `Hunt Pedantry Right Cheek`: missing static alert text
+- `05-shb/hunts/kholusia.ts` `Hunt Pedantry Left Cheek`: missing static alert text
+- `05-shb/hunts/lakeland.ts` `Hunt Nariphon Roots of Atopy`: missing static alert text
+- `05-shb/hunts/lakeland.ts` `Hunt Tyger Dragon's Voice`: missing static alert text
+- `05-shb/hunts/lakeland.ts` `Hunt Tyger Ram's Voice`: missing static alert text
+- `05-shb/hunts/lakeland.ts` `Hunt Tyger Scorpion's Sting`: missing static alert text
+- `05-shb/hunts/ss_rank.ts` `Hunt Rebellion Sanctified Blizzard Chain`: missing static alert text
+- `05-shb/hunts/ss_rank.ts` `Hunt Rebellion Heavenly Cyclone`: missing static alert text
+- `05-shb/hunts/the_raktika_greatwood.ts` `Hunt Ixtab Tartarean Meteor`: missing static alert text
+- `05-shb/hunts/the_raktika_greatwood.ts` `Hunt Ixtab Tartarean Twister`: missing static alert text
+- `05-shb/hunts/the_tempest.ts` `Hunt Baal Sewer Water Back`: missing static alert text
+- `05-shb/hunts/the_tempest.ts` `Hunt Baal Sewage Wave Front`: missing static alert text
+- `05-shb/hunts/the_tempest.ts` `Hunt Baal Sewage Wave Back`: missing static alert text
+- `05-shb/map/the_dungeons_of_lyhe_ghiah.ts` `Dungeons of Lyhe Ghiah Fuath Trickster Spawn`: missing static netRegex id
+- `05-shb/map/the_dungeons_of_lyhe_ghiah.ts` `Dungeons of Lyhe Ghiah The Keeper of the Keys Spawn`: missing static netRegex id
+- `05-shb/map/the_dungeons_of_lyhe_ghiah.ts` `Dungeons of Lyhe Ghiah Dungeon Crew Spawn`: missing static netRegex id
+- `05-shb/map/the_shifting_oubliettes_of_lyhe_ghiah.ts` `Shifting Oubliettes of Lyhe Ghiah Fuath Trickster Spawn`: missing static netRegex id
+- `05-shb/map/the_shifting_oubliettes_of_lyhe_ghiah.ts` `Shifting Oubliettes of Lyhe Ghiah The Keeper of the Keys Spawn`: missing static netRegex id
+- `05-shb/map/the_shifting_oubliettes_of_lyhe_ghiah.ts` `Shifting Oubliettes of Lyhe Ghiah Dungeon Crew Spawn`: missing static netRegex id
+- `05-shb/map/the_shifting_oubliettes_of_lyhe_ghiah.ts` `Shifting Oubliettes of Lyhe Ghiah Fuath Troublemaker Hydrocannon`: missing static alert text
+- `05-shb/map/the_shifting_oubliettes_of_lyhe_ghiah.ts` `Shifting Oubliettes of Lyhe Ghiah Fuath Troublemaker Croaking Chorus`: missing static alert text
+- `05-shb/map/the_shifting_oubliettes_of_lyhe_ghiah.ts` `Shifting Oubliettes of Lyhe Ghiah Secret Korrigan Saibai Mandragora`: missing static alert text
+- `05-shb/map/the_shifting_oubliettes_of_lyhe_ghiah.ts` `Shifting Oubliettes of Lyhe Ghiah Daen Ose Petriburst`: dynamic alert text
+- `05-shb/map/the_shifting_oubliettes_of_lyhe_ghiah.ts` `Shifting Oubliettes of Lyhe Ghiah Daen Ose Petrifaction Player`: missing static alert text
+- `05-shb/raid/e10n.ts` `E10N Backward Implosion`: missing static alert text
+- `05-shb/raid/e10n.ts` `E10N Left Giga Slash`: missing static alert text
+- `05-shb/raid/e10n.ts` `E10N Right Giga Slash`: missing static alert text
+- `05-shb/raid/e10s.ts` `E10S Giga Slash Shadow Drop Right`: dynamic alert text
+- `05-shb/raid/e10s.ts` `E10S Giga Slash Shadow Drop Left`: dynamic alert text
+- `05-shb/raid/e10s.ts` `E10S Shadow Servant Cleave Drop`: missing static alert text
+- `05-shb/raid/e10s.ts` `E10S Shadow Of A Hero`: missing static netRegex id
+- `05-shb/raid/e10s.ts` `E10S Shadow Of A Hero Head Marker Map`: missing static netRegex id
+- `05-shb/raid/e10s.ts` `E10S Shadow Of A Hero Head Marker`: missing static netRegex id
+- `05-shb/raid/e10s.ts` `E10S Shackled Apart`: missing static alert text
+- `05-shb/raid/e10s.ts` `E10S Shackled Together`: missing static alert text
+- `05-shb/raid/e11n.ts` `E11N Powder Mark Explosion`: missing static alert text
+- `05-shb/raid/e11n.ts` `E11N Bound Of Faith Tether Collector`: missing static netRegex id
+- `05-shb/raid/e11n.ts` `E11N Bound Of Faith Tether Collector Cleanup`: missing static netRegex id
+- `05-shb/raid/e11n.ts` `E11N Bound Of Faith Fire`: missing static alert text
+- `05-shb/raid/e11n.ts` `E11N Bound Of Faith Lightning`: missing static alert text
+- `05-shb/raid/e11n.ts` `E11N Bound Of Faith Holy`: missing static alert text
+- `05-shb/raid/e11s.ts` `E11S Bound Of Faith Tether Collector`: missing static alert text
+- `05-shb/raid/e11s.ts` `E11S Bound Of Faith Tether Collector Cleanup`: missing static alert text
+- `05-shb/raid/e11s.ts` `E11S Bound Of Faith Fire`: missing static alert text
+- `05-shb/raid/e11s.ts` `E11S Bound Of Faith Lightning`: missing static alert text
+- `05-shb/raid/e11s.ts` `E11S Bound Of Faith Holy`: missing static alert text
+- `05-shb/raid/e11s.ts` `E11S Bound Of Faith Shifting Sky`: missing static alert text
+- `05-shb/raid/e11s.ts` `E11S Bound Of Faith Sundered Sky`: missing static alert text
+- `05-shb/raid/e11s.ts` `E11S Powder Mark Explosion`: missing static alert text
+- `05-shb/raid/e11s.ts` `E11S Cycle of Faith Fire Tether`: missing static alert text
+- `05-shb/raid/e11s.ts` `E11S Cycle of Faith Lightning Tether`: missing static alert text
+- `05-shb/raid/e11s.ts` `E11S Cycle of Faith Holy Tether`: missing static alert text
+- `05-shb/raid/e12n.ts` `E12N Bomb Collect`: missing static netRegex id
+- `05-shb/raid/e12n.ts` `E12N Boulders Impact`: missing static alert text
+- `05-shb/raid/e12n.ts` `E12N Rapturous Reach Double`: dynamic alert text
+- `05-shb/raid/e12n.ts` `E12N Rapturous Reach Cleanup`: missing static alert text
+- `05-shb/raid/e12n.ts` `E12N Rapturous Reach Single`: missing static alert text
+- `05-shb/raid/e12n.ts` `E12N Tether Collect`: missing static netRegex id
+- `05-shb/raid/e12n.ts` `E12N Cast Release`: missing static alert text
+- `05-shb/raid/e12n.ts` `E12N Tether Cleanup`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Promise Formless Judgment You`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Promise Junction Titan Bombs`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Promise Classical Sculpture`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Promise Chiseled Sculpture`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Promise Chiseled Sculpture Collector`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Promise Chiseled Sculpture Tether`: dynamic alert text
+- `05-shb/raid/e12s.ts` `E12S Promise Statue 2nd/3rd/4th Laser`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Promise Weight Cleanup`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Promise Formless Judgment`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Promise Junction Shiva`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Promise Junction Titan`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Promise Tether Collect`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Promise Stock`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Promise Cast Release`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Promise Tether Cleanup`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Promise Small Lion Spawn`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Promise Small Lion Tether`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Relativity Phase`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Oracle Cataclysm`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Shell Crusher`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Dark Water Collect`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Dark Water Cleanup`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Basic Relativity Debuffs`: missing static alert text
+- `05-shb/raid/e12s.ts` `E12S Intermediate Relativity Debuff Collector`: dynamic alert text
+- `05-shb/raid/e12s.ts` `E12S Relativity Debuffs`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Oracle Basic Relativity Shadow Eye Other`: dynamic alert text
+- `05-shb/raid/e12s.ts` `E12S Basic Relativity Yellow Hourglass`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Adv Relativity Hourglass Collect`: missing static netRegex id
+- `05-shb/raid/e12s.ts` `E12S Adv Relativity Hourglass Collect Yellow Tethers`: dynamic alert text
+- `05-shb/raid/e12s.ts` `E12S Adv Relativity Buff Collector`: missing static alert text
+- `05-shb/raid/e1s.ts` `E1S Initial`: missing static alert text
+- `05-shb/raid/e1s.ts` `E1S Vice and Virtue Tracker`: missing static alert text
+- `05-shb/raid/e1s.ts` `E1S Vice and Virtue DPS 2 Tracker`: missing static alert text
+- `05-shb/raid/e1s.ts` `E1S Vice and Virtue Tank 1`: missing static alert text
+- `05-shb/raid/e1s.ts` `E1S Vice and Virtue Tank 2`: missing static alert text
+- `05-shb/raid/e1s.ts` `E1S Vice and Virtue Healer 1`: missing static alert text
+- `05-shb/raid/e1s.ts` `E1S Vice and Virtue Healer 2`: missing static alert text
+- `05-shb/raid/e2n.ts` `E2N Shadowflame Healer`: missing static alert text
+- `05-shb/raid/e2n.ts` `E2N Darkfire Counter`: missing static alert text
+- `05-shb/raid/e2n.ts` `E2N Unholy Darkness No Waiting`: missing static alert text
+- `05-shb/raid/e2n.ts` `E2N Shadoweye No Waiting`: missing static alert text
+- `05-shb/raid/e2n.ts` `E2N Dark Fire Collect`: missing static alert text
+- `05-shb/raid/e2n.ts` `E2N Unholy Darkness Collect`: missing static alert text
+- `05-shb/raid/e2n.ts` `E2N Countdown Marker Unholy Darkness`: missing static alert text
+- `05-shb/raid/e2n.ts` `E2N Shadoweye Collect`: missing static alert text
+- `05-shb/raid/e2n.ts` `E2N Countdown Marker Shadoweye`: missing static alert text
+- `05-shb/raid/e2n.ts` `E2N Countdown Marker Cleanup`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Shadowflame Healer`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Doomvoid Guillotine`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Unholy Darkness No Waiting`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Unholy Darkness Collect`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Countdown Marker Unholy Darkness`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Dark Fire Collect`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Shadoweye No Waiting`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Shadoweye Collect`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Countdown Marker Shadoweye Other`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Flare Collect`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Hell Wind Cleanup`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Hell Wind Collect`: missing static alert text
+- `05-shb/raid/e2s.ts` `E2S Countdown Marker Cleanup`: missing static alert text
+- `05-shb/raid/e3n.ts` `E3N Undersea Quake Inside`: missing static alert text
+- `05-shb/raid/e3n.ts` `E3N Stack`: missing static alert text
+- `05-shb/raid/e3n.ts` `E3N Surging Waters Marker`: missing static alert text
+- `05-shb/raid/e3s.ts` `E3S Rip Current`: missing static alert text
+- `05-shb/raid/e3s.ts` `E3S Undersea Quake Inside`: missing static alert text
+- `05-shb/raid/e3s.ts` `E3S Hydrothermal Vent Collect`: missing static alert text
+- `05-shb/raid/e4s.ts` `E4S Earthen Gauntlets`: missing static alert text
+- `05-shb/raid/e4s.ts` `E4S Earthen Armor`: missing static alert text
+- `05-shb/raid/e4s.ts` `E4S Massive Landslide - Sides`: missing static alert text
+- `05-shb/raid/e4s.ts` `E4S Earthen Fist - Left/Right`: missing static alert text
+- `05-shb/raid/e4s.ts` `E4S Earthen Fist - Right/Left`: missing static alert text
+- `05-shb/raid/e4s.ts` `E4S Granite Gaol Collect`: missing static alert text
+- `05-shb/raid/e4s.ts` `E4S Granite Gaol`: dynamic alert text
+- `05-shb/raid/e6s.ts` `E6S Strike Spark`: dynamic alert text
+- `05-shb/raid/e6s.ts` `E6S Touchdown`: missing static alert text
+- `05-shb/raid/e6s.ts` `E6S Hated of the Vortex`: missing static alert text
+- `05-shb/raid/e6s.ts` `E6S Raktapaksa Spawn`: missing static alert text
+- `05-shb/raid/e6s.ts` `E6S Irons Of Purgatory`: dynamic alert text
+- `05-shb/raid/e7n.ts` `E7N Away With Thee Color Cleanup`: missing static alert text
+- `05-shb/raid/e7s.ts` `E7S Betwixt Worlds`: missing static alert text
+- `05-shb/raid/e7s.ts` `E7S Betwixt Worlds Stack`: dynamic alert text
+- `05-shb/raid/e7s.ts` `E7S False Midnight`: missing static alert text
+- `05-shb/raid/e7s.ts` `E7S Silver Shot`: missing static alert text
+- `05-shb/raid/e7s.ts` `E7S Silver Sledge`: missing static alert text
+- `05-shb/raid/e7s.ts` `E7S Adds`: missing static netRegex id
+- `05-shb/raid/e7s.ts` `E7S Insatiable Light Stack`: dynamic alert text
+- `05-shb/raid/e7s.ts` `E7S Insatiable Light`: missing static alert text
+- `05-shb/raid/e7s.ts` `E7S Astral Effect`: missing static alert text
+- `05-shb/raid/e7s.ts` `E7S Umbral Effect`: missing static alert text
+- `05-shb/raid/e7s.ts` `E7S Boundless Tracker`: missing static alert text
+- `05-shb/raid/e7s.ts` `E7S Boundless Light Dark Stack`: missing static alert text
+- `05-shb/raid/e7s.ts` `E7S Boundless Cleanup`: missing static alert text
+- `05-shb/raid/e7s.ts` `E7S Words of Night`: dynamic alert text
+- `05-shb/raid/e7s.ts` `E7S Threefold Grace`: dynamic alert text
+- `05-shb/raid/e8n.ts` `E8N Axe Kick With Mirror`: missing static alert text
+- `05-shb/raid/e8n.ts` `E8N Light Rampant Collect`: missing static alert text
+- `05-shb/raid/e8n.ts` `E8N Light Rampant Cleanup`: missing static alert text
+- `05-shb/raid/e8n.ts` `E8N Twin Stillness`: missing static alert text
+- `05-shb/raid/e8n.ts` `E8N Twin Silence`: missing static alert text
+- `05-shb/raid/e8n.ts` `E8N Spiteful Dance`: missing static alert text
+- `05-shb/raid/e8n.ts` `E8N Embittered Dance`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Lightsteeped Gain Tracker`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Lightsteeped Lose Tracker`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Mirror Collect`: missing static netRegex id
+- `05-shb/raid/e8s.ts` `E8S Biting Frost`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Driving Frost`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Diamond Frost Freezing`: dynamic alert text
+- `05-shb/raid/e8s.ts` `E8S Path of Light Counter`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Light Rampant Final Tower`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Heart Asunder Side Tracker`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Akh Morn`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Akh Morn Cleanup`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Mirror Mirror 3 Directions`: dynamic alert text
+- `05-shb/raid/e8s.ts` `E8S Mirror Mirror 3 Dir 1`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Mirror Mirror 3 Dir 2`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Mirror Mirror 3 Dir 3`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Wyrm's Lament Counter`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Wyrm's Lament Mirror`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Wyrmclaw`: dynamic alert text
+- `05-shb/raid/e8s.ts` `E8S Wyrmfang`: dynamic alert text
+- `05-shb/raid/e8s.ts` `E8S Wyrm's Lament Buff Reminder`: dynamic alert text
+- `05-shb/raid/e8s.ts` `E8S Twin Stillness`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Twin Silence`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Spiteful Dance`: missing static alert text
+- `05-shb/raid/e8s.ts` `E8S Embittered Dance`: missing static alert text
+- `05-shb/raid/e9n.ts` `E9N The Art Of Darkness Right`: missing static alert text
+- `05-shb/raid/e9n.ts` `E9N The Art Of Darkness Left`: missing static alert text
+- `05-shb/raid/e9n.ts` `E9N Hypercharged Condensation`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S The Art Of Darkness Protean`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S The Art Of Darkness Partner Stacks`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S Anti-Air Phaser Unlimited List`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S Anti-Air Phaser Unlimited 2`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S Anti-Air Phaser Unlimited 3`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S Wide-Angle Phaser Unlimited List`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S Wide-Angle Phaser Unlimited 2`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S Wide-Angle Phaser Unlimited 3`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S The Second / Third Art Of Darkness Charge Solver`: missing static netRegex id
+- `05-shb/raid/e9s.ts` `E9S The Second / Third Art Of Darkness Left / Right Charge`: missing static netRegex id
+- `05-shb/raid/e9s.ts` `E9S The Second / Third Art Of Darkness Callout`: missing static netRegex id
+- `05-shb/raid/e9s.ts` `E9S Hypercharged Condensation`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S The Art Of Darkness Right`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S The Art Of Darkness Left`: missing static alert text
+- `05-shb/raid/e9s.ts` `E9S Clone The Art Of Darkness`: missing static alert text
+- `05-shb/trial/diamond_weapon-ex.ts` `DiamondEx Code Chi-Xi-Stigma`: missing static alert text
+- `05-shb/trial/diamond_weapon-ex.ts` `DiamondEx Headmarker`: missing static netRegex id
+- `05-shb/trial/diamond_weapon.ts` `Diamond Claw Swipe East`: missing static alert text
+- `05-shb/trial/diamond_weapon.ts` `Diamond Claw Swipe West`: missing static alert text
+- `05-shb/trial/diamond_weapon.ts` `Diamond Diamond Flash`: missing static alert text
+- `05-shb/trial/emerald_weapon-ex.ts` `EmeraldEx Aetheroplasm Rotate`: missing static netRegex id
+- `05-shb/trial/emerald_weapon-ex.ts` `EmeraldEx Divide Et Impera P1`: missing static alert text
+- `05-shb/trial/emerald_weapon-ex.ts` `EmeraldEx Expire`: missing static netRegex id
+- `05-shb/trial/emerald_weapon-ex.ts` `EmeraldEx Primus Terminus Est`: dynamic alert text
+- `05-shb/trial/emerald_weapon-ex.ts` `EmeraldEx Tertius Terminus Est`: dynamic alert text
+- `05-shb/trial/emerald_weapon-ex.ts` `EmeraldEx Sidescathe Left`: missing static alert text
+- `05-shb/trial/emerald_weapon-ex.ts` `EmeraldEx Sidescathe Right`: missing static alert text
+- `05-shb/trial/emerald_weapon-ex.ts` `EmeraldEx Magitek Cannon`: missing static alert text
+- `05-shb/trial/emerald_weapon.ts` `Emerald Sidescathe Left`: missing static alert text
+- `05-shb/trial/emerald_weapon.ts` `Emerald Sidescathe Right`: missing static alert text
+- `05-shb/trial/hades-ex.ts` `HadesEx Bad Faith Left 1`: missing static alert text
+- `05-shb/trial/hades-ex.ts` `HadesEx Bad Faith Right 1`: missing static alert text
+- `05-shb/trial/hades-ex.ts` `HadesEx Arcane Control Orbs`: missing static netRegex id
+- `05-shb/trial/hades-ex.ts` `HadesEx Arcane Control Doors`: missing static netRegex id
+- `05-shb/trial/hades-ex.ts` `HadesEx Healers Blizzard/Fire IV`: missing static alert text
+- `05-shb/trial/hades-ex.ts` `HadesEx Aetherial Gaol`: missing static netRegex id
+- `05-shb/trial/hades-ex.ts` `HadesEx Shadow Stream`: missing static alert text
+- `05-shb/trial/hades.ts` `Hades Bad Faith Left`: missing static alert text
+- `05-shb/trial/hades.ts` `Hades Bad Faith Right`: missing static alert text
+- `05-shb/trial/hades.ts` `Hades Echo Right`: missing static alert text
+- ... 1115 more skipped triggers omitted from this report
 
 ## Notes
 

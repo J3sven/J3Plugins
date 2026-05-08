@@ -26,6 +26,9 @@ internal sealed class TriggerDefinition
     [JsonProperty("targetSelf")]
     public bool TargetSelf { get; set; }
 
+    [JsonProperty("targetNotSelf")]
+    public bool TargetNotSelf { get; set; }
+
     [JsonProperty("roles")]
     public HashSet<string> Roles { get; set; } = [];
 
@@ -88,6 +91,7 @@ internal sealed class TriggerDefinition
         !string.IsNullOrWhiteSpace(EventType)
         || NormalizedIds.Count > 0
         || TargetSelf
+        || TargetNotSelf
         || Roles.Count > 0
         || NotRoles.Count > 0
         || Jobs.Count > 0

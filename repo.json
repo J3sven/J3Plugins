@@ -47,5 +47,25 @@
     "DownloadLinkInstall": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.1.0/IINACTNativeOverlay.zip",
     "DownloadLinkTesting": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.1.0/IINACTNativeOverlay.zip",
     "DownloadLinkUpdate": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.1.0/IINACTNativeOverlay.zip"
+  },
+  {
+    "Author": "J3",
+    "Name": "Chocobot",
+    "InternalName": "Chocobot",
+    "AssemblyVersion": "0.1.0.0",
+    "TestingAssemblyVersion": "0.1.0.0",
+    "Description": "A native Dalamud encounter callout engine powered by IINACT log events, with a cute chocobo for moral support!",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/J3sven/J3Plugins",
+    "Tags": ["iinact", "callouts", "raid", "triggers", "alerts"],
+    "DalamudApiLevel": 15,
+    "LoadPriority": 0,
+    "IconUrl": "https://raw.githubusercontent.com/J3sven/J3Plugins/main/src/Chocobot/Assets/chocobot-icon.png",
+    "Punchline": "Native IINACT-powered encounter callouts with a cute chocobo for moral support!",
+    "IsHide": "False",
+    "IsTestingExclusive": "False",
+    "DownloadLinkInstall": "https://github.com/J3sven/J3Plugins/releases/download/chocobot-v0.1.0.0/Chocobot.zip",
+    "DownloadLinkTesting": "https://github.com/J3sven/J3Plugins/releases/download/chocobot-v0.1.0.0/Chocobot.zip",
+    "DownloadLinkUpdate": "https://github.com/J3sven/J3Plugins/releases/download/chocobot-v0.1.0.0/Chocobot.zip"
   }
 ]
