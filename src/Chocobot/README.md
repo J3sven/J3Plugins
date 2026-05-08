@@ -81,6 +81,10 @@ timeline entries. Imported timelines sync from observed ability IDs, show the
 next mechanics in the upcoming overlay, and promote imported timeline cues to
 live callouts when their cue time arrives.
 
+`Conditions.targetIsYou()` is represented as a `targetSelf` runtime check when a
+static fallback callout can be derived, using IINACT's primary-player event to
+avoid firing personal markers for the whole party.
+
 Dynamic output text, role checks, state collectors, geometry solvers, and
 complex timeline behavior such as jumps/resync windows are still reported or
 handled conservatively so missing encounter coverage can be tackled as Chocobot

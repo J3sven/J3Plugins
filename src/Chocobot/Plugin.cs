@@ -26,6 +26,7 @@ public sealed class Plugin : IDalamudPlugin
 
     private readonly IDalamudPluginInterface pluginInterface;
     private readonly ICommandManager commandManager;
+    private readonly IObjectTable objectTable;
     private readonly ICallGateSubscriber<string, bool> createSubscriber;
     private readonly ICallGateSubscriber<string, bool> createLegacySubscriber;
     private readonly ICallGateSubscriber<string, bool> unsubscribe;
@@ -59,6 +60,7 @@ public sealed class Plugin : IDalamudPlugin
     private string? triggerLoadError;
     private string? timelineLoadError;
     private string? currentZone;
+    private string? primaryPlayerName;
     private string? lastEventType;
     private string? lastLogLine;
     private DateTime? lastEventAt;
@@ -76,10 +78,12 @@ public sealed class Plugin : IDalamudPlugin
     public Plugin(
         IDalamudPluginInterface pluginInterface,
         ICommandManager commandManager,
+        IObjectTable objectTable,
         IPluginLog pluginLog)
     {
         this.pluginInterface = pluginInterface;
         this.commandManager = commandManager;
+        this.objectTable = objectTable;
         Log = pluginLog;
 
         Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
@@ -158,6 +162,8 @@ public sealed class Plugin : IDalamudPlugin
 
     private void Draw()
     {
+        RefreshPrimaryPlayerFromDalamud();
+
         if (Configuration.UseWebSocketTransport)
         {
             EnsureWebSocketClient();
@@ -230,6 +236,9 @@ public sealed class Plugin : IDalamudPlugin
                 currentZone = Text(data["zoneName"]) ?? Text(data["zone"]);
                 ResetTimelines();
                 break;
+            case "ChangePrimaryPlayer":
+                ProcessPrimaryPlayer(data);
+                break;
             case "CombatData":
                 ProcessCombatData(data);
                 break;
@@ -262,6 +271,10 @@ public sealed class Plugin : IDalamudPlugin
                 else
                     currentZone = Text(msg);
                 ResetTimelines();
+                break;
+            case "ChangePrimaryPlayer":
+            case "SendCharName":
+                ProcessPrimaryPlayer(AsObject(msg) ?? data);
                 break;
             case "CombatData":
                 ProcessCombatData(AsObject(msg) ?? data);
@@ -322,6 +335,9 @@ public sealed class Plugin : IDalamudPlugin
             if (match is not { Success: true })
                 continue;
 
+            if (trigger.TargetSelf && !LineTargetsPrimaryPlayer(line))
+                continue;
+
             var now = DateTime.UtcNow;
             if (IsSuppressed(trigger, now))
                 continue;
@@ -337,6 +353,36 @@ public sealed class Plugin : IDalamudPlugin
             matchedTriggerCount++;
             lastTriggerAt = DateTime.Now;
         }
+    }
+
+    private void ProcessPrimaryPlayer(JObject data)
+    {
+        primaryPlayerName = Text(data["charName"])
+                            ?? Text(data["name"])
+                            ?? Text(data["playerName"])
+                            ?? primaryPlayerName;
+    }
+
+    private void RefreshPrimaryPlayerFromDalamud()
+    {
+        try
+        {
+            var name = TextFromValue(objectTable.LocalPlayer?.Name);
+            if (!string.IsNullOrWhiteSpace(name))
+                primaryPlayerName = name;
+        }
+        catch
+        {
+            // Best-effort fallback; IINACT events can still provide the player name.
+        }
+    }
+
+    private bool LineTargetsPrimaryPlayer(string line)
+    {
+        if (string.IsNullOrWhiteSpace(primaryPlayerName))
+            return false;
+
+        return line.Contains(primaryPlayerName, StringComparison.OrdinalIgnoreCase);
     }
 
     private bool IsSuppressed(TriggerDefinition trigger, DateTime now)
@@ -1155,6 +1201,7 @@ public sealed class Plugin : IDalamudPlugin
         ImGui.TextUnformatted($"Triggers loaded: {triggers.Count}");
         ImGui.TextUnformatted($"Timelines loaded: {timelines.Count}");
         ImGui.TextUnformatted($"Current zone: {currentZone ?? "unknown"}");
+        ImGui.TextUnformatted($"Player: {primaryPlayerName ?? "unknown"}");
 
         if (Configuration.ShowDebugWindow)
         {
@@ -1248,7 +1295,7 @@ public sealed class Plugin : IDalamudPlugin
             if (!SendToIinact(new JObject
                 {
                     ["call"] = "subscribe",
-                    ["events"] = new JArray("LogLine", "ChangeZone", "CombatData")
+                    ["events"] = new JArray("LogLine", "ChangeZone", "CombatData", "ChangePrimaryPlayer")
                 }))
             {
                 TryRemoveIinactSubscriber();
@@ -1283,7 +1330,7 @@ public sealed class Plugin : IDalamudPlugin
                 SendToIinact(new JObject
                 {
                     ["call"] = "unsubscribe",
-                    ["events"] = new JArray("LogLine", "ChangeZone", "CombatData")
+                    ["events"] = new JArray("LogLine", "ChangeZone", "CombatData", "ChangePrimaryPlayer")
                 });
             }
 
@@ -1575,6 +1622,21 @@ public sealed class Plugin : IDalamudPlugin
             JValue value => value.Value?.ToString(),
             _ => token.ToString(Formatting.None)
         };
+    }
+
+    private static string? TextFromValue(object? value)
+    {
+        if (value is null)
+            return null;
+
+        if (value is string text)
+            return text;
+
+        var textValueProperty = value.GetType().GetProperty("TextValue");
+        if (textValueProperty?.GetValue(value) is string textValue)
+            return textValue;
+
+        return value.ToString();
     }
 
     private static string FormatTime(DateTime? time)

@@ -29,6 +29,7 @@ struct Trigger {
     id: String,
     zone: Option<String>,
     pattern: String,
+    target_self: bool,
     alert: String,
     duration: f64,
     suppress: f64,
@@ -414,7 +415,7 @@ fn convert_timeline(text: &str, data_dir: &Path, rel: &str, zone: Option<String>
         let Some(before) = extract_number_property(&block, "beforeSeconds") else {
             continue;
         };
-        let Some(alert) = extract_alert_text(&block) else {
+        let Some(alert) = extract_alert_text(&block, false) else {
             continue;
         };
         if alert.contains("${") {
@@ -672,11 +673,12 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
     let Some(net_regex) = extract_object_property(block, "netRegex") else {
         return skipped(file, Some(cactbot_id), "missing netRegex");
     };
-    let ids = extract_net_regex_ids(&net_regex);
+    let ids = extract_net_regex_ids(&net_regex, &event_type);
     if ids.is_empty() {
         return skipped(file, Some(cactbot_id), "missing static netRegex id");
     }
-    let Some(text) = extract_alert_text(block) else {
+    let target_self = block.contains("Conditions.targetIsYou");
+    let Some(text) = extract_alert_text(block, target_self) else {
         return skipped(file, Some(cactbot_id), "missing static alert text");
     };
     if text.contains("${") {
@@ -690,6 +692,7 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
         id: format!("cactbot-{}", slugify(&cactbot_id)),
         zone,
         pattern: make_id_pattern(&ids),
+        target_self,
         alert: text,
         duration,
         suppress,
@@ -813,8 +816,16 @@ fn extract_number_property(block: &str, name: &str) -> Option<f64> {
     }
 }
 
-fn extract_net_regex_ids(net_regex: &str) -> Vec<String> {
-    let Some(value) = extract_property_value(net_regex, "id") else {
+fn extract_net_regex_ids(net_regex: &str, event_type: &str) -> Vec<String> {
+    let value = extract_property_value(net_regex, "id")
+        .or_else(|| {
+            if matches!(event_type, "GainsEffect" | "LosesEffect") {
+                extract_property_value(net_regex, "effectId")
+            } else {
+                None
+            }
+        });
+    let Some(value) = value else {
         return Vec::new();
     };
     let mut ids = BTreeSet::new();
@@ -837,9 +848,9 @@ fn extract_net_regex_ids(net_regex: &str) -> Vec<String> {
     ids.into_iter().collect()
 }
 
-fn extract_alert_text(block: &str) -> Option<String> {
+fn extract_alert_text(block: &str, allow_target_self_dynamic_branch: bool) -> Option<String> {
     for field in ["alarmText", "alertText", "infoText"] {
-        if let Some(text) = extract_static_text_field(block, field) {
+        if let Some(text) = extract_static_text_field(block, field, allow_target_self_dynamic_branch) {
             return Some(text);
         }
     }
@@ -847,7 +858,7 @@ fn extract_alert_text(block: &str) -> Option<String> {
     response_text(&response).map(|text| text.to_string())
 }
 
-fn extract_static_text_field(block: &str, field: &str) -> Option<String> {
+fn extract_static_text_field(block: &str, field: &str, allow_target_self_dynamic_branch: bool) -> Option<String> {
     let value = extract_property_value(block, field)?;
     if let Some(text) = quoted_text(&value) {
         return Some(clean_text(&text));
@@ -860,7 +871,7 @@ fn extract_static_text_field(block: &str, field: &str) -> Option<String> {
         return extract_output_string(&output_strings, &output_key);
     }
 
-    let output_key = extract_output_key_after_field(block, field)?;
+    let output_key = extract_output_key_after_field(block, field, allow_target_self_dynamic_branch)?;
     extract_output_string(&output_strings, &output_key)
 }
 
@@ -896,15 +907,39 @@ fn extract_output_key(value: &str) -> Option<String> {
     }
 }
 
-fn extract_output_key_after_field(block: &str, field: &str) -> Option<String> {
+fn extract_output_key_after_field(block: &str, field: &str, allow_dynamic_branch: bool) -> Option<String> {
     let marker = format!("{field}:");
     let start = block.find(&marker)? + marker.len();
     let tail = &block[start..];
     let field_body = tail.split("outputStrings").next().unwrap_or(tail);
+    if allow_dynamic_branch {
+        if let Some(output_key) = extract_last_returned_output_key(field_body) {
+            return Some(output_key);
+        }
+    }
     if field_body.contains("data.") || field_body.contains("matches.") || block.contains("Conditions.targetIsYou") {
         return None;
     }
     extract_output_key(field_body)
+}
+
+fn extract_last_returned_output_key(field_body: &str) -> Option<String> {
+    let marker = "return output.";
+    let mut key = None;
+    let mut search_from = 0;
+    while let Some(offset) = field_body[search_from..].find(marker) {
+        let start = search_from + offset + marker.len();
+        let rest = &field_body[start..];
+        let candidate: String = rest
+            .chars()
+            .take_while(|ch| ch.is_ascii_alphanumeric() || *ch == '_')
+            .collect();
+        if !candidate.is_empty() {
+            key = Some(candidate);
+        }
+        search_from = start + rest.chars().next().map(char::len_utf8).unwrap_or(1);
+    }
+    key
 }
 
 fn extract_output_string(output_strings: &str, key: &str) -> Option<String> {
@@ -1035,9 +1070,10 @@ fn dedupe_triggers(triggers: Vec<Trigger>) -> Vec<Trigger> {
     let mut deduped = Vec::new();
     for trigger in triggers {
         let key = format!(
-            "{}:{}:{}",
+            "{}:{}:{}:{}",
             trigger.zone.as_deref().unwrap_or_default(),
             trigger.pattern,
+            trigger.target_self,
             trigger.alert
         );
         if seen.insert(key) {
@@ -1072,6 +1108,9 @@ fn write_trigger_json(path: &Path, triggers: &[Trigger]) -> Result<(), String> {
         }
         out.push_str("    \"source\": \"LogLine\",\n");
         out.push_str(&format!("    \"pattern\": \"{}\",\n", json_escape(&trigger.pattern)));
+        if trigger.target_self {
+            out.push_str("    \"targetSelf\": true,\n");
+        }
         out.push_str(&format!("    \"alert\": \"{}\",\n", json_escape(&trigger.alert)));
         out.push_str(&format!("    \"duration\": {},\n", format_number(trigger.duration)));
         if let Some(countdown) = trigger.countdown {
@@ -1232,8 +1271,9 @@ fn write_report(
     out.push_str(
         "\n## Notes\n\n\
 - Imported triggers are zone-scoped when cactbot's ZoneId maps to an English zone name.\n\
+- `Conditions.targetIsYou()` imports as a `targetSelf` runtime check when a static fallback callout can be derived.\n\
 - Imported timelines are conservative: cues are generated from static timelineTriggers and sync from observed ability IDs.\n\
-- Dynamic output text, role checks, state collectors, and geometry solvers are intentionally skipped.\n\
+- Dynamic output text, role checks, state collectors, and geometry solvers are otherwise intentionally skipped.\n\
 - Re-run this importer after updating cactbot to identify newly importable or newly skipped encounters.\n",
     );
 

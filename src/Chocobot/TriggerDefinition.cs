@@ -17,6 +17,9 @@ internal sealed class TriggerDefinition
     [JsonProperty("pattern")]
     public string Pattern { get; set; } = string.Empty;
 
+    [JsonProperty("targetSelf")]
+    public bool TargetSelf { get; set; }
+
     [JsonProperty("info")]
     public string? InfoText { get; set; }
 
