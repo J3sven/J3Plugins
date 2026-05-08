@@ -32,6 +32,10 @@ struct Trigger {
     ids: Vec<String>,
     pattern: String,
     target_self: bool,
+    roles: Vec<String>,
+    not_roles: Vec<String>,
+    jobs: Vec<String>,
+    not_jobs: Vec<String>,
     mechanic_key: String,
     state_conditions: Vec<(String, bool)>,
     state_updates: Vec<(String, bool)>,
@@ -71,6 +75,14 @@ struct ImportResult {
     reason: Option<String>,
     cactbot_id: Option<String>,
     file: String,
+}
+
+#[derive(Default)]
+struct RoleConditions {
+    roles: Vec<String>,
+    not_roles: Vec<String>,
+    jobs: Vec<String>,
+    not_jobs: Vec<String>,
 }
 
 fn main() {
@@ -688,6 +700,7 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
     let target_self = block.contains("Conditions.targetIsYou");
     let state_conditions = extract_bool_state_condition(block).into_iter().collect::<Vec<_>>();
     let state_updates = extract_bool_state_updates(block);
+    let role_conditions = extract_role_conditions(block);
     let mechanic_key = slugify(&cactbot_id);
     let text = extract_alert_text(block, target_self);
     if text.is_none() && state_updates.is_empty() {
@@ -707,6 +720,10 @@ fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> Impor
         ids: ids.clone(),
         pattern: make_id_pattern(&ids),
         target_self,
+        roles: role_conditions.roles,
+        not_roles: role_conditions.not_roles,
+        jobs: role_conditions.jobs,
+        not_jobs: role_conditions.not_jobs,
         mechanic_key,
         state_conditions,
         state_updates,
@@ -871,17 +888,94 @@ fn extract_bool_state_condition(block: &str) -> Option<(String, bool)> {
     let expr = value.split("=>").nth(1)?.trim();
     if let Some(key) = expr.strip_prefix("!data.") {
         let key = key.trim();
-        if is_simple_identifier(key) {
+        if is_simple_identifier(key) && key != "role" && key != "job" {
             return Some((key.to_string(), false));
         }
     }
     if let Some(key) = expr.strip_prefix("data.") {
         let key = key.trim();
-        if is_simple_identifier(key) {
+        if is_simple_identifier(key) && key != "role" && key != "job" {
             return Some((key.to_string(), true));
         }
     }
     None
+}
+
+fn extract_role_conditions(block: &str) -> RoleConditions {
+    let Some(value) = extract_property_value(block, "condition") else {
+        return RoleConditions::default();
+    };
+    let Some(expr) = value.split("=>").nth(1) else {
+        return RoleConditions::default();
+    };
+    let expr = trim_wrapping(expr.trim(), '(', ')');
+
+    let mut conditions = RoleConditions::default();
+    if expr.contains("matches.") {
+        return conditions;
+    }
+
+    if expr.contains(" || ") && !expr.contains(" && ") {
+        for part in expr.split(" || ") {
+            if let Some((kind, value)) = extract_role_comparison(part, "===") {
+                push_role_condition(&mut conditions, kind, value, false);
+            }
+        }
+        return conditions;
+    }
+
+    if expr.contains(" && ") && !expr.contains(" || ") {
+        for part in expr.split(" && ") {
+            if let Some((kind, value)) = extract_role_comparison(part, "!==") {
+                push_role_condition(&mut conditions, kind, value, true);
+            }
+        }
+        return conditions;
+    }
+
+    if let Some((kind, value)) = extract_role_comparison(expr, "===") {
+        push_role_condition(&mut conditions, kind, value, false);
+    } else if let Some((kind, value)) = extract_role_comparison(expr, "!==") {
+        push_role_condition(&mut conditions, kind, value, true);
+    }
+
+    conditions
+}
+
+fn extract_role_comparison<'a>(part: &'a str, op: &str) -> Option<(&'a str, String)> {
+    let part = trim_wrapping(part.trim(), '(', ')');
+    let (left, right) = part.split_once(op)?;
+    let left = left.trim();
+    if left != "data.role" && left != "data.job" {
+        return None;
+    }
+
+    let value = quoted_text(right.trim())?;
+    Some((left.strip_prefix("data.")?, value))
+}
+
+fn push_role_condition(conditions: &mut RoleConditions, kind: &str, value: String, negative: bool) {
+    match (kind, negative) {
+        ("role", false) => conditions.roles.push(value.to_ascii_lowercase()),
+        ("role", true) => conditions.not_roles.push(value.to_ascii_lowercase()),
+        ("job", false) => conditions.jobs.push(value.to_ascii_uppercase()),
+        ("job", true) => conditions.not_jobs.push(value.to_ascii_uppercase()),
+        _ => {}
+    }
+}
+
+fn trim_wrapping(value: &str, open: char, close: char) -> &str {
+    let mut current = value.trim();
+    loop {
+        if current.starts_with(open)
+            && current.ends_with(close)
+            && find_matching(current, 0, open, close) == Some(current.len() - close.len_utf8())
+        {
+            current = current[open.len_utf8()..current.len() - close.len_utf8()].trim();
+        } else {
+            return current;
+        }
+    }
 }
 
 fn is_simple_identifier(value: &str) -> bool {
@@ -1229,6 +1323,10 @@ fn synthesize_effect_state_gain_triggers(mut triggers: Vec<Trigger>) -> Vec<Trig
                 ids: trigger.ids.clone(),
                 pattern: trigger.pattern.clone(),
                 target_self: trigger.target_self,
+                roles: trigger.roles.clone(),
+                not_roles: trigger.not_roles.clone(),
+                jobs: trigger.jobs.clone(),
+                not_jobs: trigger.not_jobs.clone(),
                 mechanic_key: trigger.mechanic_key.clone(),
                 state_conditions: Vec::new(),
                 state_updates: vec![(key.clone(), true)],
@@ -1250,12 +1348,16 @@ fn dedupe_triggers(triggers: Vec<Trigger>) -> Vec<Trigger> {
     let mut deduped = Vec::new();
     for trigger in triggers {
         let key = format!(
-            "{}:{}:{}:{}:{}:{}:{}:{}:{}",
+            "{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}",
             trigger.zone.as_deref().unwrap_or_default(),
             trigger.event_type,
             trigger.ids.join(","),
             trigger.pattern,
             trigger.target_self,
+            trigger.roles.join(","),
+            trigger.not_roles.join(","),
+            trigger.jobs.join(","),
+            trigger.not_jobs.join(","),
             format_state_pairs(&trigger.state_conditions),
             format_state_pairs(&trigger.state_updates),
             trigger.silent,
@@ -1303,6 +1405,21 @@ fn write_bool_map(out: &mut String, name: &str, pairs: &[(String, bool)]) {
     out.push_str("},\n");
 }
 
+fn write_string_array(out: &mut String, name: &str, values: &[String]) {
+    if values.is_empty() {
+        return;
+    }
+
+    out.push_str(&format!("    \"{name}\": ["));
+    for (idx, value) in values.iter().enumerate() {
+        if idx > 0 {
+            out.push_str(", ");
+        }
+        out.push_str(&format!("\"{}\"", json_escape(value)));
+    }
+    out.push_str("],\n");
+}
+
 fn write_trigger_json(path: &Path, triggers: &[Trigger]) -> Result<(), String> {
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent).map_err(|err| format!("Failed to create {}: {err}", parent.display()))?;
@@ -1328,6 +1445,10 @@ fn write_trigger_json(path: &Path, triggers: &[Trigger]) -> Result<(), String> {
         if trigger.target_self {
             out.push_str("    \"targetSelf\": true,\n");
         }
+        write_string_array(&mut out, "roles", &trigger.roles);
+        write_string_array(&mut out, "notRoles", &trigger.not_roles);
+        write_string_array(&mut out, "jobs", &trigger.jobs);
+        write_string_array(&mut out, "notJobs", &trigger.not_jobs);
         write_bool_map(&mut out, "stateConditions", &trigger.state_conditions);
         write_bool_map(&mut out, "stateUpdates", &trigger.state_updates);
         if trigger.silent {
@@ -1497,6 +1618,7 @@ fn write_report(
 - Imported triggers are zone-scoped when cactbot's ZoneId maps to an English zone name.\n\
 - Imported triggers include structured event type and ID metadata, with raw regex patterns retained as a fallback.\n\
 - `Conditions.targetIsYou()` imports as a `targetSelf` runtime check when a static fallback callout can be derived.\n\
+- Simple `data.role` and `data.job` equality/inequality conditions import as player role/job runtime checks.\n\
 - Simple boolean `data.foo` conditions and `data.foo = true/false` run hooks import as Chocobot state flags.\n\
 - State-gated ability triggers can inherit additional same-mechanic IDs from cactbot timeline entries in the same zone.\n\
 - Boolean state clearers on `LosesEffect` synthesize paired silent `GainsEffect` setters when cactbot has a true setter for that state in the same zone.\n\

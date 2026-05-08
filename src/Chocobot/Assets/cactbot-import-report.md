@@ -3,7 +3,7 @@
 - cactbot source: `/tmp/chocobot-cactbot-import`
 - output: `src/Chocobot/Assets/cactbot-imported-triggers.json`
 - timeline output: `src/Chocobot/Assets/cactbot-imported-timelines.json`
-- imported triggers: 3209
+- imported triggers: 3210
 - imported timelines: 246
 - files with imports: 326 / 346
 - skipped trigger objects: 2932
@@ -1373,6 +1373,7 @@
 - Imported triggers are zone-scoped when cactbot's ZoneId maps to an English zone name.
 - Imported triggers include structured event type and ID metadata, with raw regex patterns retained as a fallback.
 - `Conditions.targetIsYou()` imports as a `targetSelf` runtime check when a static fallback callout can be derived.
+- Simple `data.role` and `data.job` equality/inequality conditions import as player role/job runtime checks.
 - Simple boolean `data.foo` conditions and `data.foo = true/false` run hooks import as Chocobot state flags.
 - State-gated ability triggers can inherit additional same-mechanic IDs from cactbot timeline entries in the same zone.
 - Boolean state clearers on `LosesEffect` synthesize paired silent `GainsEffect` setters when cactbot has a true setter for that state in the same zone.

@@ -26,6 +26,18 @@ internal sealed class TriggerDefinition
     [JsonProperty("targetSelf")]
     public bool TargetSelf { get; set; }
 
+    [JsonProperty("roles")]
+    public HashSet<string> Roles { get; set; } = [];
+
+    [JsonProperty("notRoles")]
+    public HashSet<string> NotRoles { get; set; } = [];
+
+    [JsonProperty("jobs")]
+    public HashSet<string> Jobs { get; set; } = [];
+
+    [JsonProperty("notJobs")]
+    public HashSet<string> NotJobs { get; set; } = [];
+
     [JsonProperty("stateConditions")]
     public Dictionary<string, bool> StateConditions { get; set; } = [];
 
@@ -76,6 +88,10 @@ internal sealed class TriggerDefinition
         !string.IsNullOrWhiteSpace(EventType)
         || NormalizedIds.Count > 0
         || TargetSelf
+        || Roles.Count > 0
+        || NotRoles.Count > 0
+        || Jobs.Count > 0
+        || NotJobs.Count > 0
         || StateConditions.Count > 0;
 
     public bool Compile(out string? error)

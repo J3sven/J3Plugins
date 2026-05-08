@@ -1011,6 +1011,7 @@
     "eventType": "GainsEffect",
     "ids": ["117"],
     "pattern": "\\b117\\b",
+    "roles": ["tank"],
     "alert": "Move Boss Out of Puddles",
     "duration": 5,
     "suppress": 5
@@ -2269,6 +2270,8 @@
     "eventType": "StartsUsing",
     "ids": ["17CB"],
     "pattern": "\\b17CB\\b",
+    "roles": ["healer"],
+    "jobs": ["BLU"],
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -3255,6 +3258,8 @@
     "eventType": "StartsUsing",
     "ids": ["15DC"],
     "pattern": "\\b15DC\\b",
+    "roles": ["tank"],
+    "jobs": ["BLU"],
     "alert": "Move boss out of puddle",
     "duration": 5,
     "suppress": 8
@@ -3897,6 +3902,7 @@
     "eventType": "Tether",
     "ids": ["0005"],
     "pattern": "\\b0005\\b",
+    "roles": ["tank"],
     "alert": "Get drainage tether",
     "duration": 5,
     "suppress": 1
@@ -3930,6 +3936,7 @@
     "eventType": "Tether",
     "ids": ["0005"],
     "pattern": "\\b0005\\b",
+    "roles": ["tank"],
     "alert": "Get drainage tether",
     "duration": 5,
     "suppress": 1
@@ -3952,6 +3959,8 @@
     "eventType": "Ability",
     "ids": ["F1B"],
     "pattern": "\\bF1B\\b",
+    "roles": ["tank"],
+    "jobs": ["BLU"],
     "alert": "Embolus: Move Boss",
     "duration": 5,
     "suppress": 8
@@ -4286,6 +4295,8 @@
     "eventType": "Ability",
     "ids": ["1632"],
     "pattern": "\\b1632\\b",
+    "roles": ["dps"],
+    "jobs": ["BLU"],
     "alert": "Kill Regulators",
     "duration": 5,
     "suppress": 8
@@ -4385,6 +4396,8 @@
     "eventType": "Ability",
     "ids": ["1632"],
     "pattern": "\\b1632\\b",
+    "roles": ["dps"],
+    "jobs": ["BLU"],
     "alert": "Kill Regulators",
     "duration": 5,
     "suppress": 8
@@ -4993,6 +5006,7 @@
     "eventType": "StartsUsing",
     "ids": ["3752"],
     "pattern": "\\b3752\\b",
+    "roles": ["healer"],
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -5027,6 +5041,7 @@
     "eventType": "StartsUsing",
     "ids": ["3758"],
     "pattern": "\\b3758\\b",
+    "roles": ["tank"],
     "alert": "Give Tether Away",
     "duration": 6,
     "suppress": 8
@@ -5049,6 +5064,8 @@
     "eventType": "Ability",
     "ids": ["3751"],
     "pattern": "\\b3751\\b",
+    "roles": ["healer"],
+    "jobs": ["BLU"],
     "alert": "Heal To Full",
     "duration": 5,
     "suppress": 10
@@ -5195,6 +5212,8 @@
     "eventType": "StartsUsing",
     "ids": ["3895"],
     "pattern": "\\b3895\\b",
+    "roles": ["healer"],
+    "jobs": ["BLU"],
     "alert": "Heal Like Whoa",
     "duration": 5,
     "suppress": 8
@@ -5206,6 +5225,7 @@
     "eventType": "Ability",
     "ids": ["3895"],
     "pattern": "\\b3895\\b",
+    "notRoles": ["healer"],
     "alert": "Kill Ruination!",
     "duration": 5,
     "countdown": 23.5,
@@ -8464,6 +8484,8 @@
     "eventType": "GainsEffect",
     "ids": ["67E"],
     "pattern": "\\b67E\\b",
+    "roles": ["tank"],
+    "jobs": ["BLU"],
     "alert": "Move bosses apart",
     "duration": 5,
     "suppress": 5
@@ -8722,6 +8744,8 @@
     "eventType": "StartsUsing",
     "ids": ["23DB"],
     "pattern": "\\b23DB\\b",
+    "roles": ["healer"],
+    "jobs": ["BLU"],
     "alert": "Raidwide AoE",
     "duration": 5,
     "suppress": 8
@@ -10077,6 +10101,7 @@
     "eventType": "StartsUsing",
     "ids": ["28F"],
     "pattern": "\\b28F\\b",
+    "roles": ["tank", "healer"],
     "alert": "Past: Bait, then through",
     "duration": 5,
     "suppress": 8
@@ -10088,6 +10113,7 @@
     "eventType": "StartsUsing",
     "ids": ["28F"],
     "pattern": "\\b28F\\b",
+    "roles": ["tank", "healer"],
     "alert": "Future: Bait, then stay",
     "duration": 5,
     "suppress": 8
@@ -10189,6 +10215,8 @@
     "eventType": "StartsUsing",
     "ids": ["315C"],
     "pattern": "\\b315C\\b",
+    "roles": ["tank"],
+    "jobs": ["BLU"],
     "alert": "Orb Tethers",
     "duration": 6,
     "suppress": 8
@@ -10538,6 +10566,18 @@
     "eventType": "StartsUsing",
     "ids": ["215E"],
     "pattern": "\\b215E\\b",
+    "alert": "Tank buster",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "cactbot-lakshmiex-pull-of-light-unexpected",
+    "zone": "Emanation (Extreme)",
+    "source": "LogLine",
+    "eventType": "StartsUsing",
+    "ids": ["215E"],
+    "pattern": "\\b215E\\b",
+    "notRoles": ["tank", "healer"],
     "alert": "Tank buster",
     "duration": 5,
     "suppress": 8
@@ -11140,6 +11180,7 @@
     "eventType": "StartsUsing",
     "ids": ["264E"],
     "pattern": "\\b264E\\b",
+    "roles": ["healer"],
     "alert": "no more heals needed",
     "duration": 5,
     "suppress": 8
@@ -11794,6 +11835,7 @@
     "eventType": "HeadMarker",
     "ids": ["0010"],
     "pattern": "\\b0010\\b",
+    "roles": ["tank"],
     "alert": "Block Mistral Song",
     "duration": 5,
     "suppress": 5
@@ -11883,6 +11925,7 @@
     "eventType": "StartsUsing",
     "ids": ["2B8B"],
     "pattern": "\\b2B8B\\b",
+    "roles": ["tank"],
     "alert": "Tank LB NOW",
     "duration": 6,
     "suppress": 8
@@ -18733,6 +18776,7 @@
     "eventType": "StartsUsing",
     "ids": ["3D78"],
     "pattern": "\\b3D78\\b",
+    "notRoles": ["tank"],
     "alert": "Stack in front of tank",
     "duration": 5,
     "suppress": 8
@@ -20758,6 +20802,7 @@
     "eventType": "StartsUsing",
     "ids": ["4D7E"],
     "pattern": "\\b4D7E\\b",
+    "roles": ["tank"],
     "alert": "Tank Stack in Tower",
     "duration": 5,
     "suppress": 8
@@ -20769,6 +20814,7 @@
     "eventType": "StartsUsing",
     "ids": ["4D7F"],
     "pattern": "\\b4D7F\\b",
+    "roles": ["tank"],
     "alert": "Tank Spread in Tower",
     "duration": 5,
     "suppress": 8
@@ -21586,6 +21632,8 @@
     "eventType": "Tether",
     "ids": ["000E"],
     "pattern": "\\b000E\\b",
+    "roles": ["tank"],
+    "jobs": ["BLU"],
     "alert": "Move Shades Apart",
     "duration": 6,
     "suppress": 10
@@ -21632,6 +21680,8 @@
     "eventType": "GainsEffect",
     "ids": ["6E9"],
     "pattern": "\\b6E9\\b",
+    "roles": ["healer"],
+    "jobs": ["BLU"],
     "alert": "Heal T/H to Full",
     "duration": 5,
     "suppress": 5
@@ -22001,6 +22051,8 @@
     "eventType": "Ability",
     "ids": ["42B0"],
     "pattern": "\\b42B0\\b",
+    "roles": ["tank"],
+    "jobs": ["BLU"],
     "alert": "Grab East/West Venery Adds",
     "duration": 5,
     "suppress": 8
@@ -22358,6 +22410,8 @@
     "eventType": "Ability",
     "ids": ["4AB6"],
     "pattern": "\\b4AB6\\b",
+    "roles": ["tank"],
+    "jobs": ["BLU"],
     "alert": "Stand in Meteor Tankbuster",
     "duration": 6,
     "countdown": 11.5,
@@ -22370,6 +22424,7 @@
     "eventType": "Ability",
     "ids": ["4AB6"],
     "pattern": "\\b4AB6\\b",
+    "notRoles": ["tank"],
     "alert": "Kill Meteor Adds",
     "duration": 5,
     "countdown": 13,
@@ -22756,6 +22811,7 @@
     "eventType": "StartsUsing",
     "ids": ["3D2C"],
     "pattern": "\\b3D2C\\b",
+    "notRoles": ["tank", "healer"],
     "alert": "Tank cleave",
     "duration": 5,
     "suppress": 8
@@ -23107,6 +23163,8 @@
     "eventType": "Ability",
     "ids": ["4F09"],
     "pattern": "\\b4F09\\b",
+    "roles": ["healer"],
+    "jobs": ["BLU"],
     "alert": "Heal All to Full",
     "duration": 5,
     "suppress": 5
@@ -23314,6 +23372,8 @@
     "eventType": "Ability",
     "ids": ["4F27"],
     "pattern": "\\b4F27\\b",
+    "roles": ["healer"],
+    "jobs": ["BLU"],
     "alert": "Full Heal Everyone",
     "duration": 5,
     "suppress": 5
@@ -23503,6 +23563,7 @@
     "eventType": "Ability",
     "ids": ["4851"],
     "pattern": "\\b4851\\b",
+    "roles": ["tank"],
     "alert": "Mines",
     "duration": 5,
     "suppress": 1
@@ -23654,6 +23715,7 @@
     "eventType": "Ability",
     "ids": ["4879"],
     "pattern": "\\b4879\\b",
+    "roles": ["tank"],
     "alert": "TANK LB!!",
     "duration": 6,
     "countdown": 6,
@@ -27478,6 +27540,8 @@
     "eventType": "StartsUsing",
     "ids": ["7984"],
     "pattern": "\\b7984\\b",
+    "roles": ["healer"],
+    "jobs": ["BLU"],
     "alert": "HP to 1",
     "duration": 5,
     "suppress": 8
@@ -27800,6 +27864,8 @@
     "eventType": "StartsUsing",
     "ids": ["796C"],
     "pattern": "\\b796C\\b",
+    "roles": ["healer"],
+    "jobs": ["BLU"],
     "alert": "HP to 1",
     "duration": 5,
     "suppress": 8
@@ -36113,6 +36179,7 @@
     "eventType": "StartsUsing",
     "ids": ["7BA1"],
     "pattern": "\\b7BA1\\b",
+    "roles": ["tank"],
     "alert": "TANK LB!!",
     "duration": 6,
     "suppress": 8

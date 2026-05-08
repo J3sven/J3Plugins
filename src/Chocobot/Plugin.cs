@@ -64,6 +64,8 @@ public sealed class Plugin : IDalamudPlugin
     private string? timelineLoadError;
     private string? currentZone;
     private string? primaryPlayerName;
+    private string? primaryPlayerJob;
+    private string? primaryPlayerRole;
     private string? lastEventType;
     private string? lastLogLine;
     private DateTime? lastEventAt;
@@ -401,6 +403,9 @@ public sealed class Plugin : IDalamudPlugin
                 return false;
         }
 
+        if (!RoleConditionsMatch(trigger))
+            return false;
+
         return true;
     }
 
@@ -469,20 +474,162 @@ public sealed class Plugin : IDalamudPlugin
                             ?? Text(data["name"])
                             ?? Text(data["playerName"])
                             ?? primaryPlayerName;
+        primaryPlayerJob = NormalizeJob(Text(data["job"]) ?? Text(data["Job"]) ?? Text(data["jobName"]) ?? primaryPlayerJob);
+        primaryPlayerRole = NormalizeRole(Text(data["role"]) ?? Text(data["Role"]) ?? primaryPlayerRole);
     }
 
     private void RefreshPrimaryPlayerFromDalamud()
     {
         try
         {
-            var name = TextFromValue(objectTable.LocalPlayer?.Name);
+            var localPlayer = objectTable.LocalPlayer;
+            var name = TextFromValue(localPlayer?.Name);
             if (!string.IsNullOrWhiteSpace(name))
                 primaryPlayerName = name;
+            RefreshPrimaryJobFromDalamud(localPlayer);
         }
         catch
         {
             // Best-effort fallback; IINACT events can still provide the player name.
         }
+    }
+
+    private void RefreshPrimaryJobFromDalamud(object? localPlayer)
+    {
+        if (localPlayer is null)
+            return;
+
+        var classJob = localPlayer.GetType().GetProperty("ClassJob")?.GetValue(localPlayer);
+        var rowId = TryGetRowId(classJob);
+        if (rowId is null or 0)
+            return;
+
+        primaryPlayerJob = JobFromClassJob(rowId.Value);
+        primaryPlayerRole = RoleFromClassJob(rowId.Value);
+    }
+
+    private static uint? TryGetRowId(object? value)
+    {
+        if (value is null)
+            return null;
+
+        if (TryConvertUInt(value.GetType().GetProperty("RowId")?.GetValue(value), out var rowId))
+            return rowId;
+
+        var nested = value.GetType().GetProperty("Value")?.GetValue(value);
+        if (TryConvertUInt(nested?.GetType().GetProperty("RowId")?.GetValue(nested), out rowId))
+            return rowId;
+
+        return null;
+    }
+
+    private static bool TryConvertUInt(object? value, out uint result)
+    {
+        switch (value)
+        {
+            case byte byteValue:
+                result = byteValue;
+                return true;
+            case ushort ushortValue:
+                result = ushortValue;
+                return true;
+            case uint uintValue:
+                result = uintValue;
+                return true;
+            case int intValue when intValue >= 0:
+                result = (uint)intValue;
+                return true;
+            case string text when uint.TryParse(text, out var parsed):
+                result = parsed;
+                return true;
+            default:
+                result = 0;
+                return false;
+        }
+    }
+
+    private static string? JobFromClassJob(uint rowId)
+    {
+        return rowId switch
+        {
+            1 => "GLA",
+            2 => "PGL",
+            3 => "MRD",
+            4 => "LNC",
+            5 => "ARC",
+            6 => "CNJ",
+            7 => "THM",
+            19 => "PLD",
+            20 => "MNK",
+            21 => "WAR",
+            22 => "DRG",
+            23 => "BRD",
+            24 => "WHM",
+            25 => "BLM",
+            26 => "ACN",
+            27 => "SMN",
+            28 => "SCH",
+            29 => "ROG",
+            30 => "NIN",
+            31 => "MCH",
+            32 => "DRK",
+            33 => "AST",
+            34 => "SAM",
+            35 => "RDM",
+            36 => "BLU",
+            37 => "GNB",
+            38 => "DNC",
+            39 => "RPR",
+            40 => "SGE",
+            41 => "VPR",
+            42 => "PCT",
+            _ => null
+        };
+    }
+
+    private static string? RoleFromClassJob(uint rowId)
+    {
+        return rowId switch
+        {
+            1 or 3 or 19 or 21 or 32 or 37 => "tank",
+            6 or 24 or 28 or 33 or 40 => "healer",
+            2 or 4 or 5 or 7 or 20 or 22 or 23 or 25 or 26 or 27 or 29 or 30 or 31 or 34 or 35 or 36 or 38 or 39 or 41 or 42 => "dps",
+            _ => null
+        };
+    }
+
+    private bool RoleConditionsMatch(TriggerDefinition trigger)
+    {
+        if (trigger.Roles.Count > 0 || trigger.Jobs.Count > 0)
+        {
+            var roleMatches = primaryPlayerRole is not null && trigger.Roles.Contains(primaryPlayerRole);
+            var jobMatches = primaryPlayerJob is not null && trigger.Jobs.Contains(primaryPlayerJob);
+
+            if (!roleMatches && !jobMatches)
+                return false;
+        }
+
+        if (trigger.NotRoles.Count > 0
+            && primaryPlayerRole is not null
+            && trigger.NotRoles.Contains(primaryPlayerRole))
+            return false;
+
+        if (trigger.NotJobs.Count > 0
+            && primaryPlayerJob is not null
+            && trigger.NotJobs.Contains(primaryPlayerJob))
+            return false;
+
+        return true;
+    }
+
+    private static string? NormalizeRole(string? role)
+    {
+        return string.IsNullOrWhiteSpace(role) ? null : role.Trim().ToLowerInvariant();
+    }
+
+    private static string? NormalizeJob(string? job)
+    {
+        return string.IsNullOrWhiteSpace(job) ? null : job.Trim().ToUpperInvariant();
     }
 
     private bool EventTargetsPrimaryPlayer(NetLogEvent netLogEvent)
@@ -1319,6 +1466,7 @@ public sealed class Plugin : IDalamudPlugin
         ImGui.TextUnformatted($"Timelines loaded: {timelines.Count}");
         ImGui.TextUnformatted($"Current zone: {currentZone ?? "unknown"}");
         ImGui.TextUnformatted($"Player: {primaryPlayerName ?? "unknown"}");
+        ImGui.TextUnformatted($"Job/role: {primaryPlayerJob ?? "unknown"} / {primaryPlayerRole ?? "unknown"}");
         ImGui.TextUnformatted($"State flags: {encounterState.Count}");
         ImGui.TextUnformatted($"State update triggers: {triggers.Count(trigger => trigger.StateUpdates.Count > 0)}");
 

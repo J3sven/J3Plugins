@@ -87,6 +87,9 @@ their cue time arrives.
 static fallback callout can be derived, using IINACT's primary-player event to
 avoid firing personal markers for the whole party.
 
+Simple cactbot role/job checks such as `data.role === 'tank'` or
+`data.job === 'BLU'` are imported as local player runtime checks.
+
 Simple boolean cactbot state such as `data.foo = true` and
 `condition: (data) => data.foo` is imported as silent state updates and runtime
 state conditions. Paired effect state is inferred generically when cactbot
