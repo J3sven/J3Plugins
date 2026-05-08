@@ -52,8 +52,8 @@
     "Author": "J3",
     "Name": "Chocobot",
     "InternalName": "Chocobot",
-    "AssemblyVersion": "0.1.0.0",
-    "TestingAssemblyVersion": "0.1.0.0",
+    "AssemblyVersion": "0.1.1.0",
+    "TestingAssemblyVersion": "0.1.1.0",
     "Description": "A native Dalamud encounter callout engine powered by IINACT log events, with a cute chocobo for moral support!",
     "ApplicableVersion": "any",
     "RepoUrl": "https://github.com/J3sven/J3Plugins",
@@ -64,8 +64,8 @@
     "Punchline": "Native IINACT-powered encounter callouts with a cute chocobo for moral support!",
     "IsHide": "False",
     "IsTestingExclusive": "False",
-    "DownloadLinkInstall": "https://github.com/J3sven/J3Plugins/releases/download/chocobot-v0.1.0.0/Chocobot.zip",
-    "DownloadLinkTesting": "https://github.com/J3sven/J3Plugins/releases/download/chocobot-v0.1.0.0/Chocobot.zip",
-    "DownloadLinkUpdate": "https://github.com/J3sven/J3Plugins/releases/download/chocobot-v0.1.0.0/Chocobot.zip"
+    "DownloadLinkInstall": "https://github.com/J3sven/J3Plugins/releases/download/chocobot-v0.1.1.0/Chocobot.zip",
+    "DownloadLinkTesting": "https://github.com/J3sven/J3Plugins/releases/download/chocobot-v0.1.1.0/Chocobot.zip",
+    "DownloadLinkUpdate": "https://github.com/J3sven/J3Plugins/releases/download/chocobot-v0.1.1.0/Chocobot.zip"
   }
 ]

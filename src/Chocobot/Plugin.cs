@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Speech.Synthesis;
 using System.Text;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
@@ -30,6 +31,9 @@ public sealed class Plugin : IDalamudPlugin
     private readonly ICommandManager commandManager;
     private readonly ITextureProvider textureProvider;
     private readonly IObjectTable objectTable;
+    private readonly IClientState clientState;
+    private readonly ICondition condition;
+    private readonly IGameGui gameGui;
     private readonly ICallGateSubscriber<string, bool> createSubscriber;
     private readonly ICallGateSubscriber<string, bool> createLegacySubscriber;
     private readonly ICallGateSubscriber<string, bool> unsubscribe;
@@ -72,6 +76,7 @@ public sealed class Plugin : IDalamudPlugin
     private string? primaryPlayerRole;
     private string? lastEventType;
     private string? lastLogLine;
+    private string? overlayHiddenReason;
     private DateTime? lastEventAt;
     private DateTime? lastTriggerAt;
     private int receivedEventCount;
@@ -89,12 +94,18 @@ public sealed class Plugin : IDalamudPlugin
         ICommandManager commandManager,
         ITextureProvider textureProvider,
         IObjectTable objectTable,
+        IClientState clientState,
+        ICondition condition,
+        IGameGui gameGui,
         IPluginLog pluginLog)
     {
         this.pluginInterface = pluginInterface;
         this.commandManager = commandManager;
         this.textureProvider = textureProvider;
         this.objectTable = objectTable;
+        this.clientState = clientState;
+        this.condition = condition;
+        this.gameGui = gameGui;
         Log = pluginLog;
 
         Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
@@ -204,10 +215,33 @@ public sealed class Plugin : IDalamudPlugin
         PruneAlerts();
         SpeakDueAlerts();
 
-        if (Configuration.Enabled && (alerts.Count > 0 || Configuration.ShowInactiveWindow))
+        overlayHiddenReason = GetOverlayHiddenReason();
+        if (Configuration.Enabled && overlayHiddenReason is null && (alerts.Count > 0 || Configuration.ShowInactiveWindow))
             DrawAlertWindow();
 
         DrawConfigWindow();
+    }
+
+    private string? GetOverlayHiddenReason()
+    {
+        if (!Configuration.Enabled)
+            return null;
+
+        if (!clientState.IsLoggedIn)
+            return "Overlay hidden because no character is logged in";
+
+        if (gameGui.GameUiHidden)
+            return "Overlay hidden because the game UI is hidden";
+
+        if (pluginInterface.UiBuilder.CutsceneActive
+            || condition[ConditionFlag.OccupiedInCutSceneEvent]
+            || condition[ConditionFlag.WatchingCutscene]
+            || condition[ConditionFlag.WatchingCutscene78])
+        {
+            return "Overlay hidden because a cutscene is active";
+        }
+
+        return null;
     }
 
     private void OpenConfigWindow()
@@ -1026,11 +1060,12 @@ public sealed class Plugin : IDalamudPlugin
             .ToList();
         var timelineRows = GetUpcomingTimelineRows(now, Math.Max(0, Configuration.MaxAlerts - pendingAlerts.Count));
         var upcomingCount = pendingAlerts.Count + timelineRows.Count;
+        var showReadyPanel = Configuration.ShowInactiveWindow && IsEncounterActiveForReadyPanel(pendingAlerts, timelineRows);
 
         if (liveAlerts.Count > 0)
             DrawTopScreenAlerts(scale, liveAlerts, now);
 
-        if (upcomingCount == 0 && !Configuration.ShowInactiveWindow)
+        if (!showReadyPanel)
             return;
 
         var flags = ImGuiWindowFlags.NoScrollbar
@@ -1069,6 +1104,16 @@ public sealed class Plugin : IDalamudPlugin
 
         ImGui.End();
         ImGui.PopStyleVar(2);
+    }
+
+    private bool IsEncounterActiveForReadyPanel(
+        IReadOnlyCollection<ActiveAlert> pendingAlerts,
+        IReadOnlyCollection<UpcomingTimelineRow> timelineRows)
+    {
+        return lastCombatDataActive == true
+               || pendingAlerts.Count > 0
+               || timelineRows.Count > 0
+               || activeTimelines.Count > 0;
     }
 
     private void DrawTopScreenAlerts(float scale, IReadOnlyList<ActiveAlert> liveAlerts, DateTime now)
@@ -1635,6 +1680,8 @@ public sealed class Plugin : IDalamudPlugin
         ImGui.TextUnformatted($"Player: {primaryPlayerName ?? "unknown"}");
         ImGui.TextUnformatted($"Job/role: {primaryPlayerJob ?? "unknown"} / {primaryPlayerRole ?? "unknown"}");
         ImGui.TextUnformatted($"State flags: {encounterState.Count}");
+        if (overlayHiddenReason is not null)
+            ImGui.TextUnformatted(overlayHiddenReason);
         ImGui.TextUnformatted($"State update triggers: {triggers.Count(trigger => trigger.StateUpdates.Count > 0)}");
 
         if (Configuration.ShowDebugWindow)

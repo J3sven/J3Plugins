@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Authors>J3</Authors>
         <Company>J3</Company>
-        <Version>0.1.0.0</Version>
+        <Version>0.1.1.0</Version>
         <Description>Native IINACT-powered encounter callouts for Final Fantasy XIV.</Description>
         <AssemblyName>Chocobot</AssemblyName>
         <TargetFramework>net10.0-windows</TargetFramework>
