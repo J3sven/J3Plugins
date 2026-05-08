@@ -34,8 +34,11 @@ public sealed class Plugin : IDalamudPlugin
     private readonly ICallGateProvider<JObject, bool> eventProvider;
     private readonly ConcurrentQueue<JObject> pendingEvents = new();
     private readonly List<TriggerDefinition> triggers = [];
+    private readonly List<TimelineDefinition> timelines = [];
     private readonly List<ActiveAlert> alerts = [];
     private readonly Dictionary<string, DateTime> lastTriggerFireAtUtc = [];
+    private readonly Dictionary<string, ActiveTimeline> activeTimelines = [];
+    private readonly HashSet<string> scheduledTimelineCues = [];
     private CancellationTokenSource? webSocketCancellation;
     private Task? webSocketTask;
     private SpeechSynthesizer? speechSynthesizer;
@@ -54,6 +57,7 @@ public sealed class Plugin : IDalamudPlugin
     private string? ttsBackend;
     private int ttsVoiceCount;
     private string? triggerLoadError;
+    private string? timelineLoadError;
     private string? currentZone;
     private string? lastEventType;
     private string? lastLogLine;
@@ -62,6 +66,12 @@ public sealed class Plugin : IDalamudPlugin
     private int receivedEventCount;
     private int webSocketEventCount;
     private int matchedTriggerCount;
+    private int timelineSyncCount;
+    private int timelineCueCount;
+    private bool? lastCombatDataActive;
+    private double lastCombatDurationSeconds;
+
+    private sealed record UpcomingTimelineRow(string Text, DateTime StartsAtUtc, DateTime AtUtc);
 
     public Plugin(
         IDalamudPluginInterface pluginInterface,
@@ -164,6 +174,7 @@ public sealed class Plugin : IDalamudPlugin
         }
 
         DrainPendingEvents();
+        ScheduleTimelineCues();
         PruneAlerts();
         SpeakDueAlerts();
 
@@ -217,17 +228,20 @@ public sealed class Plugin : IDalamudPlugin
         {
             case "ChangeZone":
                 currentZone = Text(data["zoneName"]) ?? Text(data["zone"]);
-                MatchTriggers(TriggerSource.ChangeZone, currentZone ?? string.Empty);
+                ResetTimelines();
+                break;
+            case "CombatData":
+                ProcessCombatData(data);
                 break;
             case "LogLine":
-                MatchTriggers(TriggerSource.LogLine, ExtractLogLine(data));
+                ProcessLogLine(ExtractLogLine(data));
                 break;
             default:
                 if (Configuration.TriggerOnAllLogLines)
                 {
                     var line = ExtractLogLine(data);
                     if (!string.IsNullOrWhiteSpace(line))
-                        MatchTriggers(TriggerSource.LogLine, line);
+                        ProcessLogLine(line);
                 }
                 break;
         }
@@ -247,16 +261,49 @@ public sealed class Plugin : IDalamudPlugin
                     currentZone = Text(zoneData["zoneName"]) ?? Text(zoneData["zone"]);
                 else
                     currentZone = Text(msg);
-                MatchTriggers(TriggerSource.ChangeZone, currentZone ?? string.Empty);
+                ResetTimelines();
+                break;
+            case "CombatData":
+                ProcessCombatData(AsObject(msg) ?? data);
                 break;
             case "LogLine":
-                MatchTriggers(TriggerSource.LogLine, ExtractLogLine(AsObject(msg) ?? data));
+                ProcessLogLine(ExtractLogLine(AsObject(msg) ?? data));
                 break;
             default:
                 if (Configuration.TriggerOnAllLogLines)
-                    MatchTriggers(TriggerSource.LogLine, ExtractLogLine(AsObject(msg) ?? data));
+                    ProcessLogLine(ExtractLogLine(AsObject(msg) ?? data));
                 break;
         }
+    }
+
+    private void ProcessLogLine(string line)
+    {
+        MatchTriggers(TriggerSource.LogLine, line);
+        SyncTimelines(line);
+    }
+
+    private void ProcessCombatData(JObject data)
+    {
+        var payload = FindCombatDataPayload(data);
+        if (payload is null)
+            return;
+
+        var encounter = AsObject(payload["Encounter"] ?? payload["encounter"]);
+        if (encounter is null)
+            return;
+
+        var isActiveText = Text(data["isActive"]) ?? Text(payload["isActive"]);
+        var isActive = string.Equals(isActiveText, "true", StringComparison.OrdinalIgnoreCase);
+        var duration = ParseDuration(Text(encounter["duration"]) ?? Text(encounter["DURATION"]));
+        var durationSeconds = duration.TotalSeconds;
+        var durationRolledBack = durationSeconds + 1 < lastCombatDurationSeconds;
+        var combatEnded = lastCombatDataActive != false && !isActive;
+
+        if (activeTimelines.Count > 0 && (durationRolledBack || combatEnded))
+            ResetTimelines();
+
+        lastCombatDataActive = isActive;
+        lastCombatDurationSeconds = durationSeconds;
     }
 
     private void MatchTriggers(TriggerSource source, string line)
@@ -305,8 +352,121 @@ public sealed class Plugin : IDalamudPlugin
 
     private bool ZoneMatches(string? zone)
     {
-        return string.IsNullOrWhiteSpace(zone)
-               || string.Equals(zone, currentZone, StringComparison.OrdinalIgnoreCase);
+        if (string.IsNullOrWhiteSpace(zone))
+            return true;
+
+        if (string.IsNullOrWhiteSpace(currentZone))
+            return false;
+
+        return string.Equals(zone, currentZone, StringComparison.OrdinalIgnoreCase)
+               || string.Equals(NormalizeZoneName(zone), NormalizeZoneName(currentZone), StringComparison.Ordinal);
+    }
+
+    private static string NormalizeZoneName(string zone)
+    {
+        var normalized = zone.Trim().ToLowerInvariant();
+        if (normalized.StartsWith("the ", StringComparison.Ordinal))
+            normalized = normalized[4..];
+
+        var builder = new StringBuilder(normalized.Length);
+        foreach (var ch in normalized)
+        {
+            if (char.IsLetterOrDigit(ch))
+                builder.Append(ch);
+        }
+
+        return builder.ToString();
+    }
+
+    private void SyncTimelines(string line)
+    {
+        if (!Configuration.Enabled || string.IsNullOrWhiteSpace(line))
+            return;
+
+        var now = DateTime.UtcNow;
+        foreach (var timeline in timelines)
+        {
+            if (!ZoneMatches(timeline.Zone))
+                continue;
+
+            var matchingSyncs = timeline.Syncs
+                .Where(sync => sync.CompiledRegex?.IsMatch(line) == true)
+                .ToList();
+            if (matchingSyncs.Count == 0)
+                continue;
+
+            var sync = matchingSyncs[0];
+            if (activeTimelines.TryGetValue(timeline.Id, out var active))
+            {
+                sync = matchingSyncs
+                    .OrderBy(candidate => ((now - TimeSpan.FromSeconds(candidate.TimeSeconds)) - active.AnchorUtc).Duration())
+                    .First();
+
+                var anchor = now - TimeSpan.FromSeconds(sync.TimeSeconds);
+                var drift = (active.AnchorUtc - anchor).Duration();
+                if (drift > TimeSpan.FromSeconds(2))
+                {
+                    active.Resync(anchor);
+                    RemoveScheduledTimelineCues(timeline.Id);
+                }
+            }
+            else
+            {
+                var anchor = now - TimeSpan.FromSeconds(sync.TimeSeconds);
+                activeTimelines[timeline.Id] = new ActiveTimeline(timeline, anchor);
+            }
+
+            timelineSyncCount++;
+            return;
+        }
+    }
+
+    private void ScheduleTimelineCues()
+    {
+        if (!Configuration.Enabled || activeTimelines.Count == 0)
+            return;
+
+        var now = DateTime.UtcNow;
+        foreach (var active in activeTimelines.Values.ToList())
+        {
+            if (!ZoneMatches(active.Definition.Zone))
+                continue;
+
+            foreach (var cue in active.Definition.Cues)
+            {
+                var cueAt = active.AnchorUtc + TimeSpan.FromSeconds(cue.TimeSeconds);
+                var startAt = cueAt - TimeSpan.FromSeconds(cue.BeforeSeconds);
+                if (now < startAt || now > cueAt + TimeSpan.FromSeconds(cue.DurationSeconds))
+                    continue;
+
+                var scheduleKey = $"{active.Definition.Id}:{cue.Id}:{cueAt.Ticks}";
+                if (!scheduledTimelineCues.Add(scheduleKey))
+                    continue;
+
+                AddAlert(
+                    scheduleKey,
+                    cue.AlertText,
+                    TimeSpan.FromSeconds(cue.DurationSeconds),
+                    cueAt > now ? cueAt - now : TimeSpan.Zero,
+                    true);
+                timelineCueCount++;
+            }
+        }
+    }
+
+    private void RemoveScheduledTimelineCues(string timelineId)
+    {
+        scheduledTimelineCues.RemoveWhere(key => key.StartsWith($"{timelineId}:", StringComparison.Ordinal));
+        alerts.RemoveAll(alert => alert.TriggerId.StartsWith($"{timelineId}:", StringComparison.Ordinal));
+    }
+
+    private void ResetTimelines()
+    {
+        activeTimelines.Clear();
+        scheduledTimelineCues.Clear();
+        alerts.RemoveAll(alert => alert.TriggerId.StartsWith("cactbot-timeline-", StringComparison.Ordinal));
+        lastCombatDataActive = null;
+        lastCombatDurationSeconds = 0;
     }
 
     private static string ResolveText(TriggerDefinition trigger, System.Text.RegularExpressions.Match match)
@@ -522,11 +682,13 @@ public sealed class Plugin : IDalamudPlugin
             .OrderBy(alert => alert.CueAtUtc)
             .Take(Configuration.MaxAlerts)
             .ToList();
+        var timelineRows = GetUpcomingTimelineRows(now, Math.Max(0, Configuration.MaxAlerts - pendingAlerts.Count));
+        var upcomingCount = pendingAlerts.Count + timelineRows.Count;
 
         if (liveAlerts.Count > 0)
             DrawTopScreenAlerts(scale, liveAlerts, now);
 
-        if (pendingAlerts.Count == 0 && !Configuration.ShowInactiveWindow)
+        if (upcomingCount == 0 && !Configuration.ShowInactiveWindow)
             return;
 
         var flags = ImGuiWindowFlags.NoScrollbar
@@ -542,9 +704,9 @@ public sealed class Plugin : IDalamudPlugin
         if (Configuration.ClickThrough)
             flags |= ImGuiWindowFlags.NoInputs;
 
-        var windowWidth = pendingAlerts.Count > 0 ? 430 * scale : 470 * scale;
-        var windowHeight = pendingAlerts.Count > 0
-            ? 42 * scale + pendingAlerts.Count * 34 * scale
+        var windowWidth = upcomingCount > 0 ? 430 * scale : 470 * scale;
+        var windowHeight = upcomingCount > 0
+            ? 42 * scale + upcomingCount * 34 * scale
             : 58 * scale;
         ImGui.SetNextWindowSize(new Vector2(windowWidth, windowHeight), ImGuiCond.Always);
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
@@ -558,8 +720,8 @@ public sealed class Plugin : IDalamudPlugin
             return;
         }
 
-        if (pendingAlerts.Count > 0)
-            DrawUpcomingPanel(scale, pendingAlerts, now);
+        if (upcomingCount > 0)
+            DrawUpcomingPanel(scale, pendingAlerts, timelineRows, now);
         else
             DrawInactivePanel(scale);
 
@@ -583,7 +745,7 @@ public sealed class Plugin : IDalamudPlugin
             var textSize = ImGui.CalcTextSize(text) * (fontSize / ImGui.GetFontSize());
             var y = viewport.Pos.Y + viewport.Size.Y * 0.17f + i * 50 * scale;
             var pos = PixelSnap(new Vector2(viewport.Pos.X + (viewport.Size.X - textSize.X) * 0.5f, y));
-            var alpha = Math.Clamp(Configuration.Opacity - i * 0.16f, 0.45f, 1f);
+            var alpha = Math.Clamp(1f - i * 0.16f, 0.45f, 1f);
             var textColor = i == 0
                 ? new Vector4(1.0f, 0.96f, 0.72f, alpha)
                 : new Vector4(0.92f, 0.96f, 1.0f, alpha);
@@ -619,18 +781,49 @@ public sealed class Plugin : IDalamudPlugin
         ImGui.Dummy(size);
     }
 
-    private void DrawUpcomingPanel(float scale, IReadOnlyList<ActiveAlert> pendingAlerts, DateTime now)
+    private List<UpcomingTimelineRow> GetUpcomingTimelineRows(DateTime now, int maxRows)
     {
-        var size = new Vector2(430 * scale, 42 * scale + pendingAlerts.Count * 34 * scale);
+        if (maxRows <= 0 || activeTimelines.Count == 0)
+            return [];
+
+        return activeTimelines.Values
+            .Where(active => ZoneMatches(active.Definition.Zone))
+            .SelectMany(active =>
+            {
+                var orderedEntries = active.Definition.Entries
+                    .OrderBy(entry => entry.TimeSeconds)
+                    .ToList();
+                return orderedEntries.Select((entry, index) =>
+                {
+                    var previousTime = index > 0
+                        ? orderedEntries[index - 1].TimeSeconds
+                        : Math.Max(0, entry.TimeSeconds - 15);
+                    return new UpcomingTimelineRow(
+                        entry.Text,
+                        active.AnchorUtc + TimeSpan.FromSeconds(previousTime),
+                        active.AnchorUtc + TimeSpan.FromSeconds(entry.TimeSeconds));
+                });
+            })
+            .Where(row => row.AtUtc > now)
+            .OrderBy(row => row.AtUtc)
+            .Take(maxRows)
+            .ToList();
+    }
+
+    private void DrawUpcomingPanel(float scale, IReadOnlyList<ActiveAlert> pendingAlerts, IReadOnlyList<UpcomingTimelineRow> timelineRows, DateTime now)
+    {
+        var rowCount = pendingAlerts.Count + timelineRows.Count;
+        var size = new Vector2(430 * scale, 42 * scale + rowCount * 34 * scale);
         var pos = ImGui.GetCursorScreenPos();
         var drawList = ImGui.GetWindowDrawList();
         DrawPanel(drawList, pos, size, scale, new Vector4(0.055f, 0.06f, 0.065f, Configuration.Opacity));
-        DrawText(drawList, pos + new Vector2(14 * scale, 12 * scale), "Upcoming", new Vector4(0.80f, 0.88f, 0.92f, 1));
+        DrawTextShadow(drawList, pos + new Vector2(14 * scale, 12 * scale), "Upcoming", new Vector4(0.80f, 0.88f, 0.92f, 1), scale);
 
+        var rowIndex = 0;
         for (var i = 0; i < pendingAlerts.Count; i++)
         {
             var alert = pendingAlerts[i];
-            var rowY = 38 * scale + i * 34 * scale;
+            var rowY = 38 * scale + rowIndex * 34 * scale;
             var text = FitTextScaled(alert.Text, size.X - 112 * scale, ImGui.GetFontSize());
             var remaining = $"{alert.CountdownRemaining(now).TotalSeconds:0.0}s";
             var textColor = i == 0
@@ -640,8 +833,8 @@ public sealed class Plugin : IDalamudPlugin
                 ? new Vector4(1.0f, 0.74f, 0.28f, 1)
                 : new Vector4(0.70f, 0.78f, 0.84f, 1);
 
-            DrawText(drawList, pos + new Vector2(14 * scale, rowY), text, textColor);
-            DrawTextRight(drawList, pos.X + size.X - 14 * scale, pos.Y + rowY, remaining, timeColor);
+            DrawTextShadow(drawList, pos + new Vector2(14 * scale, rowY), text, textColor, scale);
+            DrawTextRightShadow(drawList, pos.X + size.X - 14 * scale, pos.Y + rowY, remaining, timeColor, scale);
 
             var barPos = pos + new Vector2(14 * scale, rowY + 21 * scale);
             var barSize = new Vector2(size.X - 28 * scale, 3 * scale);
@@ -656,9 +849,61 @@ public sealed class Plugin : IDalamudPlugin
                 barPos + new Vector2(barSize.X * remainingProgress, barSize.Y),
                 ImGui.GetColorU32(new Vector4(1.0f, 0.72f, 0.22f, 0.92f)),
                 2 * scale);
+            rowIndex++;
+        }
+
+        for (var i = 0; i < timelineRows.Count; i++)
+        {
+            var row = timelineRows[i];
+            var rowY = 38 * scale + rowIndex * 34 * scale;
+            var text = FitTextScaled(row.Text, size.X - 112 * scale, ImGui.GetFontSize());
+            var remaining = row.AtUtc - now;
+            var remainingText = FormatCountdown(remaining);
+            var textColor = rowIndex == 0
+                ? new Vector4(1.0f, 0.96f, 0.72f, 1)
+                : new Vector4(0.88f, 0.92f, 0.95f, 1);
+            var timeColor = rowIndex == 0
+                ? new Vector4(1.0f, 0.74f, 0.28f, 1)
+                : new Vector4(0.70f, 0.78f, 0.84f, 1);
+
+            DrawTextShadow(drawList, pos + new Vector2(14 * scale, rowY), text, textColor, scale);
+            DrawTextRightShadow(drawList, pos.X + size.X - 14 * scale, pos.Y + rowY, remainingText, timeColor, scale);
+
+            var barPos = pos + new Vector2(14 * scale, rowY + 21 * scale);
+            var barSize = new Vector2(size.X - 28 * scale, 3 * scale);
+            var timelineProgress = TimelineProgress(row, now);
+            drawList.AddRectFilled(
+                barPos,
+                barPos + barSize,
+                ImGui.GetColorU32(new Vector4(1, 1, 1, 0.10f)),
+                2 * scale);
+            drawList.AddRectFilled(
+                barPos,
+                barPos + new Vector2(barSize.X * (1 - timelineProgress), barSize.Y),
+                ImGui.GetColorU32(new Vector4(0.42f, 0.78f, 1.0f, 0.82f)),
+                2 * scale);
+            rowIndex++;
         }
 
         ImGui.Dummy(size);
+    }
+
+    private static float TimelineProgress(UpcomingTimelineRow row, DateTime now)
+    {
+        var total = row.AtUtc - row.StartsAtUtc;
+        if (total.TotalMilliseconds <= 0)
+            return 1;
+
+        var elapsed = now - row.StartsAtUtc;
+        return Math.Clamp((float)(elapsed.TotalMilliseconds / total.TotalMilliseconds), 0f, 1f);
+    }
+
+    private static string FormatCountdown(TimeSpan remaining)
+    {
+        if (remaining.TotalSeconds < 60)
+            return $"{remaining.TotalSeconds:0.0}s";
+
+        return $"{(int)remaining.TotalMinutes}:{remaining.Seconds:00}";
     }
 
     private static void DrawPanel(ImDrawListPtr drawList, Vector2 pos, Vector2 size, float scale, Vector4 color)
@@ -673,10 +918,22 @@ public sealed class Plugin : IDalamudPlugin
         drawList.AddText(pos, ImGui.GetColorU32(color), text);
     }
 
+    private static void DrawTextShadow(ImDrawListPtr drawList, Vector2 pos, string text, Vector4 color, float scale)
+    {
+        drawList.AddText(pos + new Vector2(MathF.Max(1, scale), MathF.Max(1, scale)), ImGui.GetColorU32(new Vector4(0, 0, 0, 0.72f)), text);
+        DrawText(drawList, pos, text, color);
+    }
+
     private static void DrawTextRight(ImDrawListPtr drawList, float rightX, float y, string text, Vector4 color)
     {
         var textSize = ImGui.CalcTextSize(text);
         DrawText(drawList, new Vector2(rightX - textSize.X, y), text, color);
+    }
+
+    private static void DrawTextRightShadow(ImDrawListPtr drawList, float rightX, float y, string text, Vector4 color, float scale)
+    {
+        var textSize = ImGui.CalcTextSize(text);
+        DrawTextShadow(drawList, new Vector2(rightX - textSize.X, y), text, color, scale);
     }
 
     private static void DrawOutlinedText(ImDrawListPtr drawList, Vector2 pos, string text, float fontSize, Vector4 color, Vector4 outlineColor, float outline)
@@ -860,7 +1117,7 @@ public sealed class Plugin : IDalamudPlugin
         changed |= SliderInt("Max alerts", Configuration.MaxAlerts, 1, 10, value => Configuration.MaxAlerts = value);
         changed |= SliderInt("TTS volume", Configuration.TtsVolume, 0, 100, value => Configuration.TtsVolume = value);
         changed |= SliderInt("TTS rate", Configuration.TtsRate, -10, 10, value => Configuration.TtsRate = value);
-        changed |= SliderFloat("Opacity", Configuration.Opacity, 0.2f, 1f, "%.2f", value => Configuration.Opacity = value);
+        changed |= SliderFloat("Opacity", Configuration.Opacity, 0f, 1f, "%.2f", value => Configuration.Opacity = value);
         changed |= SliderFloat("Scale", Configuration.AlertScale, 0.75f, 1.75f, "%.2f", value => Configuration.AlertScale = value);
 
         if (ImGui.Button("Test alert"))
@@ -893,7 +1150,10 @@ public sealed class Plugin : IDalamudPlugin
             ImGui.TextWrapped($"TTS error: {ttsLastError}");
         if (triggerLoadError is not null)
             ImGui.TextWrapped($"Trigger error: {triggerLoadError}");
+        if (timelineLoadError is not null)
+            ImGui.TextWrapped($"Timeline error: {timelineLoadError}");
         ImGui.TextUnformatted($"Triggers loaded: {triggers.Count}");
+        ImGui.TextUnformatted($"Timelines loaded: {timelines.Count}");
         ImGui.TextUnformatted($"Current zone: {currentZone ?? "unknown"}");
 
         if (Configuration.ShowDebugWindow)
@@ -901,6 +1161,11 @@ public sealed class Plugin : IDalamudPlugin
             ImGui.TextUnformatted($"Events received: {receivedEventCount}");
             ImGui.TextUnformatted($"WebSocket events: {webSocketEventCount}");
             ImGui.TextUnformatted($"Triggers matched: {matchedTriggerCount}");
+            ImGui.TextUnformatted($"Timeline syncs: {timelineSyncCount}");
+            ImGui.TextUnformatted($"Timeline cues: {timelineCueCount}");
+            ImGui.TextUnformatted($"Active timelines: {activeTimelines.Count}");
+            ImGui.TextUnformatted($"Combat active: {lastCombatDataActive?.ToString() ?? "unknown"}");
+            ImGui.TextUnformatted($"Combat duration: {lastCombatDurationSeconds:0.0}s");
             ImGui.TextUnformatted($"Last event type: {lastEventType ?? "unknown"}");
             ImGui.TextUnformatted($"Last event: {FormatTime(lastEventAt)}");
             ImGui.TextUnformatted($"Last trigger: {FormatTime(lastTriggerAt)}");
@@ -983,7 +1248,7 @@ public sealed class Plugin : IDalamudPlugin
             if (!SendToIinact(new JObject
                 {
                     ["call"] = "subscribe",
-                    ["events"] = new JArray("LogLine", "ChangeZone")
+                    ["events"] = new JArray("LogLine", "ChangeZone", "CombatData")
                 }))
             {
                 TryRemoveIinactSubscriber();
@@ -1018,7 +1283,7 @@ public sealed class Plugin : IDalamudPlugin
                 SendToIinact(new JObject
                 {
                     ["call"] = "unsubscribe",
-                    ["events"] = new JArray("LogLine", "ChangeZone")
+                    ["events"] = new JArray("LogLine", "ChangeZone", "CombatData")
                 });
             }
 
@@ -1068,8 +1333,12 @@ public sealed class Plugin : IDalamudPlugin
     private void LoadTriggers()
     {
         triggers.Clear();
+        timelines.Clear();
+        activeTimelines.Clear();
+        scheduledTimelineCues.Clear();
         lastTriggerFireAtUtc.Clear();
         triggerLoadError = null;
+        timelineLoadError = null;
         var assetsPath = Path.Combine(pluginInterface.AssemblyLocation.Directory!.FullName, "Assets");
 
         try
@@ -1091,17 +1360,46 @@ public sealed class Plugin : IDalamudPlugin
                 return;
             }
 
-            foreach (var path in files)
+            foreach (var path in files.Where(path => !Path.GetFileName(path).Contains("timeline", StringComparison.OrdinalIgnoreCase)))
                 LoadTriggerFile(path, errors);
 
             if (errors.Count > 0)
                 triggerLoadError = string.Join("; ", errors.Take(3)) + (errors.Count > 3 ? $" and {errors.Count - 3} more" : string.Empty);
+
+            LoadTimelines(assetsPath);
         }
         catch (Exception ex)
         {
             triggerLoadError = ex.Message;
             Log.Warning(ex, "Failed to load Chocobot triggers.");
         }
+    }
+
+    private void LoadTimelines(string assetsPath)
+    {
+        var errors = new List<string>();
+        foreach (var path in Directory.GetFiles(assetsPath, "*timeline*.json").OrderBy(Path.GetFileName))
+        {
+            try
+            {
+                var loaded = JsonConvert.DeserializeObject<List<TimelineDefinition>>(File.ReadAllText(path)) ?? [];
+                foreach (var timeline in loaded)
+                {
+                    if (timeline.Compile(out var error))
+                        timelines.Add(timeline);
+                    else if (error is not null)
+                        errors.Add($"{Path.GetFileName(path)}: {error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"{Path.GetFileName(path)}: {ex.Message}");
+                Log.Warning(ex, "Failed to load Chocobot timeline file {Path}.", path);
+            }
+        }
+
+        if (errors.Count > 0)
+            timelineLoadError = string.Join("; ", errors.Take(3)) + (errors.Count > 3 ? $" and {errors.Count - 3} more" : string.Empty);
     }
 
     private void LoadTriggerFile(string path, List<string> errors)
@@ -1129,7 +1427,7 @@ public sealed class Plugin : IDalamudPlugin
         Configuration.MaxAlerts = Math.Clamp(Configuration.MaxAlerts, 1, 10);
         Configuration.TtsVolume = Math.Clamp(Configuration.TtsVolume, 0, 100);
         Configuration.TtsRate = Math.Clamp(Configuration.TtsRate, -10, 10);
-        Configuration.Opacity = Math.Clamp(Configuration.Opacity, 0.2f, 1f);
+        Configuration.Opacity = Math.Clamp(Configuration.Opacity, 0f, 1f);
         Configuration.AlertScale = Math.Clamp(Configuration.AlertScale, 0.75f, 1.75f);
     }
 
@@ -1196,6 +1494,52 @@ public sealed class Plugin : IDalamudPlugin
                ?? Text(data["logLine"])
                ?? Text(data["msg"])
                ?? data.ToString(Formatting.None);
+    }
+
+    private static JObject? FindCombatDataPayload(JObject data, int depth = 0)
+    {
+        if (depth > 4)
+            return null;
+
+        if ((data["Encounter"] is not null || data["encounter"] is not null)
+            && (data["Combatant"] is not null || data["combatant"] is not null || data["combatants"] is not null))
+            return data;
+
+        foreach (var propertyName in new[] { "msg", "data", "payload", "detail", "event", "Event", "args" })
+        {
+            if (AsObject(data[propertyName]) is { } nested
+                && FindCombatDataPayload(nested, depth + 1) is { } payload)
+                return payload;
+        }
+
+        foreach (var property in data.Properties())
+        {
+            if (AsObject(property.Value) is { } nested
+                && FindCombatDataPayload(nested, depth + 1) is { } payload)
+                return payload;
+        }
+
+        return null;
+    }
+
+    private static TimeSpan ParseDuration(string? duration)
+    {
+        if (string.IsNullOrWhiteSpace(duration))
+            return TimeSpan.Zero;
+
+        var parts = duration.Split(':');
+        if (parts.Length == 2
+            && int.TryParse(parts[0], out var minutes)
+            && int.TryParse(parts[1], out var seconds))
+            return new TimeSpan(0, minutes, seconds);
+
+        if (parts.Length == 3
+            && int.TryParse(parts[0], out var hours)
+            && int.TryParse(parts[1], out minutes)
+            && int.TryParse(parts[2], out seconds))
+            return new TimeSpan(hours, minutes, seconds);
+
+        return TimeSpan.Zero;
     }
 
     private static JObject? AsObject(JToken? token)

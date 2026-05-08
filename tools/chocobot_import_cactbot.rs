@@ -7,6 +7,7 @@ use std::process::Command;
 
 const DEFAULT_ARCHIVE_URL: &str = "https://github.com/quisquous/cactbot/archive/refs/heads/main.tar.gz";
 const DEFAULT_OUTPUT: &str = "src/Chocobot/Assets/cactbot-imported-triggers.json";
+const DEFAULT_TIMELINE_OUTPUT: &str = "src/Chocobot/Assets/cactbot-imported-timelines.json";
 const DEFAULT_REPORT: &str = "src/Chocobot/Assets/cactbot-import-report.md";
 const RAIDBOSS_DATA: &str = "ui/raidboss/data";
 const DEFAULT_EXCLUDE: &str = "03-hw/trial/sophia-ex.ts";
@@ -17,6 +18,7 @@ struct Args {
     download: bool,
     archive_url: String,
     output: PathBuf,
+    timeline_output: PathBuf,
     report: PathBuf,
     exclude_files: Vec<String>,
     help: bool,
@@ -25,11 +27,36 @@ struct Args {
 #[derive(Clone)]
 struct Trigger {
     id: String,
+    zone: Option<String>,
     pattern: String,
     alert: String,
     duration: f64,
     suppress: f64,
     countdown: Option<f64>,
+}
+
+#[derive(Clone)]
+struct Timeline {
+    id: String,
+    zone: Option<String>,
+    syncs: Vec<TimelineSync>,
+    entries: Vec<TimelineEntry>,
+    cues: Vec<TimelineCue>,
+}
+
+#[derive(Clone)]
+struct TimelineSync {
+    time: f64,
+    pattern: String,
+}
+
+#[derive(Clone)]
+struct TimelineCue {
+    id: String,
+    time: f64,
+    before: f64,
+    alert: String,
+    duration: f64,
 }
 
 struct ImportResult {
@@ -67,6 +94,7 @@ fn run() -> Result<(), String> {
     if !data_dir.is_dir() {
         return Err(format!("Missing cactbot raidboss data directory: {}", data_dir.display()));
     }
+    let zone_names = load_zone_names(&cactbot_root)?;
 
     let mut files = Vec::new();
     collect_ts_files(&data_dir, &mut files)?;
@@ -79,6 +107,7 @@ fn run() -> Result<(), String> {
         .collect();
 
     let mut triggers = Vec::new();
+    let mut timelines = Vec::new();
     let mut skipped = Vec::new();
     let mut file_stats: BTreeMap<String, BTreeMap<String, usize>> = BTreeMap::new();
 
@@ -91,14 +120,21 @@ fn run() -> Result<(), String> {
 
         let text = fs::read_to_string(&path)
             .map_err(|err| format!("Failed to read {}: {err}", path.display()))?;
+        let zone = extract_zone_name(&text, &zone_names);
         let blocks = extract_trigger_blocks(&text);
+        let timeline = convert_timeline(&text, &data_dir, &rel, zone.clone());
+        if let Some(timeline) = timeline {
+            inc_stat(&mut file_stats, &rel, "timeline imported");
+            timelines.push(timeline);
+        }
+
         if blocks.is_empty() {
             inc_stat(&mut file_stats, &rel, "no-trigger-blocks");
             continue;
         }
 
         for block in blocks {
-            let result = convert_trigger_block(&block, &rel);
+            let result = convert_trigger_block(&block, &rel, zone.clone());
             match result.trigger {
                 Some(trigger) => {
                     triggers.push(trigger);
@@ -115,9 +151,11 @@ fn run() -> Result<(), String> {
 
     triggers = dedupe_triggers(triggers);
     write_trigger_json(&args.output, &triggers)?;
-    write_report(&args, &cactbot_root, &triggers, &skipped, &file_stats)?;
+    write_timeline_json(&args.timeline_output, &timelines)?;
+    write_report(&args, &cactbot_root, &triggers, &timelines, &skipped, &file_stats)?;
 
     println!("Imported {} triggers into {}", triggers.len(), args.output.display());
+    println!("Imported {} timelines into {}", timelines.len(), args.timeline_output.display());
     println!("Wrote import report to {}", args.report.display());
     Ok(())
 }
@@ -126,6 +164,7 @@ fn parse_args() -> Result<Args, String> {
     let mut args = Args {
         archive_url: DEFAULT_ARCHIVE_URL.to_string(),
         output: PathBuf::from(DEFAULT_OUTPUT),
+        timeline_output: PathBuf::from(DEFAULT_TIMELINE_OUTPUT),
         report: PathBuf::from(DEFAULT_REPORT),
         exclude_files: vec![DEFAULT_EXCLUDE.to_string()],
         ..Default::default()
@@ -139,6 +178,7 @@ fn parse_args() -> Result<Args, String> {
             "--cactbot-dir" => args.cactbot_dir = Some(next_path(&mut iter, "--cactbot-dir")?),
             "--archive-url" => args.archive_url = next_string(&mut iter, "--archive-url")?,
             "--output" => args.output = next_path(&mut iter, "--output")?,
+            "--timeline-output" => args.timeline_output = next_path(&mut iter, "--timeline-output")?,
             "--report" => args.report = next_path(&mut iter, "--report")?,
             "--exclude-file" => args.exclude_files.push(next_string(&mut iter, "--exclude-file")?),
             unknown => return Err(format!("Unknown argument: {unknown}")),
@@ -170,6 +210,7 @@ Options:\n\
   --download               Download cactbot main into /tmp and import from it.\n\
   --archive-url <url>      cactbot tar.gz archive URL used with --download.\n\
   --output <path>          Generated trigger JSON. Default: {DEFAULT_OUTPUT}\n\
+  --timeline-output <path> Generated timeline JSON. Default: {DEFAULT_TIMELINE_OUTPUT}\n\
   --report <path>          Markdown import report. Default: {DEFAULT_REPORT}\n\
   --exclude-file <suffix>  raidboss data file suffix to skip. Repeatable.\n\
   --help                   Show this help.\n\
@@ -236,12 +277,264 @@ fn collect_ts_files(dir: &Path, files: &mut Vec<PathBuf>) -> Result<(), String> 
     Ok(())
 }
 
+fn load_zone_names(cactbot_root: &Path) -> Result<BTreeMap<String, String>, String> {
+    let zone_id_path = cactbot_root.join("resources/zone_id.ts");
+    let zone_info_path = cactbot_root.join("resources/zone_info.ts");
+    let zone_id_text = fs::read_to_string(&zone_id_path)
+        .map_err(|err| format!("Failed to read {}: {err}", zone_id_path.display()))?;
+    let zone_info_text = fs::read_to_string(&zone_info_path)
+        .map_err(|err| format!("Failed to read {}: {err}", zone_info_path.display()))?;
+
+    let mut symbol_to_id = BTreeMap::new();
+    for line in zone_id_text.lines() {
+        let trimmed = line.trim();
+        if !trimmed.starts_with('\'') {
+            continue;
+        }
+        let Some(symbol_end) = trimmed[1..].find('\'') else {
+            continue;
+        };
+        let symbol = &trimmed[1..1 + symbol_end];
+        let Some(colon) = trimmed.find(':') else {
+            continue;
+        };
+        let number: String = trimmed[colon + 1..]
+            .chars()
+            .skip_while(|ch| ch.is_whitespace())
+            .take_while(|ch| ch.is_ascii_digit())
+            .collect();
+        if !number.is_empty() {
+            symbol_to_id.insert(symbol.to_string(), number);
+        }
+    }
+
+    let mut id_to_name = BTreeMap::new();
+    let mut current_id: Option<String> = None;
+    let mut in_name = false;
+    for line in zone_info_text.lines() {
+        let trimmed = line.trim();
+        if trimmed.ends_with('{') && trimmed.chars().next().is_some_and(|ch| ch.is_ascii_digit()) {
+            current_id = trimmed.split(':').next().map(|value| value.trim().to_string());
+            in_name = false;
+            continue;
+        }
+        if trimmed.starts_with("'name':") {
+            in_name = true;
+            continue;
+        }
+        if in_name && trimmed.starts_with("'en':") {
+            if let Some(id) = current_id.clone() {
+                if let Some(name) = extract_quoted_after_colon(trimmed) {
+                    id_to_name.insert(id, name);
+                }
+            }
+            in_name = false;
+        }
+    }
+
+    let mut symbol_to_name = BTreeMap::new();
+    for (symbol, id) in symbol_to_id {
+        if let Some(name) = id_to_name.get(&id) {
+            symbol_to_name.insert(symbol, name.clone());
+        }
+    }
+    Ok(symbol_to_name)
+}
+
+fn extract_quoted_after_colon(line: &str) -> Option<String> {
+    let colon = line.find(':')?;
+    let value = line[colon + 1..].trim().trim_end_matches(',');
+    quoted_text(value)
+}
+
+fn extract_zone_name(text: &str, zone_names: &BTreeMap<String, String>) -> Option<String> {
+    let stripped = strip_comments(text);
+    let marker = "zoneId:";
+    let start = stripped.find(marker)? + marker.len();
+    let rest = stripped[start..].trim_start();
+    let zone_marker = "ZoneId.";
+    let symbol_start = rest.find(zone_marker)? + zone_marker.len();
+    let symbol: String = rest[symbol_start..]
+        .chars()
+        .take_while(|ch| ch.is_ascii_alphanumeric() || *ch == '_')
+        .collect();
+    zone_names.get(&symbol).cloned()
+}
+
 fn extract_trigger_blocks(text: &str) -> Vec<String> {
     let stripped = strip_comments(text);
     let Some(array) = find_named_array(&stripped, "triggers") else {
         return Vec::new();
     };
     split_top_level_objects(&array)
+}
+
+fn extract_timeline_trigger_blocks(text: &str) -> Vec<String> {
+    let stripped = strip_comments(text);
+    let Some(array) = find_named_array(&stripped, "timelineTriggers") else {
+        return Vec::new();
+    };
+    split_top_level_objects(&array)
+}
+
+#[derive(Clone)]
+struct TimelineEntry {
+    time: f64,
+    text: String,
+    ids: Vec<String>,
+}
+
+fn convert_timeline(text: &str, data_dir: &Path, rel: &str, zone: Option<String>) -> Option<Timeline> {
+    let timeline_file = extract_string_property(text, "timelineFile")?;
+    let timeline_path = data_dir.join(Path::new(rel).parent().unwrap_or_else(|| Path::new(""))).join(timeline_file);
+    let timeline_text = fs::read_to_string(timeline_path).ok()?;
+    let entries = parse_timeline_entries(&timeline_text);
+    if entries.is_empty() {
+        return None;
+    }
+
+    let mut syncs = Vec::new();
+    for entry in &entries {
+        if !entry.ids.is_empty() {
+            syncs.push(TimelineSync {
+                time: entry.time,
+                pattern: make_id_pattern(&entry.ids),
+            });
+        }
+    }
+
+    let mut cues = Vec::new();
+    for block in extract_timeline_trigger_blocks(text) {
+        let Some(cactbot_id) = extract_string_property(&block, "id") else {
+            continue;
+        };
+        let Some(regex) = extract_timeline_regex(&block) else {
+            continue;
+        };
+        let Some(before) = extract_number_property(&block, "beforeSeconds") else {
+            continue;
+        };
+        let Some(alert) = extract_alert_text(&block) else {
+            continue;
+        };
+        if alert.contains("${") {
+            continue;
+        }
+        let duration = extract_number_property(&block, "durationSeconds").unwrap_or(5.0);
+        for entry in entries.iter().filter(|entry| timeline_regex_matches(&regex, &entry.text)) {
+            cues.push(TimelineCue {
+                id: format!("timeline-{}-{}-{}", slugify(&cactbot_id), slugify(&entry.text), format_number(entry.time)),
+                time: entry.time,
+                before,
+                alert: alert.clone(),
+                duration,
+            });
+        }
+    }
+
+    cues = dedupe_cues(cues);
+    if syncs.is_empty() || entries.is_empty() {
+        return None;
+    }
+
+    Some(Timeline {
+        id: format!("cactbot-timeline-{}", slugify(rel.trim_end_matches(".ts"))),
+        zone,
+        syncs,
+        entries,
+        cues,
+    })
+}
+
+fn parse_timeline_entries(text: &str) -> Vec<TimelineEntry> {
+    let mut entries = Vec::new();
+    for raw_line in text.lines() {
+        let line = raw_line.trim();
+        if line.is_empty() || line.starts_with('#') || line.starts_with("hideall") {
+            continue;
+        }
+        let mut chars = line.char_indices();
+        let mut end_time = 0;
+        for (idx, ch) in &mut chars {
+            if ch.is_ascii_digit() || ch == '.' {
+                end_time = idx + ch.len_utf8();
+            } else {
+                break;
+            }
+        }
+        if end_time == 0 {
+            continue;
+        }
+        let Ok(time) = line[..end_time].parse::<f64>() else {
+            continue;
+        };
+        let rest = line[end_time..].trim_start();
+        if !rest.starts_with('"') {
+            continue;
+        }
+        let Some(end_quote) = rest[1..].find('"') else {
+            continue;
+        };
+        let text = rest[1..1 + end_quote].to_string();
+        if text.starts_with("--") {
+            continue;
+        }
+        let details = &rest[2 + end_quote..];
+        let ids = extract_ids_from_text(details);
+        entries.push(TimelineEntry { time, text, ids });
+    }
+    entries
+}
+
+fn extract_timeline_regex(block: &str) -> Option<String> {
+    let value = extract_property_value(block, "regex")?;
+    if value.starts_with('/') {
+        let end = value.rfind('/')?;
+        if end > 0 {
+            return Some(value[1..end].to_string());
+        }
+    }
+    quoted_text(&value)
+}
+
+fn timeline_regex_matches(regex: &str, text: &str) -> bool {
+    let needle = simplify_timeline_pattern(regex);
+    let haystack = simplify_timeline_pattern(text);
+    !needle.is_empty() && haystack.contains(&needle)
+}
+
+fn simplify_timeline_pattern(value: &str) -> String {
+    value
+        .replace("\\(", "(")
+        .replace("\\)", ")")
+        .replace("\\/", "/")
+        .replace("\\?", "?")
+        .replace("\\.", ".")
+        .replace("\\b", "")
+        .replace('^', "")
+        .replace('$', "")
+        .to_ascii_lowercase()
+}
+
+fn extract_ids_from_text(value: &str) -> Vec<String> {
+    let mut ids = BTreeSet::new();
+    let chars: Vec<char> = value.chars().collect();
+    let mut i = 0;
+    while i < chars.len() {
+        if chars[i].is_ascii_hexdigit() {
+            let start = i;
+            while i < chars.len() && chars[i].is_ascii_hexdigit() {
+                i += 1;
+            }
+            let len = i - start;
+            if (3..=6).contains(&len) {
+                ids.insert(chars[start..i].iter().collect::<String>().to_uppercase());
+            }
+            continue;
+        }
+        i += 1;
+    }
+    ids.into_iter().collect()
 }
 
 fn strip_comments(text: &str) -> String {
@@ -369,7 +662,7 @@ fn split_top_level_objects(text: &str) -> Vec<String> {
     blocks
 }
 
-fn convert_trigger_block(block: &str, file: &str) -> ImportResult {
+fn convert_trigger_block(block: &str, file: &str, zone: Option<String>) -> ImportResult {
     let Some(cactbot_id) = extract_string_property(block, "id") else {
         return skipped(file, None, "missing id");
     };
@@ -395,6 +688,7 @@ fn convert_trigger_block(block: &str, file: &str) -> ImportResult {
     let countdown = extract_number_property(block, "delaySeconds").filter(|value| *value > 0.0);
     let trigger = Trigger {
         id: format!("cactbot-{}", slugify(&cactbot_id)),
+        zone,
         pattern: make_id_pattern(&ids),
         alert: text,
         duration,
@@ -561,8 +855,12 @@ fn extract_static_text_field(block: &str, field: &str) -> Option<String> {
     if let Some(text) = extract_english_from_object(&value) {
         return Some(text);
     }
-    let output_key = extract_output_key(&value)?;
     let output_strings = extract_object_property(block, "outputStrings")?;
+    if let Some(output_key) = extract_output_key(&value) {
+        return extract_output_string(&output_strings, &output_key);
+    }
+
+    let output_key = extract_output_key_after_field(block, field)?;
     extract_output_string(&output_strings, &output_key)
 }
 
@@ -596,6 +894,17 @@ fn extract_output_key(value: &str) -> Option<String> {
     } else {
         Some(key)
     }
+}
+
+fn extract_output_key_after_field(block: &str, field: &str) -> Option<String> {
+    let marker = format!("{field}:");
+    let start = block.find(&marker)? + marker.len();
+    let tail = &block[start..];
+    let field_body = tail.split("outputStrings").next().unwrap_or(tail);
+    if field_body.contains("data.") || field_body.contains("matches.") || block.contains("Conditions.targetIsYou") {
+        return None;
+    }
+    extract_output_key(field_body)
 }
 
 fn extract_output_string(output_strings: &str, key: &str) -> Option<String> {
@@ -725,8 +1034,26 @@ fn dedupe_triggers(triggers: Vec<Trigger>) -> Vec<Trigger> {
     let mut seen = BTreeSet::new();
     let mut deduped = Vec::new();
     for trigger in triggers {
-        if seen.insert(trigger.id.clone()) {
+        let key = format!(
+            "{}:{}:{}",
+            trigger.zone.as_deref().unwrap_or_default(),
+            trigger.pattern,
+            trigger.alert
+        );
+        if seen.insert(key) {
             deduped.push(trigger);
+        }
+    }
+    deduped
+}
+
+fn dedupe_cues(cues: Vec<TimelineCue>) -> Vec<TimelineCue> {
+    let mut seen = BTreeSet::new();
+    let mut deduped = Vec::new();
+    for cue in cues {
+        let key = format!("{}:{}", cue.id, format_number(cue.time));
+        if seen.insert(key) {
+            deduped.push(cue);
         }
     }
     deduped
@@ -740,6 +1067,9 @@ fn write_trigger_json(path: &Path, triggers: &[Trigger]) -> Result<(), String> {
     for (idx, trigger) in triggers.iter().enumerate() {
         out.push_str("  {\n");
         out.push_str(&format!("    \"id\": \"{}\",\n", json_escape(&trigger.id)));
+        if let Some(zone) = &trigger.zone {
+            out.push_str(&format!("    \"zone\": \"{}\",\n", json_escape(zone)));
+        }
         out.push_str("    \"source\": \"LogLine\",\n");
         out.push_str(&format!("    \"pattern\": \"{}\",\n", json_escape(&trigger.pattern)));
         out.push_str(&format!("    \"alert\": \"{}\",\n", json_escape(&trigger.alert)));
@@ -758,10 +1088,71 @@ fn write_trigger_json(path: &Path, triggers: &[Trigger]) -> Result<(), String> {
     fs::write(path, out).map_err(|err| format!("Failed to write {}: {err}", path.display()))
 }
 
+fn write_timeline_json(path: &Path, timelines: &[Timeline]) -> Result<(), String> {
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent).map_err(|err| format!("Failed to create {}: {err}", parent.display()))?;
+    }
+    let mut out = String::from("[\n");
+    for (idx, timeline) in timelines.iter().enumerate() {
+        out.push_str("  {\n");
+        out.push_str(&format!("    \"id\": \"{}\",\n", json_escape(&timeline.id)));
+        if let Some(zone) = &timeline.zone {
+            out.push_str(&format!("    \"zone\": \"{}\",\n", json_escape(zone)));
+        }
+        out.push_str("    \"syncs\": [\n");
+        for (sync_idx, sync) in timeline.syncs.iter().enumerate() {
+            out.push_str("      {\n");
+            out.push_str(&format!("        \"time\": {},\n", format_number(sync.time)));
+            out.push_str(&format!("        \"pattern\": \"{}\"\n", json_escape(&sync.pattern)));
+            out.push_str("      }");
+            if sync_idx + 1 != timeline.syncs.len() {
+                out.push(',');
+            }
+            out.push('\n');
+        }
+        out.push_str("    ],\n");
+        out.push_str("    \"entries\": [\n");
+        for (entry_idx, entry) in timeline.entries.iter().enumerate() {
+            out.push_str("      {\n");
+            out.push_str(&format!("        \"time\": {},\n", format_number(entry.time)));
+            out.push_str(&format!("        \"text\": \"{}\"\n", json_escape(&entry.text)));
+            out.push_str("      }");
+            if entry_idx + 1 != timeline.entries.len() {
+                out.push(',');
+            }
+            out.push('\n');
+        }
+        out.push_str("    ],\n");
+        out.push_str("    \"cues\": [\n");
+        for (cue_idx, cue) in timeline.cues.iter().enumerate() {
+            out.push_str("      {\n");
+            out.push_str(&format!("        \"id\": \"{}\",\n", json_escape(&cue.id)));
+            out.push_str(&format!("        \"time\": {},\n", format_number(cue.time)));
+            out.push_str(&format!("        \"before\": {},\n", format_number(cue.before)));
+            out.push_str(&format!("        \"alert\": \"{}\",\n", json_escape(&cue.alert)));
+            out.push_str(&format!("        \"duration\": {}\n", format_number(cue.duration)));
+            out.push_str("      }");
+            if cue_idx + 1 != timeline.cues.len() {
+                out.push(',');
+            }
+            out.push('\n');
+        }
+        out.push_str("    ]\n");
+        out.push_str("  }");
+        if idx + 1 != timelines.len() {
+            out.push(',');
+        }
+        out.push('\n');
+    }
+    out.push_str("]\n");
+    fs::write(path, out).map_err(|err| format!("Failed to write {}: {err}", path.display()))
+}
+
 fn write_report(
     args: &Args,
     cactbot_root: &Path,
     triggers: &[Trigger],
+    timelines: &[Timeline],
     skipped: &[ImportResult],
     file_stats: &BTreeMap<String, BTreeMap<String, usize>>,
 ) -> Result<(), String> {
@@ -784,7 +1175,9 @@ fn write_report(
     out.push_str("# Chocobot cactbot import report\n\n");
     out.push_str(&format!("- cactbot source: `{}`\n", cactbot_root.display()));
     out.push_str(&format!("- output: `{}`\n", args.output.display()));
+    out.push_str(&format!("- timeline output: `{}`\n", args.timeline_output.display()));
     out.push_str(&format!("- imported triggers: {}\n", triggers.len()));
+    out.push_str(&format!("- imported timelines: {}\n", timelines.len()));
     out.push_str(&format!("- files with imports: {} / {}\n", imported_files, file_stats.len()));
     out.push_str(&format!("- skipped trigger objects: {}\n\n", skipped.len()));
 
@@ -838,8 +1231,8 @@ fn write_report(
 
     out.push_str(
         "\n## Notes\n\n\
-- Imported triggers match raw network/log lines by ability/effect ID and are not zone-scoped.\n\
-- Timeline triggers are intentionally not converted yet; Chocobot needs a timeline engine first.\n\
+- Imported triggers are zone-scoped when cactbot's ZoneId maps to an English zone name.\n\
+- Imported timelines are conservative: cues are generated from static timelineTriggers and sync from observed ability IDs.\n\
 - Dynamic output text, role checks, state collectors, and geometry solvers are intentionally skipped.\n\
 - Re-run this importer after updating cactbot to identify newly importable or newly skipped encounters.\n",
     );

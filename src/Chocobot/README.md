@@ -2,7 +2,7 @@
 
 Native Dalamud encounter callouts powered by IINACT.
 
-This is the foundation for a cactbot-like experience without running external ACT. It consumes IINACT `LogLine` and `ChangeZone` events through the MiniParse WebSocket by default, with IPC fallback available, then evaluates JSON trigger definitions and displays native Dalamud encounter alerts.
+This is the foundation for a cactbot-like experience without running external ACT. It consumes IINACT `LogLine` events through the MiniParse WebSocket by default, with IPC fallback available, then evaluates JSON trigger definitions and displays native Dalamud encounter alerts. `ChangeZone` events are used only for zone state and timeline reset.
 
 The mascot direction is a cute robotic chocobo: small, readable, and distinct from cactbot while still making the callout role obvious.
 
@@ -31,7 +31,7 @@ Assets/*.json
 Current fields:
 
 - `id`: unique trigger id
-- `source`: `LogLine` or `ChangeZone`
+- `source`: `LogLine`
 - `zone`: optional zone name filter
 - `pattern`: regular expression
 - `info`: default text
@@ -47,8 +47,9 @@ Numbered regex capture groups can be referenced as `$1`, `$2`, and so on.
 The included Sophia Extreme seed pack is adapted from cactbot's
 `ui/raidboss/data/03-hw/trial/sophia-ex.ts` encounter triggers. Chocobot only
 uses reactive log-line triggers right now, so log-line cues fire immediately.
-Timeline-only calls and cactbot's stateful safe-spot solver are represented as
-simpler alerts until the native timeline/state engine exists.
+Timeline cues are supported for imported static timeline triggers, but cactbot's
+stateful safe-spot solver is represented as simpler alerts until Chocobot has
+native stateful trigger logic.
 
 ## cactbot Import Flow
 
@@ -70,10 +71,17 @@ The importer writes:
 
 ```text
 Assets/cactbot-imported-triggers.json
+Assets/cactbot-imported-timelines.json
 Assets/cactbot-import-report.md
 ```
 
 It only imports static ID-based cactbot raidboss triggers that Chocobot can
-represent today. Dynamic output text, role checks, state collectors, geometry
-solvers, and timeline triggers are reported as skipped so missing encounter
-coverage can be tackled as Chocobot grows those systems.
+represent today, plus conservative timeline data that can be matched to static
+timeline entries. Imported timelines sync from observed ability IDs, show the
+next mechanics in the upcoming overlay, and promote imported timeline cues to
+live callouts when their cue time arrives.
+
+Dynamic output text, role checks, state collectors, geometry solvers, and
+complex timeline behavior such as jumps/resync windows are still reported or
+handled conservatively so missing encounter coverage can be tackled as Chocobot
+grows those systems.
