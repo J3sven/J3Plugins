@@ -1,0 +1,17 @@
+{
+  "Author": "J3",
+  "Name": "Chocobot",
+  "Punchline": "Native IINACT-powered encounter callouts.",
+  "Description": "A native Dalamud encounter callout engine powered by IINACT log events, with JSON trigger packs and on-screen alerts.",
+  "InternalName": "Chocobot",
+  "ApplicableVersion": "any",
+  "RepoUrl": "https://github.com/J3sven/J3Plugins",
+  "IconUrl": "https://raw.githubusercontent.com/J3sven/J3Plugins/main/src/Chocobot/Assets/chocobot-icon.png",
+  "Tags": [
+    "iinact",
+    "callouts",
+    "raid",
+    "triggers",
+    "alerts"
+  ]
+}

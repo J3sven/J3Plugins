@@ -1,0 +1,162 @@
+[
+  {
+    "id": "zone-change",
+    "source": "ChangeZone",
+    "pattern": "(.+)",
+    "info": "Zone: $1",
+    "duration": 3,
+    "speak": false,
+    "suppress": 5
+  },
+  {
+    "id": "countdown",
+    "source": "LogLine",
+    "pattern": "Battle commencing in (?<seconds>\\d+) seconds",
+    "alert": "Pull in $seconds",
+    "duration": 4
+  },
+  {
+    "id": "sophia-ex-tank-buster",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19C4\\b|Arms Of Wisdom",
+    "alert": "Tank buster: swap",
+    "duration": 6,
+    "suppress": 10
+  },
+  {
+    "id": "sophia-ex-thunder-ii",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19B0\\b|Thunder II",
+    "alert": "Avoid front",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "sophia-ex-thunder-iii",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19AC\\b|Thunder III",
+    "alert": "Get under Sophia",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "sophia-ex-aero-iii",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19AE\\b|Aero III",
+    "alert": "Get out",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "sophia-ex-gnosis",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19C2\\b|Gnosis",
+    "alert": "Knockback",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "sophia-ex-onrush",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19C1\\b|Onrush",
+    "alert": "Avoid dash attack",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "sophia-ex-cintamani",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19C5\\b|Cintamani",
+    "alert": "Raidwide AoE",
+    "duration": 4,
+    "suppress": 10
+  },
+  {
+    "id": "sophia-ex-dischordant-cleansing",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19B3\\b|\\b19B5\\b|Dischordant Cleansing",
+    "alert": "Stack with partner",
+    "duration": 6,
+    "suppress": 10
+  },
+  {
+    "id": "sophia-ex-quasar-bait",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b196E\\b|\\b19A7\\b|Quasar \\(Snapshot\\)",
+    "alert": "Bait Quasar meteors",
+    "duration": 6,
+    "suppress": 10
+  },
+  {
+    "id": "sophia-ex-quasar-tilt",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b1A4C\\b|Quasar \\(Tilt\\)",
+    "alert": "Watch platform tilt",
+    "duration": 8,
+    "suppress": 10
+  },
+  {
+    "id": "sophia-ex-divine-spark",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19B6\\b|Divine Spark",
+    "alert": "Look away",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "sophia-ex-gnostic-rant",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19B8\\b|Gnostic Rant",
+    "alert": "Get behind lancer",
+    "duration": 6,
+    "suppress": 8
+  },
+  {
+    "id": "sophia-ex-infusion",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b1988\\b|Infusion",
+    "alert": "Infusion on target",
+    "duration": 6,
+    "suppress": 8
+  },
+  {
+    "id": "sophia-ex-light-dew",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b1983\\b|\\b19BF\\b|\\b19C0\\b|Light Dew",
+    "alert": "Avoid head laser",
+    "duration": 5,
+    "suppress": 8
+  },
+  {
+    "id": "sophia-ex-execute",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19AA\\b|Execute",
+    "alert": "Execute: find clone safe spot",
+    "duration": 8,
+    "suppress": 10
+  },
+  {
+    "id": "sophia-ex-cloudy-heavens",
+    "zone": "Containment Bay P1T6 (Extreme)",
+    "source": "LogLine",
+    "pattern": "\\b19BE\\b|Cloudy Heavens",
+    "alert": "Adds phase",
+    "duration": 5,
+    "suppress": 10
+  }
+]

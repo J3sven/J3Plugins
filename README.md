@@ -14,3 +14,4 @@ https://raw.githubusercontent.com/J3sven/J3Plugins/main/repo.json
 
 - [Cursor Indicator](src/CursorIndicator/README.md)
 - [IINACT Native Overlay](src/IINACTNativeOverlay/README.md)
+- [Chocobot](src/Chocobot/README.md)
