@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Chocobot/Chocobot.csproj" />
+    <Project Path="src/CutsceneTranscripts/CutsceneTranscripts.csproj" />
     <Project Path="src/IINACTNativeOverlay/IINACTNativeOverlay.csproj" />
   </Folder>
   <Folder Name="/src/CursorIndicator/">

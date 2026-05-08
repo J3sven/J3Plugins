@@ -1,0 +1,1021 @@
+using System.Numerics;
+using Dalamud.Game.Addon.Events;
+using Dalamud.Bindings.ImGui;
+using Dalamud.Game.Addon.Lifecycle;
+using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
+using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.Command;
+using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
+using Dalamud.Utility;
+using FFXIVClientStructs.FFXIV.Client.UI;
+using FFXIVClientStructs.FFXIV.Component.GUI;
+
+namespace CutsceneTranscripts;
+
+public sealed unsafe class Plugin : IDalamudPlugin
+{
+    private const string CommandName = "/cutscenetranscript";
+    private const string ShortCommandName = "/cstranscript";
+    private static readonly string[] ChoiceAddonNames =
+    [
+        "SelectString",
+        "CutSceneSelectString",
+        "SelectIconString",
+        "SelectYesno",
+        "SelectOk"
+    ];
+    private static readonly Vector4[] SpeakerColorPalette =
+    [
+        new(0.45f, 0.78f, 1.00f, 1.00f),
+        new(1.00f, 0.68f, 0.38f, 1.00f),
+        new(0.58f, 0.90f, 0.54f, 1.00f),
+        new(0.95f, 0.56f, 0.72f, 1.00f),
+        new(0.76f, 0.68f, 1.00f, 1.00f),
+        new(1.00f, 0.86f, 0.38f, 1.00f),
+        new(0.42f, 0.91f, 0.84f, 1.00f),
+        new(0.86f, 0.62f, 0.42f, 1.00f),
+        new(0.72f, 0.88f, 1.00f, 1.00f),
+        new(0.93f, 0.77f, 0.96f, 1.00f),
+        new(0.70f, 0.94f, 0.72f, 1.00f),
+        new(1.00f, 0.74f, 0.58f, 1.00f)
+    ];
+
+    private readonly IDalamudPluginInterface pluginInterface;
+    private readonly ICommandManager commandManager;
+    private readonly IAddonLifecycle addonLifecycle;
+    private readonly ICondition condition;
+    private readonly IObjectTable objectTable;
+    private readonly IGameGui gameGui;
+    private readonly List<TranscriptEntry> entries = [];
+    private readonly Dictionary<nint, ChoiceState> choiceStates = [];
+    private readonly Dictionary<string, Vector4> speakerColors = [];
+    private readonly Queue<string> choiceDebugLines = [];
+    private bool transcriptOpen;
+    private bool configOpen;
+    private bool lastCutsceneActive;
+    private DateTimeOffset lastCutsceneActiveAt;
+    private string? lastObservedTalkKey;
+    private string? lastTranscriptEntryKey;
+    private string? lastDialogSpeaker;
+    private string? lastChoiceSkipDebugKey;
+    private DateTimeOffset lastChoiceSkipDebugAt;
+
+    internal static IPluginLog Log { get; private set; } = null!;
+    internal Configuration Configuration { get; }
+
+    private sealed record TranscriptEntry(DateTimeOffset Timestamp, string? Speaker, string Text);
+
+    private sealed class ChoiceState
+    {
+        public string AddonName { get; init; } = string.Empty;
+        public List<string> Options { get; } = [];
+        public int SelectedIndex { get; set; } = -1;
+        public int ListItemIndex { get; set; } = -1;
+        public int LastEventParam { get; set; } = -1;
+        public bool LastEventParamMayBeChoiceIndex { get; set; } = true;
+        public bool SubmitSeen { get; set; }
+        public bool Recorded { get; set; }
+        public string? LastLoggedOptionsKey { get; set; }
+    }
+
+    public Plugin(
+        IDalamudPluginInterface pluginInterface,
+        ICommandManager commandManager,
+        IAddonLifecycle addonLifecycle,
+        ICondition condition,
+        IObjectTable objectTable,
+        IGameGui gameGui,
+        IPluginLog pluginLog)
+    {
+        this.pluginInterface = pluginInterface;
+        this.commandManager = commandManager;
+        this.addonLifecycle = addonLifecycle;
+        this.condition = condition;
+        this.objectTable = objectTable;
+        this.gameGui = gameGui;
+        Log = pluginLog;
+
+        Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+        Configuration.Initialize(pluginInterface);
+        ClampConfiguration();
+
+        pluginInterface.UiBuilder.DisableCutsceneUiHide = true;
+
+        commandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
+        {
+            HelpMessage = "Opens the current cutscene transcript. Use 'config' for settings, 'debug' for choice diagnostics, or 'clear' to clear the transcript."
+        });
+        commandManager.AddHandler(ShortCommandName, new CommandInfo(OnCommand)
+        {
+            HelpMessage = "Opens the current cutscene transcript."
+        });
+
+        addonLifecycle.RegisterListener(AddonEvent.PostUpdate, "Talk", OnTalkPostUpdate);
+        addonLifecycle.RegisterListener(AddonEvent.PostRefresh, "Talk", OnTalkPostUpdate);
+        addonLifecycle.RegisterListener(AddonEvent.PreFinalize, "Talk", OnTalkFinalize);
+        addonLifecycle.RegisterListener(AddonEvent.PostUpdate, ChoiceAddonNames, OnChoicePostUpdate);
+        addonLifecycle.RegisterListener(AddonEvent.PostRefresh, ChoiceAddonNames, OnChoicePostUpdate);
+        addonLifecycle.RegisterListener(AddonEvent.PreReceiveEvent, ChoiceAddonNames, OnChoiceReceiveEvent);
+        addonLifecycle.RegisterListener(AddonEvent.PostReceiveEvent, ChoiceAddonNames, OnChoiceReceiveEvent);
+        addonLifecycle.RegisterListener(AddonEvent.PreFinalize, ChoiceAddonNames, OnChoiceFinalize);
+
+        pluginInterface.UiBuilder.Draw += Draw;
+        pluginInterface.UiBuilder.OpenMainUi += OpenTranscriptWindow;
+        pluginInterface.UiBuilder.OpenConfigUi += OpenConfigWindow;
+    }
+
+    public void Dispose()
+    {
+        pluginInterface.UiBuilder.Draw -= Draw;
+        pluginInterface.UiBuilder.OpenMainUi -= OpenTranscriptWindow;
+        pluginInterface.UiBuilder.OpenConfigUi -= OpenConfigWindow;
+        addonLifecycle.UnregisterListener(OnTalkPostUpdate, OnTalkFinalize, OnChoicePostUpdate, OnChoiceReceiveEvent, OnChoiceFinalize);
+        commandManager.RemoveHandler(CommandName);
+        commandManager.RemoveHandler(ShortCommandName);
+    }
+
+    private void OnCommand(string command, string args)
+    {
+        switch (args.Trim().ToLowerInvariant())
+        {
+            case "on":
+                Configuration.Enabled = true;
+                Configuration.Save();
+                break;
+            case "off":
+                Configuration.Enabled = false;
+                Configuration.Save();
+                break;
+            case "clear":
+                ClearTranscript();
+                break;
+            case "config":
+            case "settings":
+                configOpen = true;
+                break;
+            case "debug":
+                Configuration.ChoiceDebugLogging = !Configuration.ChoiceDebugLogging;
+                Configuration.Save();
+                configOpen = true;
+                LogChoiceDebug($"Choice diagnostics toggled {(Configuration.ChoiceDebugLogging ? "on" : "off")}.");
+                break;
+            default:
+                transcriptOpen = !transcriptOpen;
+                break;
+        }
+    }
+
+    private void OpenTranscriptWindow()
+    {
+        transcriptOpen = true;
+    }
+
+    private void OpenConfigWindow()
+    {
+        configOpen = true;
+    }
+
+    private void Draw()
+    {
+        var cutsceneActive = IsCutsceneActive();
+        if (!lastCutsceneActive && cutsceneActive)
+        {
+            ClearTranscript();
+        }
+        else if (lastCutsceneActive && !cutsceneActive)
+        {
+            if (Configuration.OpenTranscriptWhenCutsceneEnds && entries.Count > 0)
+                transcriptOpen = true;
+            else if (!Configuration.KeepLastTranscriptAfterCutscene)
+                ClearTranscript();
+        }
+
+        if (cutsceneActive)
+            lastCutsceneActiveAt = DateTimeOffset.Now;
+
+        lastCutsceneActive = cutsceneActive;
+
+        if (Configuration.Enabled && Configuration.ShowButtonDuringCutscenes && cutsceneActive && entries.Count > 0)
+            DrawTranscriptButton();
+
+        DrawTranscriptWindow();
+        DrawConfigWindow();
+    }
+
+    private bool IsCutsceneActive()
+    {
+        return pluginInterface.UiBuilder.CutsceneActive
+            || condition[ConditionFlag.OccupiedInCutSceneEvent]
+            || condition[ConditionFlag.WatchingCutscene]
+            || condition[ConditionFlag.WatchingCutscene78];
+    }
+
+    private void DrawTranscriptButton()
+    {
+        ImGui.SetNextWindowPos(new Vector2(Configuration.ButtonX, Configuration.ButtonY), ImGuiCond.FirstUseEver);
+        ImGui.SetNextWindowBgAlpha(0.72f);
+
+        const ImGuiWindowFlags flags = ImGuiWindowFlags.NoDecoration
+            | ImGuiWindowFlags.AlwaysAutoResize
+            | ImGuiWindowFlags.NoSavedSettings
+            | ImGuiWindowFlags.NoFocusOnAppearing
+            | ImGuiWindowFlags.NoNav;
+
+        if (!ImGui.Begin("##CutsceneTranscriptButton", flags))
+        {
+            ImGui.End();
+            return;
+        }
+
+        if (ImGui.Button($"Transcript ({entries.Count})"))
+            transcriptOpen = true;
+
+        var pos = ImGui.GetWindowPos();
+        if (Vector2.Distance(pos, new Vector2(Configuration.ButtonX, Configuration.ButtonY)) > 0.5f)
+        {
+            Configuration.ButtonX = pos.X;
+            Configuration.ButtonY = pos.Y;
+            Configuration.Save();
+        }
+
+        ImGui.End();
+    }
+
+    private void DrawTranscriptWindow()
+    {
+        if (!transcriptOpen)
+            return;
+
+        ImGui.SetNextWindowSize(new Vector2(Configuration.WindowWidth, Configuration.WindowHeight), ImGuiCond.FirstUseEver);
+        if (!ImGui.Begin("Cutscene Transcript", ref transcriptOpen))
+        {
+            ImGui.End();
+            return;
+        }
+
+        if (ImGui.Button("Copy"))
+            ImGui.SetClipboardText(BuildTranscriptText());
+
+        ImGui.SameLine();
+        if (ImGui.Button("Clear"))
+            ClearTranscript();
+
+        ImGui.SameLine();
+        ImGui.TextDisabled($"{entries.Count} line{(entries.Count == 1 ? string.Empty : "s")}");
+        ImGui.Separator();
+
+        if (entries.Count == 0)
+        {
+            ImGui.TextDisabled("No dialog has been recorded yet.");
+        }
+        else
+        {
+            foreach (var entry in entries)
+            {
+                ImGui.PushTextWrapPos();
+                if (!string.IsNullOrWhiteSpace(entry.Speaker))
+                {
+                    ImGui.TextColored(GetSpeakerColor(entry.Speaker), $"{entry.Speaker}:");
+                    ImGui.SameLine();
+                }
+
+                ImGui.TextWrapped(entry.Text);
+                ImGui.PopTextWrapPos();
+                ImGui.Spacing();
+            }
+
+            if (ImGui.GetScrollY() >= ImGui.GetScrollMaxY() - 24f)
+                ImGui.SetScrollHereY(1f);
+        }
+
+        var size = ImGui.GetWindowSize();
+        if (Vector2.Distance(size, new Vector2(Configuration.WindowWidth, Configuration.WindowHeight)) > 1f)
+        {
+            Configuration.WindowWidth = Math.Clamp(size.X, 320f, 1200f);
+            Configuration.WindowHeight = Math.Clamp(size.Y, 240f, 900f);
+            Configuration.Save();
+        }
+
+        ImGui.End();
+    }
+
+    private void DrawConfigWindow()
+    {
+        if (!configOpen)
+            return;
+
+        if (!ImGui.Begin("Cutscene Transcript Settings", ref configOpen, ImGuiWindowFlags.AlwaysAutoResize))
+        {
+            ImGui.End();
+            return;
+        }
+
+        var changed = false;
+        changed |= Checkbox("Enabled", Configuration.Enabled, value => Configuration.Enabled = value);
+        changed |= Checkbox("Show transcript button during cutscenes", Configuration.ShowButtonDuringCutscenes, value => Configuration.ShowButtonDuringCutscenes = value);
+        changed |= Checkbox("Keep last transcript after cutscene", Configuration.KeepLastTranscriptAfterCutscene, value => Configuration.KeepLastTranscriptAfterCutscene = value);
+        changed |= Checkbox("Open transcript when cutscene ends", Configuration.OpenTranscriptWhenCutsceneEnds, value => Configuration.OpenTranscriptWhenCutsceneEnds = value);
+        changed |= Checkbox("Log choice capture diagnostics", Configuration.ChoiceDebugLogging, value => Configuration.ChoiceDebugLogging = value);
+        changed |= SliderInt("Max recorded lines", Configuration.MaxEntries, 25, 1000, value => Configuration.MaxEntries = value);
+
+        if (changed)
+        {
+            ClampConfiguration();
+            TrimEntries();
+            Configuration.Save();
+        }
+
+        ImGui.Separator();
+        ImGui.TextDisabled($"Recorded lines: {entries.Count}");
+        if (ImGui.Button("Clear Transcript"))
+            ClearTranscript();
+
+        if (Configuration.ChoiceDebugLogging)
+        {
+            ImGui.Separator();
+            ImGui.TextDisabled("Choice diagnostics");
+            ImGui.SameLine();
+            if (ImGui.Button("Copy Debug"))
+                ImGui.SetClipboardText(string.Join(Environment.NewLine, choiceDebugLines));
+
+            if (choiceDebugLines.Count == 0)
+            {
+                ImGui.TextDisabled("No tracked choice addon activity has been observed yet.");
+            }
+            else
+            {
+                foreach (var line in choiceDebugLines.Reverse())
+                    ImGui.TextWrapped(line);
+            }
+        }
+
+        ImGui.End();
+    }
+
+    private void OnTalkPostUpdate(AddonEvent eventType, AddonArgs args)
+    {
+        if (!Configuration.Enabled || !IsCutsceneActive() || args.Addon.IsNull || !args.Addon.IsVisible)
+            return;
+
+        CaptureTalkAddon((AddonTalk*)args.Addon.Address);
+    }
+
+    private void OnTalkFinalize(AddonEvent eventType, AddonArgs args)
+    {
+        lastObservedTalkKey = null;
+    }
+
+    private void OnChoicePostUpdate(AddonEvent eventType, AddonArgs args)
+    {
+        if (args.Addon.IsNull)
+        {
+            LogChoiceSkipDebug($"update skipped addon={args.AddonName} lifecycle={eventType} reason=null-addon");
+            return;
+        }
+
+        var shouldCapture = ShouldCaptureChoice(args);
+        if (Configuration.ChoiceDebugLogging && (!args.Addon.IsVisible || !shouldCapture))
+            LogChoiceSkipDebug($"update skipped addon={args.AddonName} lifecycle={eventType} visible={args.Addon.IsVisible} shouldCapture={shouldCapture} cutscene={IsCutsceneActive()} entries={entries.Count}");
+
+        if (!shouldCapture || !args.Addon.IsVisible)
+            return;
+
+        CacheChoiceState(args);
+    }
+
+    private void OnChoiceReceiveEvent(AddonEvent eventType, AddonArgs args)
+    {
+        if (args.Addon.IsNull)
+        {
+            LogChoiceDebug($"receive skipped addon={args.AddonName} lifecycle={eventType} reason=null-addon");
+            return;
+        }
+
+        var shouldCapture = ShouldCaptureChoice(args);
+        if (Configuration.ChoiceDebugLogging && (!args.Addon.IsVisible || !shouldCapture))
+            LogChoiceDebug($"receive skipped addon={args.AddonName} lifecycle={eventType} visible={args.Addon.IsVisible} shouldCapture={shouldCapture} cutscene={IsCutsceneActive()} entries={entries.Count}");
+
+        if (!shouldCapture || !args.Addon.IsVisible)
+            return;
+
+        if (args is not AddonReceiveEventArgs receiveArgs)
+            return;
+
+        var isSubmitEvent = IsChoiceSubmitEvent(receiveArgs);
+        LogChoiceDebug($"receive addon={args.AddonName} lifecycle={eventType} atkEvent={receiveArgs.AtkEventType} eventParam={receiveArgs.EventParam} submit={isSubmitEvent} cutscene={IsCutsceneActive()}");
+
+        var listItemIndex = ReadListItemIndex(receiveArgs);
+        var state = CacheChoiceState(args, receiveArgs.EventParam, listItemIndex, EventParamMayBeChoiceIndex(receiveArgs));
+        if (state == null)
+            return;
+
+        if (!isSubmitEvent)
+            return;
+
+        state.SubmitSeen = true;
+        TryRecordChoice(state, preferEventParam: eventType == AddonEvent.PreReceiveEvent);
+    }
+
+    private void OnChoiceFinalize(AddonEvent eventType, AddonArgs args)
+    {
+        if (args.Addon.IsNull)
+        {
+            LogChoiceDebug($"finalize skipped addon={args.AddonName} reason=null-addon");
+            return;
+        }
+
+        var address = args.Addon.Address;
+        if (choiceStates.TryGetValue(address, out var state))
+        {
+            LogChoiceDebug($"finalize addon={args.AddonName} submitSeen={state.SubmitSeen} recorded={state.Recorded} selected={state.SelectedIndex} listItem={state.ListItemIndex} eventParam={state.LastEventParam} options={FormatOptions(state.Options)}");
+
+            if (state.SubmitSeen)
+                TryRecordChoice(state, preferEventParam: false);
+        }
+        else
+        {
+            LogChoiceDebug($"finalize addon={args.AddonName} state=missing");
+        }
+
+        choiceStates.Remove(address);
+    }
+
+    private void CaptureTalkAddon(AddonTalk* addon)
+    {
+        if (addon == null)
+            return;
+
+        var texts = new List<string>();
+        AddText(texts, addon->String268.AsDalamudSeString().TextValue);
+        AddText(texts, addon->String2D0.AsDalamudSeString().TextValue);
+        AddText(texts, addon->String338.AsDalamudSeString().TextValue);
+        AddText(texts, addon->String408.AsDalamudSeString().TextValue);
+        AddText(texts, addon->String470.AsDalamudSeString().TextValue);
+        AddText(texts, addon->String4D8.AsDalamudSeString().TextValue);
+        AddText(texts, addon->String540.AsDalamudSeString().TextValue);
+        AddText(texts, ReadTextNode(addon->AtkTextNode220));
+        AddText(texts, ReadTextNode(addon->AtkTextNode228));
+        AddText(texts, ReadTextNode(addon->AtkTextNode238));
+        AddText(texts, ReadTextNode(addon->AtkTextNode240));
+        AddText(texts, ReadTextNode(addon->AtkTextNode248));
+
+        if (texts.Count == 0)
+            return;
+
+        var talkKey = string.Join("\n", texts);
+        if (string.Equals(talkKey, lastObservedTalkKey, StringComparison.Ordinal))
+            return;
+
+        lastObservedTalkKey = talkKey;
+        AddTranscriptEntry(texts);
+    }
+
+    private void AddTranscriptEntry(List<string> texts)
+    {
+        var body = texts.OrderByDescending(text => text.Length).First();
+        string? speaker = null;
+
+        foreach (var candidate in texts)
+        {
+            if (TextEquivalent(candidate, body) || candidate.Length > 80 || candidate.Contains('\n'))
+                continue;
+
+            speaker = candidate;
+            break;
+        }
+
+        if (string.IsNullOrWhiteSpace(speaker))
+            speaker = lastDialogSpeaker;
+        else
+            lastDialogSpeaker = speaker;
+
+        var entryKey = $"{speaker}\n{body}";
+        if (string.Equals(entryKey, lastTranscriptEntryKey, StringComparison.Ordinal))
+            return;
+
+        lastTranscriptEntryKey = entryKey;
+        entries.Add(new TranscriptEntry(DateTimeOffset.Now, speaker, body));
+        TrimEntries();
+    }
+
+    private void AddChoiceEntry(string choiceText)
+    {
+        choiceText = CleanText(choiceText);
+        if (string.IsNullOrWhiteSpace(choiceText))
+            return;
+
+        var playerName = GetPlayerName();
+        var entryKey = $"{playerName}\n{choiceText}";
+        if (string.Equals(entryKey, lastTranscriptEntryKey, StringComparison.Ordinal))
+            return;
+
+        lastTranscriptEntryKey = entryKey;
+        entries.Add(new TranscriptEntry(DateTimeOffset.Now, playerName, choiceText));
+        TrimEntries();
+    }
+
+    private string GetPlayerName()
+    {
+        var name = objectTable.LocalPlayer?.Name.TextValue;
+        return string.IsNullOrWhiteSpace(name)
+            ? "Player"
+            : name;
+    }
+
+    private bool ShouldCaptureChoice(AddonArgs args)
+    {
+        if (!Configuration.Enabled)
+            return false;
+
+        if (IsCutsceneActive() || lastCutsceneActive)
+            return true;
+
+        if (args.AddonName.Contains("CutScene", StringComparison.OrdinalIgnoreCase) && entries.Count > 0)
+            return true;
+
+        return lastCutsceneActiveAt != default
+            && DateTimeOffset.Now - lastCutsceneActiveAt <= TimeSpan.FromSeconds(30);
+    }
+
+    private ChoiceState? CacheChoiceState(AddonArgs args, int eventParam = -1, int listItemIndex = -1, bool eventParamMayBeChoiceIndex = true)
+    {
+        if (args.Addon.IsNull)
+            return null;
+
+        var address = args.Addon.Address;
+        if (!choiceStates.TryGetValue(address, out var state))
+        {
+            state = new ChoiceState { AddonName = args.AddonName };
+            choiceStates[address] = state;
+        }
+
+        var options = ReadChoiceOptions(args);
+        if (options.Count > 0)
+        {
+            state.Options.Clear();
+            state.Options.AddRange(options);
+        }
+
+        var selectedIndex = ReadSelectedChoiceIndex(args);
+        if (IsValidChoiceIndex(state, selectedIndex))
+            state.SelectedIndex = selectedIndex;
+
+        if (eventParam >= 0)
+        {
+            state.LastEventParam = eventParam;
+            state.LastEventParamMayBeChoiceIndex = eventParamMayBeChoiceIndex;
+        }
+
+        if (IsValidChoiceIndex(state, listItemIndex))
+        {
+            state.ListItemIndex = listItemIndex;
+        }
+        else if (listItemIndex > 0 && IsValidChoiceIndex(state, listItemIndex - 1))
+        {
+            state.ListItemIndex = listItemIndex - 1;
+        }
+
+        var unitBase = (AtkUnitBase*)args.Addon.Address;
+        var atkValueTypes = FormatAtkValueTypes(unitBase);
+        var optionsKey = $"{args.AddonName}|{FormatOptions(state.Options)}|selected={state.SelectedIndex}|listItem={state.ListItemIndex}|eventParam={state.LastEventParam}|atkValues={unitBase->AtkValuesCount}|types={atkValueTypes}";
+        if (!string.Equals(optionsKey, state.LastLoggedOptionsKey, StringComparison.Ordinal))
+        {
+            LogChoiceDebug($"options addon={args.AddonName} selected={state.SelectedIndex} listItem={state.ListItemIndex} eventParam={state.LastEventParam} atkValues={unitBase->AtkValuesCount} atkTypes={atkValueTypes} count={state.Options.Count} values={FormatOptions(state.Options)}");
+            state.LastLoggedOptionsKey = optionsKey;
+        }
+
+        return state;
+    }
+
+    private static List<string> ReadChoiceOptions(AddonArgs args)
+    {
+        return args.AddonName switch
+        {
+            "SelectString" => ReadSelectStringOptions((AddonSelectString*)args.Addon.Address),
+            "SelectYesno" => ReadGenericChoiceOptions((AtkUnitBase*)args.Addon.Address, preferFinalPair: true),
+            "CutSceneSelectString" => ReadCutSceneSelectStringOptions((AtkUnitBase*)args.Addon.Address),
+            _ => ReadGenericChoiceOptions((AtkUnitBase*)args.Addon.Address)
+        };
+    }
+
+    private static int ReadSelectedChoiceIndex(AddonArgs args)
+    {
+        return args.AddonName switch
+        {
+            "SelectString" => ReadSelectStringSelectedIndex((AddonSelectString*)args.Addon.Address),
+            _ => ReadGenericSelectedIndex((AtkUnitBase*)args.Addon.Address)
+        };
+    }
+
+    private void TryRecordChoice(ChoiceState state, bool preferEventParam)
+    {
+        if (state.Recorded)
+            return;
+
+        var indices = new List<int> { state.ListItemIndex };
+        if (preferEventParam && state.LastEventParamMayBeChoiceIndex)
+            indices.Add(state.LastEventParam);
+
+        indices.Add(state.SelectedIndex);
+
+        if (!preferEventParam && state.LastEventParamMayBeChoiceIndex)
+            indices.Add(state.LastEventParam);
+
+        foreach (var index in indices)
+        {
+            if (!IsValidChoiceIndex(state, index))
+                continue;
+
+            AddChoiceEntry(state.Options[index]);
+            state.Recorded = true;
+            LogChoiceDebug($"recorded addon={state.AddonName} index={index} text=\"{state.Options[index]}\"");
+            return;
+        }
+
+        if (state.Options.Count == 1)
+        {
+            AddChoiceEntry(state.Options[0]);
+            state.Recorded = true;
+            LogChoiceDebug($"recorded addon={state.AddonName} fallback=single-option text=\"{state.Options[0]}\"");
+            return;
+        }
+
+        LogChoiceDebug($"record failed addon={state.AddonName} selected={state.SelectedIndex} listItem={state.ListItemIndex} eventParam={state.LastEventParam} count={state.Options.Count} options={FormatOptions(state.Options)}");
+    }
+
+    private static bool IsValidChoiceIndex(ChoiceState state, int index)
+    {
+        return index >= 0 && index < state.Options.Count;
+    }
+
+    private static bool IsChoiceSubmitEvent(AddonReceiveEventArgs args)
+    {
+        return args.AtkEventType is AddonEventType.MouseClick
+            or AddonEventType.MouseUp
+            or AddonEventType.ButtonClick
+            or AddonEventType.ListButtonPress
+            or AddonEventType.ListItemClick
+            or AddonEventType.ListItemDoubleClick
+            or AddonEventType.ListItemSelect
+            or AddonEventType.DialogueSubmit;
+    }
+
+    private static bool EventParamMayBeChoiceIndex(AddonReceiveEventArgs args)
+    {
+        return args.AtkEventType is not (AddonEventType.ListButtonPress
+            or AddonEventType.ListItemClick
+            or AddonEventType.ListItemDoubleClick
+            or AddonEventType.ListItemSelect);
+    }
+
+    private static int ReadListItemIndex(AddonReceiveEventArgs args)
+    {
+        if (args.AtkEventData == 0)
+            return -1;
+
+        var eventData = (AtkEventData*)args.AtkEventData;
+        return eventData == null
+            ? -1
+            : eventData->ListItemData.SelectedIndex;
+    }
+
+    private static List<string> ReadSelectStringOptions(AddonSelectString* addon)
+    {
+        var options = new List<string>();
+        if (addon == null || addon->PopupMenu.EntryNames == null)
+            return options;
+
+        var count = Math.Clamp(addon->PopupMenu.EntryCount, 0, 100);
+        for (var i = 0; i < count; i++)
+            AddText(options, addon->PopupMenu.EntryNames[i].AsDalamudSeString().TextValue);
+
+        return options;
+    }
+
+    private static int ReadSelectStringSelectedIndex(AddonSelectString* addon)
+    {
+        if (addon == null || addon->PopupMenu.List == null)
+            return -1;
+
+        var list = addon->PopupMenu.List;
+        var count = addon->PopupMenu.EntryCount;
+        var candidates = new[]
+        {
+            list->SelectedItemIndex,
+            list->HeldItemIndex,
+            list->HoveredItemIndex,
+            list->HoveredItemIndex2,
+            list->HoveredItemIndex3
+        };
+
+        return candidates.FirstOrDefault(index => index >= 0 && index < count, -1);
+    }
+
+    private static int ReadGenericSelectedIndex(AtkUnitBase* addon)
+    {
+        if (addon == null)
+            return -1;
+
+        return ReadGenericSelectedIndex(addon->RootNode);
+    }
+
+    private static int ReadGenericSelectedIndex(AtkResNode* node)
+    {
+        if (node == null)
+            return -1;
+
+        if (node->Type == NodeType.Component)
+        {
+            var list = ((AtkComponentNode*)node)->GetAsAtkComponentList();
+            var selected = ReadComponentListSelectedIndex(list);
+            if (selected >= 0)
+                return selected;
+        }
+
+        var child = node->ChildNode;
+        while (child != null)
+        {
+            var selected = ReadGenericSelectedIndex(child);
+            if (selected >= 0)
+                return selected;
+
+            child = child->PrevSiblingNode;
+        }
+
+        return -1;
+    }
+
+    private static int ReadComponentListSelectedIndex(AtkComponentList* list)
+    {
+        if (list == null)
+            return -1;
+
+        var count = list->ListLength;
+        var candidates = new[]
+        {
+            list->SelectedItemIndex,
+            list->HeldItemIndex,
+            list->HoveredItemIndex,
+            list->HoveredItemIndex2,
+            list->HoveredItemIndex3
+        };
+
+        return candidates.FirstOrDefault(index => index >= 0 && index < count, -1);
+    }
+
+    private static List<string> ReadCutSceneSelectStringOptions(AtkUnitBase* addon)
+    {
+        var texts = new List<string>();
+        if (addon == null)
+            return texts;
+
+        CollectTextNodes(addon->RootNode, texts);
+        CollectAtkValueStrings(addon, texts);
+
+        if (texts.Count > 1)
+            texts.RemoveAt(0);
+
+        return texts
+            .Where(text => text.Length <= 240)
+            .ToList();
+    }
+
+    private static List<string> ReadGenericChoiceOptions(AtkUnitBase* addon, bool preferFinalPair = false)
+    {
+        var texts = new List<string>();
+        if (addon == null)
+            return texts;
+
+        CollectTextNodes(addon->RootNode, texts);
+        CollectAtkValueStrings(addon, texts);
+
+        if (texts.Count == 0)
+            return texts;
+
+        if (preferFinalPair)
+        {
+            var shortTexts = texts.Where(text => text.Length <= 80 && !text.Contains('\n')).TakeLast(2).ToList();
+            if (shortTexts.Count > 0)
+                return shortTexts;
+        }
+
+        return texts
+            .Where(text => text.Length <= 240)
+            .ToList();
+    }
+
+    private static void CollectAtkValueStrings(AtkUnitBase* addon, List<string> texts)
+    {
+        if (addon == null || addon->AtkValues == null || addon->AtkValuesCount == 0)
+            return;
+
+        var count = Math.Min(addon->AtkValuesCount, (ushort)100);
+        for (var i = 0; i < count; i++)
+            CollectAtkValueString(addon->AtkValues + i, texts);
+    }
+
+    private static void CollectAtkValueString(AtkValue* value, List<string> texts)
+    {
+        if (value == null)
+            return;
+
+        if (IsStringAtkValueType(value->Type))
+        {
+            AddText(texts, value->GetValueAsString());
+            return;
+        }
+
+        if (value->Type is AtkValueType.Vector or AtkValueType.ManagedVector)
+        {
+            var count = Math.Min(value->GetVectorSize(), 100u);
+            for (var i = 0u; i < count; i++)
+                CollectAtkValueString(value->GetVectorValue(i), texts);
+        }
+    }
+
+    private static bool IsStringAtkValueType(AtkValueType type)
+    {
+        return type is AtkValueType.String
+            or AtkValueType.WideString
+            or AtkValueType.String8
+            or AtkValueType.ManagedString;
+    }
+
+    private static void CollectTextNodes(AtkResNode* node, List<string> texts)
+    {
+        if (node == null)
+            return;
+
+        if (node->Type == NodeType.Text)
+            AddText(texts, ((AtkTextNode*)node)->NodeText.AsDalamudSeString().TextValue);
+
+        var child = node->ChildNode;
+        while (child != null)
+        {
+            CollectTextNodes(child, texts);
+            child = child->PrevSiblingNode;
+        }
+    }
+
+    private static string ReadTextNode(AtkTextNode* node)
+    {
+        return node == null
+            ? string.Empty
+            : CleanText(node->NodeText.AsDalamudSeString().TextValue);
+    }
+
+    private static void AddText(List<string> texts, string? text)
+    {
+        text = CleanText(text);
+        if (string.IsNullOrWhiteSpace(text))
+            return;
+
+        if (texts.Any(existing => string.Equals(existing, text, StringComparison.Ordinal)))
+            return;
+
+        texts.Add(text);
+    }
+
+    private static string CleanText(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return string.Empty;
+
+        return string.Join(
+            "\n",
+            text.Replace("\r\n", "\n", StringComparison.Ordinal)
+                .Replace('\r', '\n')
+                .Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+            .Trim();
+    }
+
+    private static bool TextEquivalent(string left, string right)
+    {
+        return string.Equals(NormalizeForComparison(left), NormalizeForComparison(right), StringComparison.Ordinal);
+    }
+
+    private static string NormalizeForComparison(string text)
+    {
+        return string.Join(' ', text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+    }
+
+    private void TrimEntries()
+    {
+        while (entries.Count > Configuration.MaxEntries)
+            entries.RemoveAt(0);
+    }
+
+    private void ClearTranscript()
+    {
+        entries.Clear();
+        choiceStates.Clear();
+        speakerColors.Clear();
+        lastObservedTalkKey = null;
+        lastTranscriptEntryKey = null;
+        lastDialogSpeaker = null;
+    }
+
+    private Vector4 GetSpeakerColor(string speaker)
+    {
+        if (speakerColors.TryGetValue(speaker, out var color))
+            return color;
+
+        color = SpeakerColorPalette[speakerColors.Count % SpeakerColorPalette.Length];
+        speakerColors[speaker] = color;
+        return color;
+    }
+
+    private void LogChoiceDebug(string message)
+    {
+        if (!Configuration.ChoiceDebugLogging)
+            return;
+
+        var line = $"{DateTimeOffset.Now:HH:mm:ss.fff} {message}";
+        choiceDebugLines.Enqueue(line);
+        while (choiceDebugLines.Count > 40)
+            choiceDebugLines.Dequeue();
+
+        Log.Information("[ChoiceDebug] {Message}", message);
+    }
+
+    private void LogChoiceSkipDebug(string message)
+    {
+        if (!Configuration.ChoiceDebugLogging)
+            return;
+
+        var now = DateTimeOffset.Now;
+        if (string.Equals(message, lastChoiceSkipDebugKey, StringComparison.Ordinal)
+            && now - lastChoiceSkipDebugAt < TimeSpan.FromSeconds(2))
+            return;
+
+        lastChoiceSkipDebugKey = message;
+        lastChoiceSkipDebugAt = now;
+        LogChoiceDebug(message);
+    }
+
+    private static string FormatOptions(IReadOnlyList<string> options)
+    {
+        return options.Count == 0
+            ? "[]"
+            : $"[{string.Join(" | ", options.Select((option, index) => $"{index}: {option}"))}]";
+    }
+
+    private static string FormatAtkValueTypes(AtkUnitBase* addon)
+    {
+        if (addon == null || addon->AtkValues == null || addon->AtkValuesCount == 0)
+            return "[]";
+
+        var count = Math.Min(addon->AtkValuesCount, (ushort)32);
+        var values = new List<string>();
+        for (var i = 0; i < count; i++)
+        {
+            var value = addon->AtkValues + i;
+            var text = IsStringAtkValueType(value->Type)
+                ? CleanText(value->GetValueAsString())
+                : string.Empty;
+
+            values.Add(string.IsNullOrWhiteSpace(text)
+                ? $"{i}:{value->Type}"
+                : $"{i}:{value->Type}=\"{text}\"");
+        }
+
+        return $"[{string.Join(" | ", values)}]";
+    }
+
+    private string BuildTranscriptText()
+    {
+        return string.Join(
+            Environment.NewLine,
+            entries.Select(entry => string.IsNullOrWhiteSpace(entry.Speaker)
+                ? entry.Text
+                : $"{entry.Speaker}: {entry.Text}"));
+    }
+
+    private void ClampConfiguration()
+    {
+        Configuration.MaxEntries = Math.Clamp(Configuration.MaxEntries, 25, 1000);
+        Configuration.ButtonX = Math.Clamp(Configuration.ButtonX, 0f, 7680f);
+        Configuration.ButtonY = Math.Clamp(Configuration.ButtonY, 0f, 4320f);
+        Configuration.WindowWidth = Math.Clamp(Configuration.WindowWidth, 320f, 1200f);
+        Configuration.WindowHeight = Math.Clamp(Configuration.WindowHeight, 240f, 900f);
+    }
+
+    private static bool Checkbox(string label, bool value, Action<bool> setter)
+    {
+        if (!ImGui.Checkbox(label, ref value))
+            return false;
+
+        setter(value);
+        return true;
+    }
+
+    private static bool SliderInt(string label, int value, int min, int max, Action<int> setter)
+    {
+        if (!ImGui.SliderInt(label, ref value, min, max))
+            return false;
+
+        setter(value);
+        return true;
+    }
+}
