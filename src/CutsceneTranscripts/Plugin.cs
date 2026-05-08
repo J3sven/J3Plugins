@@ -5,6 +5,8 @@ using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Command;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility;
@@ -40,17 +42,24 @@ public sealed unsafe class Plugin : IDalamudPlugin
         new(0.70f, 0.94f, 0.72f, 1.00f),
         new(1.00f, 0.74f, 0.58f, 1.00f)
     ];
+    private static readonly Vector4 DialogueBoxFill = new(0.86f, 0.80f, 0.67f, 1.00f);
+    private static readonly Vector4 DialogueBoxHighlight = new(0.96f, 0.91f, 0.80f, 0.38f);
+    private static readonly Vector4 DialogueBoxBorder = new(0.34f, 0.29f, 0.21f, 0.95f);
+    private static readonly Vector4 DialogueTextColor = new(0.08f, 0.07f, 0.05f, 1.00f);
+    private static readonly Vector4 DialogueShadowColor = new(0.00f, 0.00f, 0.00f, 0.28f);
 
     private readonly IDalamudPluginInterface pluginInterface;
     private readonly ICommandManager commandManager;
     private readonly IAddonLifecycle addonLifecycle;
     private readonly ICondition condition;
     private readonly IObjectTable objectTable;
+    private readonly ITextureProvider textureProvider;
     private readonly IGameGui gameGui;
     private readonly List<TranscriptEntry> entries = [];
     private readonly Dictionary<nint, ChoiceState> choiceStates = [];
     private readonly Dictionary<string, Vector4> speakerColors = [];
     private readonly Queue<string> choiceDebugLines = [];
+    private readonly ISharedImmediateTexture? speakerShadowTexture;
     private bool transcriptOpen;
     private bool configOpen;
     private bool lastCutsceneActive;
@@ -85,6 +94,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         IAddonLifecycle addonLifecycle,
         ICondition condition,
         IObjectTable objectTable,
+        ITextureProvider textureProvider,
         IGameGui gameGui,
         IPluginLog pluginLog)
     {
@@ -93,12 +103,14 @@ public sealed unsafe class Plugin : IDalamudPlugin
         this.addonLifecycle = addonLifecycle;
         this.condition = condition;
         this.objectTable = objectTable;
+        this.textureProvider = textureProvider;
         this.gameGui = gameGui;
         Log = pluginLog;
 
         Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Configuration.Initialize(pluginInterface);
         ClampConfiguration();
+        speakerShadowTexture = LoadSpeakerShadowTexture();
 
         pluginInterface.UiBuilder.DisableCutsceneUiHide = true;
 
@@ -272,18 +284,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         else
         {
             foreach (var entry in entries)
-            {
-                ImGui.PushTextWrapPos();
-                if (!string.IsNullOrWhiteSpace(entry.Speaker))
-                {
-                    ImGui.TextColored(GetSpeakerColor(entry.Speaker), $"{entry.Speaker}:");
-                    ImGui.SameLine();
-                }
-
-                ImGui.TextWrapped(entry.Text);
-                ImGui.PopTextWrapPos();
-                ImGui.Spacing();
-            }
+                DrawDialogueEntry(entry);
 
             if (ImGui.GetScrollY() >= ImGui.GetScrollMaxY() - 24f)
                 ImGui.SetScrollHereY(1f);
@@ -298,6 +299,80 @@ public sealed unsafe class Plugin : IDalamudPlugin
         }
 
         ImGui.End();
+    }
+
+    private void DrawDialogueEntry(TranscriptEntry entry)
+    {
+        var scale = Math.Max(0.85f, ImGui.GetFontSize() / 17f);
+        var drawList = ImGui.GetWindowDrawList();
+        var cursor = ImGui.GetCursorScreenPos();
+        var availableWidth = Math.Max(280f * scale, ImGui.GetContentRegionAvail().X);
+        var boxWidth = Math.Max(260f * scale, availableWidth - 8f * scale);
+        var boxX = cursor.X + 4f * scale;
+        var speakerHeight = string.IsNullOrWhiteSpace(entry.Speaker)
+            ? 0f
+            : ImGui.GetTextLineHeight() + 2f * scale;
+        var speakerOverlap = string.IsNullOrWhiteSpace(entry.Speaker) ? 0f : 8f * scale;
+        var boxY = cursor.Y + Math.Max(0f, speakerHeight - speakerOverlap);
+        var paddingX = 18f * scale;
+        var paddingY = 14f * scale;
+        var lineHeight = ImGui.GetTextLineHeight() * 1.18f;
+        var wrapWidth = Math.Max(80f * scale, boxWidth - paddingX * 2f);
+        var lines = WrapText(entry.Text, wrapWidth);
+        var boxHeight = Math.Max(58f * scale, paddingY * 2f + lines.Count * lineHeight);
+        var boxPos = new Vector2(boxX, boxY);
+        var boxEnd = boxPos + new Vector2(boxWidth, boxHeight);
+        var rounding = 19f * scale;
+
+        drawList.AddRectFilled(boxPos + new Vector2(2f * scale, 3f * scale),
+                               boxEnd + new Vector2(2f * scale, 3f * scale),
+                               ImGui.GetColorU32(DialogueShadowColor), rounding);
+        drawList.AddRectFilled(boxPos, boxEnd, ImGui.GetColorU32(DialogueBoxFill), rounding);
+        drawList.AddRectFilled(boxPos + new Vector2(3f * scale, 3f * scale),
+                               new Vector2(boxEnd.X - 3f * scale, boxPos.Y + boxHeight * 0.48f),
+                               ImGui.GetColorU32(DialogueBoxHighlight), rounding * 0.82f);
+        drawList.AddRect(boxPos, boxEnd, ImGui.GetColorU32(DialogueBoxBorder), rounding,
+                         ImDrawFlags.RoundCornersAll, 1.35f * scale);
+
+        var textPos = boxPos + new Vector2(paddingX, paddingY);
+        for (var i = 0; i < lines.Count; i++)
+            drawList.AddText(textPos + new Vector2(0f, i * lineHeight), ImGui.GetColorU32(DialogueTextColor), lines[i]);
+
+        if (!string.IsNullOrWhiteSpace(entry.Speaker))
+        {
+            var speakerPos = new Vector2(boxX + 20f * scale, boxY - 10f * scale);
+            DrawSpeakerTag(drawList, speakerPos, entry.Speaker, GetSpeakerColor(entry.Speaker), scale);
+        }
+
+        ImGui.Dummy(new Vector2(availableWidth, boxY - cursor.Y + boxHeight + 10f * scale));
+    }
+
+    private ISharedImmediateTexture? LoadSpeakerShadowTexture()
+    {
+        var shadowPath = Path.Combine(pluginInterface.AssemblyLocation.Directory!.FullName, "Assets", "speaker-shadow-v2.png");
+        return File.Exists(shadowPath)
+            ? textureProvider.GetFromFile(shadowPath)
+            : null;
+    }
+
+    private void DrawSpeakerTag(ImDrawListPtr drawList, Vector2 pos, string text, Vector4 color, float scale)
+    {
+        var textSize = ImGui.CalcTextSize(text);
+        if (speakerShadowTexture?.TryGetWrap(out IDalamudTextureWrap? wrap, out _) == true)
+        {
+            var shadowWidth = Math.Max(122f * scale, textSize.X + 86f * scale);
+            var shadowHeight = 23f * scale;
+            var shadowPos = pos - new Vector2(13f * scale, 3f * scale);
+            drawList.AddImage(wrap.Handle, shadowPos, shadowPos + new Vector2(shadowWidth, shadowHeight));
+        }
+        else
+        {
+            drawList.AddText(pos + new Vector2(0f, 3.0f * scale), ImGui.GetColorU32(new Vector4(0f, 0f, 0f, 0.28f)), text);
+            drawList.AddText(pos + new Vector2(1.6f * scale, 2.2f * scale), ImGui.GetColorU32(new Vector4(0f, 0f, 0f, 0.34f)), text);
+        }
+
+        drawList.AddText(pos + new Vector2(1.0f * scale, 1.0f * scale), ImGui.GetColorU32(new Vector4(0f, 0f, 0f, 0.70f)), text);
+        drawList.AddText(pos, ImGui.GetColorU32(color), text);
     }
 
     private void DrawConfigWindow()
@@ -888,6 +963,74 @@ public sealed unsafe class Plugin : IDalamudPlugin
                 .Replace('\r', '\n')
                 .Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
             .Trim();
+    }
+
+    private static List<string> WrapText(string text, float maxWidth)
+    {
+        var lines = new List<string>();
+        foreach (var paragraph in text.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n').Split('\n'))
+            WrapParagraph(paragraph, maxWidth, lines);
+
+        if (lines.Count == 0)
+            lines.Add(string.Empty);
+
+        return lines;
+    }
+
+    private static void WrapParagraph(string paragraph, float maxWidth, List<string> lines)
+    {
+        paragraph = paragraph.Trim();
+        if (string.IsNullOrEmpty(paragraph))
+            return;
+
+        var current = string.Empty;
+        foreach (var word in paragraph.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (current.Length == 0)
+            {
+                AddWrappedWord(word, maxWidth, lines, ref current);
+                continue;
+            }
+
+            var candidate = $"{current} {word}";
+            if (ImGui.CalcTextSize(candidate).X <= maxWidth)
+            {
+                current = candidate;
+                continue;
+            }
+
+            lines.Add(current);
+            current = string.Empty;
+            AddWrappedWord(word, maxWidth, lines, ref current);
+        }
+
+        if (current.Length > 0)
+            lines.Add(current);
+    }
+
+    private static void AddWrappedWord(string word, float maxWidth, List<string> lines, ref string current)
+    {
+        if (ImGui.CalcTextSize(word).X <= maxWidth)
+        {
+            current = word;
+            return;
+        }
+
+        var segment = string.Empty;
+        foreach (var character in word)
+        {
+            var candidate = segment + character;
+            if (segment.Length > 0 && ImGui.CalcTextSize(candidate).X > maxWidth)
+            {
+                lines.Add(segment);
+                segment = character.ToString();
+                continue;
+            }
+
+            segment = candidate;
+        }
+
+        current = segment;
     }
 
     private static bool TextEquivalent(string left, string right)
