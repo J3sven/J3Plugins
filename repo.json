@@ -23,8 +23,8 @@
     "Author": "J3",
     "Name": "IINACT Native Overlay",
     "InternalName": "IINACTNativeOverlay",
-    "AssemblyVersion": "0.2.1.0",
-    "TestingAssemblyVersion": "0.2.1.0",
+    "AssemblyVersion": "0.2.2.0",
+    "TestingAssemblyVersion": "0.2.2.0",
     "Description": "Native Dalamud DPS meter HUD for IINACT combat data. Especially useful for linux users who use tiling window managers!",
     "ApplicableVersion": "any",
     "RepoUrl": "https://github.com/J3sven/J3Plugins",
@@ -44,9 +44,9 @@
     "Punchline": "A native Dalamud DPS meter overlay for IINACT.",
     "IsHide": "False",
     "IsTestingExclusive": "False",
-    "DownloadLinkInstall": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.1.0/IINACTNativeOverlay.zip",
-    "DownloadLinkTesting": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.1.0/IINACTNativeOverlay.zip",
-    "DownloadLinkUpdate": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.1.0/IINACTNativeOverlay.zip"
+    "DownloadLinkInstall": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.2.0/IINACTNativeOverlay.zip",
+    "DownloadLinkTesting": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.2.0/IINACTNativeOverlay.zip",
+    "DownloadLinkUpdate": "https://github.com/J3sven/J3Plugins/releases/download/iinact-native-overlay-v0.2.2.0/IINACTNativeOverlay.zip"
   },
   {
     "Author": "J3",

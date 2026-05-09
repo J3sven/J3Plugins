@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Numerics;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
@@ -172,7 +173,7 @@ internal sealed class DpsMeterOverlay : IDisposable
         config.Opacity = Math.Clamp(config.Opacity, 0.15f, 1f);
 
         UpdateJobCacheFromDalamud();
-        if (config.HideOutOfCombat && snapshot is not null && !snapshot.IsActive)
+        if (config.HideOutOfCombat && (snapshot is { IsActive: false } || (snapshot is null && !plugin.Condition[ConditionFlag.InCombat])))
         {
             Status = "Meter hidden because the encounter is inactive";
             return;

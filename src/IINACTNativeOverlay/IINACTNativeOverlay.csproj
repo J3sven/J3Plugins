@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Authors>J3</Authors>
         <Company>J3</Company>
-        <Version>0.2.1.0</Version>
+        <Version>0.2.2.0</Version>
         <Description>Native Dalamud DPS meter overlay for IINACT.</Description>
         <AssemblyName>IINACTNativeOverlay</AssemblyName>
         <TargetFramework>net10.0-windows</TargetFramework>
