@@ -12,7 +12,6 @@ internal sealed class Configuration : IPluginConfiguration
     public bool ShowButtonDuringCutscenes { get; set; } = true;
     public bool KeepLastTranscriptAfterCutscene { get; set; } = true;
     public bool OpenTranscriptWhenCutsceneEnds { get; set; }
-    public bool ChoiceDebugLogging { get; set; }
     public int MaxEntries { get; set; } = 250;
     public float ButtonX { get; set; } = 24f;
     public float ButtonY { get; set; } = 120f;

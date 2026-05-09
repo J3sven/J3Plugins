@@ -10,6 +10,7 @@ using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility;
+using FFXIVClientStructs.FFXIV.Client.Sound;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
@@ -65,7 +66,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
     private readonly List<TranscriptEntry> entries = [];
     private readonly Dictionary<nint, ChoiceState> choiceStates = [];
     private readonly Dictionary<string, Vector4> speakerColors = [];
-    private readonly Queue<string> choiceDebugLines = [];
+    private readonly List<VoiceCaptureProbe> voiceCaptureProbes = [];
     private readonly ISharedImmediateTexture? speakerShadowTexture;
     private bool transcriptOpen;
     private bool configOpen;
@@ -74,16 +75,33 @@ public sealed unsafe class Plugin : IDalamudPlugin
     private string? lastObservedTalkKey;
     private string? lastTranscriptEntryKey;
     private string? lastDialogSpeaker;
-    private string? lastChoiceSkipDebugKey;
-    private DateTimeOffset lastChoiceSkipDebugAt;
     private TalkWindowBounds? talkWindowBounds;
     private DateTimeOffset lastTalkWindowBoundsAt;
 
     internal static IPluginLog Log { get; private set; } = null!;
     internal Configuration Configuration { get; }
 
-    private sealed record TranscriptEntry(DateTimeOffset Timestamp, string? Speaker, string Text);
+    private sealed record TranscriptEntry(DateTimeOffset Timestamp, string? Speaker, string Text, VoiceClipRef? VoiceClip);
+    private sealed record VoiceClipRef(string Path, uint SoundNumber, bool CanReplay = true);
+    private readonly record struct VoiceSoundCandidate(
+        string Path,
+        uint SoundNumber,
+        float Elapsed,
+        float Volume,
+        SoundVolumeCategory VolumeCategory,
+        bool IsPlaying,
+        bool IsLoading,
+        bool IsPositional,
+        bool IsAutoRelease,
+        int MidiNote);
     private readonly record struct TalkWindowBounds(Vector2 Position, Vector2 Size);
+
+    private sealed class VoiceCaptureProbe
+    {
+        public int EntryIndex { get; init; }
+        public DateTimeOffset EndsAt { get; init; }
+        public DateTimeOffset NextSampleAt { get; set; }
+    }
 
     private sealed class ChoiceState
     {
@@ -95,7 +113,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
         public bool LastEventParamMayBeChoiceIndex { get; set; } = true;
         public bool SubmitSeen { get; set; }
         public bool Recorded { get; set; }
-        public string? LastLoggedOptionsKey { get; set; }
     }
 
     public Plugin(
@@ -126,7 +143,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
         commandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Opens the current cutscene transcript. Use 'config' for settings, 'debug' for choice diagnostics, or 'clear' to clear the transcript."
+            HelpMessage = "Opens the current cutscene transcript. Use 'config' for settings or 'clear' to clear the transcript."
         });
         commandManager.AddHandler(ShortCommandName, new CommandInfo(OnCommand)
         {
@@ -176,12 +193,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
             case "settings":
                 configOpen = true;
                 break;
-            case "debug":
-                Configuration.ChoiceDebugLogging = !Configuration.ChoiceDebugLogging;
-                Configuration.Save();
-                configOpen = true;
-                LogChoiceDebug($"Choice diagnostics toggled {(Configuration.ChoiceDebugLogging ? "on" : "off")}.");
-                break;
             default:
                 transcriptOpen = !transcriptOpen;
                 break;
@@ -223,6 +234,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
         DrawTranscriptWindow();
         DrawConfigWindow();
+        ProcessVoiceCaptureProbes();
     }
 
     private bool IsCutsceneActive()
@@ -330,8 +342,8 @@ public sealed unsafe class Plugin : IDalamudPlugin
         }
         else
         {
-            foreach (var entry in entries)
-                DrawDialogueEntry(entry);
+            for (var i = 0; i < entries.Count; i++)
+                DrawDialogueEntry(i, entries[i]);
 
             if (ImGui.GetScrollY() >= ImGui.GetScrollMaxY() - 24f)
                 ImGui.SetScrollHereY(1f);
@@ -411,7 +423,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         ImGui.Spacing();
     }
 
-    private void DrawDialogueEntry(TranscriptEntry entry)
+    private void DrawDialogueEntry(int entryIndex, TranscriptEntry entry)
     {
         var scale = Math.Max(0.85f, ImGui.GetFontSize() / 17f);
         var drawList = ImGui.GetWindowDrawList();
@@ -427,7 +439,9 @@ public sealed unsafe class Plugin : IDalamudPlugin
         var paddingX = 18f * scale;
         var paddingY = 14f * scale;
         var lineHeight = ImGui.GetTextLineHeight() * 1.18f;
-        var wrapWidth = Math.Max(80f * scale, boxWidth - paddingX * 2f);
+        var replayButtonSize = entry.VoiceClip == null ? 0f : 22f * scale;
+        var replaySpace = entry.VoiceClip == null ? 0f : replayButtonSize + 10f * scale;
+        var wrapWidth = Math.Max(80f * scale, boxWidth - paddingX * 2f - replaySpace);
         var lines = WrapText(entry.Text, wrapWidth);
         var boxHeight = Math.Max(58f * scale, paddingY * 2f + lines.Count * lineHeight);
         var boxPos = new Vector2(boxX, boxY);
@@ -448,6 +462,9 @@ public sealed unsafe class Plugin : IDalamudPlugin
         for (var i = 0; i < lines.Count; i++)
             drawList.AddText(textPos + new Vector2(0f, i * lineHeight), ImGui.GetColorU32(DialogueTextColor), lines[i]);
 
+        if (entry.VoiceClip is { } voiceClip)
+            DrawReplayVoiceButton(drawList, boxEnd - new Vector2(paddingX + replayButtonSize, paddingY + replayButtonSize * 0.25f), replayButtonSize, voiceClip, scale);
+
         if (!string.IsNullOrWhiteSpace(entry.Speaker))
         {
             var speakerPos = new Vector2(boxX + 20f * scale, boxY - 10f * scale);
@@ -455,6 +472,52 @@ public sealed unsafe class Plugin : IDalamudPlugin
         }
 
         ImGui.Dummy(new Vector2(availableWidth, boxY - cursor.Y + boxHeight + 10f * scale));
+    }
+
+    private void DrawReplayVoiceButton(ImDrawListPtr drawList, Vector2 pos, float size, VoiceClipRef voiceClip, float scale)
+    {
+        var cursor = ImGui.GetCursorScreenPos();
+        ImGui.SetCursorScreenPos(pos);
+        ImGui.PushID($"voice-{voiceClip.Path}");
+        var clicked = ImGui.InvisibleButton("replay", new Vector2(size, size));
+        var hovered = ImGui.IsItemHovered();
+        if (hovered)
+            ImGui.SetTooltip(voiceClip.CanReplay ? "Replay voiced line" : "Replay unavailable");
+        ImGui.PopID();
+        ImGui.SetCursorScreenPos(cursor);
+
+        var center = pos + new Vector2(size * 0.5f);
+        var fill = !voiceClip.CanReplay
+            ? new Vector4(0.16f, 0.15f, 0.13f, 0.74f)
+            : hovered
+            ? new Vector4(0.34f, 0.25f, 0.13f, 0.96f)
+            : new Vector4(0.20f, 0.15f, 0.09f, 0.86f);
+        var iconColor = voiceClip.CanReplay
+            ? IconGold
+            : new Vector4(0.56f, 0.52f, 0.45f, 0.82f);
+        drawList.AddCircleFilled(center, size * 0.5f, ImGui.GetColorU32(fill), 18);
+        drawList.AddCircle(center, size * 0.5f - 0.5f * scale, ImGui.GetColorU32(voiceClip.CanReplay ? WindowBorder : DialogueBoxBorder), 18, 1f * scale);
+
+        var icon = ImGui.GetColorU32(iconColor);
+        var speakerMin = pos + new Vector2(size * 0.26f, size * 0.41f);
+        var speakerMax = pos + new Vector2(size * 0.39f, size * 0.59f);
+        drawList.AddRectFilled(speakerMin, speakerMax, icon, 1.2f * scale);
+
+        var coneTop = pos + new Vector2(size * 0.39f, size * 0.39f);
+        var coneMid = pos + new Vector2(size * 0.55f, size * 0.29f);
+        var coneBottom = pos + new Vector2(size * 0.55f, size * 0.71f);
+        var coneLeftBottom = pos + new Vector2(size * 0.39f, size * 0.61f);
+        drawList.AddQuadFilled(coneTop, coneMid, coneBottom, coneLeftBottom, icon);
+
+        drawList.PathClear();
+        drawList.PathArcTo(center + new Vector2(size * 0.03f, 0f), size * 0.18f, -0.55f, 0.55f, 8);
+        drawList.PathStroke(icon, ImDrawFlags.None, 1.5f * scale);
+        drawList.PathClear();
+        drawList.PathArcTo(center + new Vector2(size * 0.03f, 0f), size * 0.30f, -0.50f, 0.50f, 10);
+        drawList.PathStroke(icon, ImDrawFlags.None, 1.3f * scale);
+
+        if (clicked && voiceClip.CanReplay)
+            ReplayVoiceClip(voiceClip);
     }
 
     private ISharedImmediateTexture? LoadSpeakerShadowTexture()
@@ -501,7 +564,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
         changed |= Checkbox("Show transcript button during cutscenes", Configuration.ShowButtonDuringCutscenes, value => Configuration.ShowButtonDuringCutscenes = value);
         changed |= Checkbox("Keep last transcript after cutscene", Configuration.KeepLastTranscriptAfterCutscene, value => Configuration.KeepLastTranscriptAfterCutscene = value);
         changed |= Checkbox("Open transcript when cutscene ends", Configuration.OpenTranscriptWhenCutsceneEnds, value => Configuration.OpenTranscriptWhenCutsceneEnds = value);
-        changed |= Checkbox("Log choice capture diagnostics", Configuration.ChoiceDebugLogging, value => Configuration.ChoiceDebugLogging = value);
         changed |= SliderInt("Max recorded lines", Configuration.MaxEntries, 25, 1000, value => Configuration.MaxEntries = value);
 
         if (changed)
@@ -515,25 +577,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
         ImGui.TextDisabled($"Recorded lines: {entries.Count}");
         if (ImGui.Button("Clear Transcript"))
             ClearTranscript();
-
-        if (Configuration.ChoiceDebugLogging)
-        {
-            ImGui.Separator();
-            ImGui.TextDisabled("Choice diagnostics");
-            ImGui.SameLine();
-            if (ImGui.Button("Copy Debug"))
-                ImGui.SetClipboardText(string.Join(Environment.NewLine, choiceDebugLines));
-
-            if (choiceDebugLines.Count == 0)
-            {
-                ImGui.TextDisabled("No tracked choice addon activity has been observed yet.");
-            }
-            else
-            {
-                foreach (var line in choiceDebugLines.Reverse())
-                    ImGui.TextWrapped(line);
-            }
-        }
 
         ImGui.End();
     }
@@ -601,14 +644,10 @@ public sealed unsafe class Plugin : IDalamudPlugin
     {
         if (args.Addon.IsNull)
         {
-            LogChoiceSkipDebug($"update skipped addon={args.AddonName} lifecycle={eventType} reason=null-addon");
             return;
         }
 
         var shouldCapture = ShouldCaptureChoice(args);
-        if (Configuration.ChoiceDebugLogging && (!args.Addon.IsVisible || !shouldCapture))
-            LogChoiceSkipDebug($"update skipped addon={args.AddonName} lifecycle={eventType} visible={args.Addon.IsVisible} shouldCapture={shouldCapture} cutscene={IsCutsceneActive()} entries={entries.Count}");
-
         if (!shouldCapture || !args.Addon.IsVisible)
             return;
 
@@ -619,14 +658,10 @@ public sealed unsafe class Plugin : IDalamudPlugin
     {
         if (args.Addon.IsNull)
         {
-            LogChoiceDebug($"receive skipped addon={args.AddonName} lifecycle={eventType} reason=null-addon");
             return;
         }
 
         var shouldCapture = ShouldCaptureChoice(args);
-        if (Configuration.ChoiceDebugLogging && (!args.Addon.IsVisible || !shouldCapture))
-            LogChoiceDebug($"receive skipped addon={args.AddonName} lifecycle={eventType} visible={args.Addon.IsVisible} shouldCapture={shouldCapture} cutscene={IsCutsceneActive()} entries={entries.Count}");
-
         if (!shouldCapture || !args.Addon.IsVisible)
             return;
 
@@ -634,8 +669,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
             return;
 
         var isSubmitEvent = IsChoiceSubmitEvent(receiveArgs);
-        LogChoiceDebug($"receive addon={args.AddonName} lifecycle={eventType} atkEvent={receiveArgs.AtkEventType} eventParam={receiveArgs.EventParam} submit={isSubmitEvent} cutscene={IsCutsceneActive()}");
-
         var listItemIndex = ReadListItemIndex(receiveArgs);
         var state = CacheChoiceState(args, receiveArgs.EventParam, listItemIndex, EventParamMayBeChoiceIndex(receiveArgs));
         if (state == null)
@@ -652,21 +685,14 @@ public sealed unsafe class Plugin : IDalamudPlugin
     {
         if (args.Addon.IsNull)
         {
-            LogChoiceDebug($"finalize skipped addon={args.AddonName} reason=null-addon");
             return;
         }
 
         var address = args.Addon.Address;
         if (choiceStates.TryGetValue(address, out var state))
         {
-            LogChoiceDebug($"finalize addon={args.AddonName} submitSeen={state.SubmitSeen} recorded={state.Recorded} selected={state.SelectedIndex} listItem={state.ListItemIndex} eventParam={state.LastEventParam} options={FormatOptions(state.Options)}");
-
             if (state.SubmitSeen)
                 TryRecordChoice(state, preferEventParam: false);
-        }
-        else
-        {
-            LogChoiceDebug($"finalize addon={args.AddonName} state=missing");
         }
 
         choiceStates.Remove(address);
@@ -726,8 +752,10 @@ public sealed unsafe class Plugin : IDalamudPlugin
             return;
 
         lastTranscriptEntryKey = entryKey;
-        entries.Add(new TranscriptEntry(DateTimeOffset.Now, speaker, body));
+        var voiceClip = TryCaptureVoiceClip();
+        entries.Add(new TranscriptEntry(DateTimeOffset.Now, speaker, body, voiceClip));
         TrimEntries();
+        StartVoiceCaptureProbe(entries.Count - 1);
     }
 
     private void AddChoiceEntry(string choiceText)
@@ -742,7 +770,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
             return;
 
         lastTranscriptEntryKey = entryKey;
-        entries.Add(new TranscriptEntry(DateTimeOffset.Now, playerName, choiceText));
+        entries.Add(new TranscriptEntry(DateTimeOffset.Now, playerName, choiceText, null));
         TrimEntries();
     }
 
@@ -807,15 +835,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
             state.ListItemIndex = listItemIndex - 1;
         }
 
-        var unitBase = (AtkUnitBase*)args.Addon.Address;
-        var atkValueTypes = FormatAtkValueTypes(unitBase);
-        var optionsKey = $"{args.AddonName}|{FormatOptions(state.Options)}|selected={state.SelectedIndex}|listItem={state.ListItemIndex}|eventParam={state.LastEventParam}|atkValues={unitBase->AtkValuesCount}|types={atkValueTypes}";
-        if (!string.Equals(optionsKey, state.LastLoggedOptionsKey, StringComparison.Ordinal))
-        {
-            LogChoiceDebug($"options addon={args.AddonName} selected={state.SelectedIndex} listItem={state.ListItemIndex} eventParam={state.LastEventParam} atkValues={unitBase->AtkValuesCount} atkTypes={atkValueTypes} count={state.Options.Count} values={FormatOptions(state.Options)}");
-            state.LastLoggedOptionsKey = optionsKey;
-        }
-
         return state;
     }
 
@@ -860,7 +879,6 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
             AddChoiceEntry(state.Options[index]);
             state.Recorded = true;
-            LogChoiceDebug($"recorded addon={state.AddonName} index={index} text=\"{state.Options[index]}\"");
             return;
         }
 
@@ -868,11 +886,8 @@ public sealed unsafe class Plugin : IDalamudPlugin
         {
             AddChoiceEntry(state.Options[0]);
             state.Recorded = true;
-            LogChoiceDebug($"recorded addon={state.AddonName} fallback=single-option text=\"{state.Options[0]}\"");
             return;
         }
-
-        LogChoiceDebug($"record failed addon={state.AddonName} selected={state.SelectedIndex} listItem={state.ListItemIndex} eventParam={state.LastEventParam} count={state.Options.Count} options={FormatOptions(state.Options)}");
     }
 
     private static bool IsValidChoiceIndex(ChoiceState state, int index)
@@ -1209,6 +1224,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
     {
         entries.Clear();
         choiceStates.Clear();
+        voiceCaptureProbes.Clear();
         speakerColors.Clear();
         lastObservedTalkKey = null;
         lastTranscriptEntryKey = null;
@@ -1225,61 +1241,215 @@ public sealed unsafe class Plugin : IDalamudPlugin
         return color;
     }
 
-    private void LogChoiceDebug(string message)
+    private void StartVoiceCaptureProbe(int entryIndex)
     {
-        if (!Configuration.ChoiceDebugLogging)
-            return;
-
-        var line = $"{DateTimeOffset.Now:HH:mm:ss.fff} {message}";
-        choiceDebugLines.Enqueue(line);
-        while (choiceDebugLines.Count > 40)
-            choiceDebugLines.Dequeue();
-
-        Log.Information("[ChoiceDebug] {Message}", message);
+        var now = DateTimeOffset.Now;
+        voiceCaptureProbes.Add(new VoiceCaptureProbe
+        {
+            EntryIndex = entryIndex,
+            EndsAt = now + TimeSpan.FromSeconds(1),
+            NextSampleAt = now
+        });
     }
 
-    private void LogChoiceSkipDebug(string message)
+    private VoiceClipRef? TryCaptureVoiceClip()
     {
-        if (!Configuration.ChoiceDebugLogging)
+        var candidates = ReadActiveSoundCandidates();
+        var candidate = TryFindPlayableVoiceClipCandidate(candidates);
+        if (candidate != null)
+            return new VoiceClipRef(candidate.Value.Path, candidate.Value.SoundNumber);
+
+        candidate = TryFindAnyVoiceClipCandidate(candidates);
+        if (candidate == null)
+            return null;
+
+        return new VoiceClipRef(candidate.Value.Path, candidate.Value.SoundNumber, CanReplay: false);
+    }
+
+    private static VoiceSoundCandidate? TryFindPlayableVoiceClipCandidate(IEnumerable<VoiceSoundCandidate> candidates)
+    {
+        foreach (var candidate in candidates
+                     .Where(IsVoiceCandidate)
+                     .Where(IsReliableVoiceCandidate)
+                     .OrderByDescending(candidate => candidate.IsPlaying)
+                     .ThenBy(candidate => candidate.Elapsed))
+            return candidate;
+
+        return null;
+    }
+
+    private static VoiceSoundCandidate? TryFindAnyVoiceClipCandidate(IEnumerable<VoiceSoundCandidate> candidates)
+    {
+        foreach (var candidate in candidates
+                     .Where(IsVoiceCandidate)
+                     .OrderByDescending(IsReliableVoiceCandidate)
+                     .ThenByDescending(candidate => candidate.IsPlaying)
+                     .ThenBy(candidate => candidate.Elapsed))
+            return candidate;
+
+        return null;
+    }
+
+    private static bool IsVoiceCandidate(VoiceSoundCandidate candidate)
+    {
+        if (candidate.SoundNumber != 0)
+            return false;
+
+        if (candidate.Volume <= 0.001f)
+            return false;
+
+        return candidate.Path.Contains("/sound/VOICE", StringComparison.OrdinalIgnoreCase)
+            || candidate.Path.Contains("/sound/VOICEM", StringComparison.OrdinalIgnoreCase)
+            || candidate.Path.Contains("/sound/VOICEF", StringComparison.OrdinalIgnoreCase)
+            || candidate.Path.Contains("/vo_", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsReliableVoiceCandidate(VoiceSoundCandidate candidate)
+    {
+        return candidate.IsPositional || candidate.IsPlaying;
+    }
+
+    private void ReplayVoiceClip(VoiceClipRef voiceClip)
+    {
+        var soundManager = SoundManager.Instance();
+        if (soundManager == null)
+        {
+            Log.Warning("Could not replay voice clip because SoundManager.Instance() was null.");
+            return;
+        }
+
+        try
+        {
+            var soundData = soundManager->PlayCutsceneVoSound(voiceClip.Path);
+            if (soundData == null)
+            {
+                soundData = soundManager->PlaySound(
+                    voiceClip.Path,
+                    1f,
+                    0,
+                    0f,
+                    0f,
+                    0f,
+                    1f,
+                    0,
+                    voiceClip.SoundNumber,
+                    true,
+                    SoundVolumeCategory.BypassVolumeRules,
+                    false,
+                    -1,
+                    false,
+                    false,
+                    false,
+                    false);
+            }
+
+            if (soundData == null)
+                return;
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Failed to replay voice clip {Path}", voiceClip.Path);
+        }
+    }
+
+    private void ProcessVoiceCaptureProbes()
+    {
+        if (voiceCaptureProbes.Count == 0)
             return;
 
         var now = DateTimeOffset.Now;
-        if (string.Equals(message, lastChoiceSkipDebugKey, StringComparison.Ordinal)
-            && now - lastChoiceSkipDebugAt < TimeSpan.FromSeconds(2))
+        for (var i = voiceCaptureProbes.Count - 1; i >= 0; i--)
+        {
+            var probe = voiceCaptureProbes[i];
+            if (now > probe.EndsAt)
+            {
+                voiceCaptureProbes.RemoveAt(i);
+                continue;
+            }
+
+            if (now < probe.NextSampleAt)
+                continue;
+
+            TryAttachVoiceClipFromSample(probe, ReadActiveSoundCandidates());
+            probe.NextSampleAt = now + TimeSpan.FromMilliseconds(250);
+        }
+    }
+
+    private void TryAttachVoiceClipFromSample(VoiceCaptureProbe probe, IReadOnlyList<VoiceSoundCandidate> candidates)
+    {
+        if (probe.EntryIndex < 0 || probe.EntryIndex >= entries.Count)
             return;
 
-        lastChoiceSkipDebugKey = message;
-        lastChoiceSkipDebugAt = now;
-        LogChoiceDebug(message);
-    }
+        var entry = entries[probe.EntryIndex];
+        if (entry.VoiceClip?.CanReplay == true)
+            return;
 
-    private static string FormatOptions(IReadOnlyList<string> options)
-    {
-        return options.Count == 0
-            ? "[]"
-            : $"[{string.Join(" | ", options.Select((option, index) => $"{index}: {option}"))}]";
-    }
-
-    private static string FormatAtkValueTypes(AtkUnitBase* addon)
-    {
-        if (addon == null || addon->AtkValues == null || addon->AtkValuesCount == 0)
-            return "[]";
-
-        var count = Math.Min(addon->AtkValuesCount, (ushort)32);
-        var values = new List<string>();
-        for (var i = 0; i < count; i++)
+        var candidate = TryFindPlayableVoiceClipCandidate(candidates);
+        if (candidate != null)
         {
-            var value = addon->AtkValues + i;
-            var text = IsStringAtkValueType(value->Type)
-                ? CleanText(value->GetValueAsString())
-                : string.Empty;
-
-            values.Add(string.IsNullOrWhiteSpace(text)
-                ? $"{i}:{value->Type}"
-                : $"{i}:{value->Type}=\"{text}\"");
+            entries[probe.EntryIndex] = entry with { VoiceClip = new VoiceClipRef(candidate.Value.Path, candidate.Value.SoundNumber) };
+            return;
         }
 
-        return $"[{string.Join(" | ", values)}]";
+        if (entry.VoiceClip != null)
+            return;
+
+        candidate = TryFindAnyVoiceClipCandidate(candidates);
+        if (candidate == null)
+            return;
+
+        entries[probe.EntryIndex] = entry with { VoiceClip = new VoiceClipRef(candidate.Value.Path, candidate.Value.SoundNumber, CanReplay: false) };
+    }
+
+    private List<VoiceSoundCandidate> ReadActiveSoundCandidates()
+    {
+        var candidates = new List<VoiceSoundCandidate>();
+        var soundManager = SoundManager.Instance();
+        if (soundManager == null)
+            return candidates;
+
+        var current = soundManager->ActiveSoundDataListHead;
+        var visited = new HashSet<nint>();
+        for (var i = 0; current != null && i < 256; i++)
+        {
+            var address = (nint)current;
+            if (!visited.Add(address))
+                break;
+
+            TryAddSoundCandidate(current, candidates);
+            current = (SoundData*)current->Next;
+        }
+
+        return candidates
+            .OrderBy(candidate => candidate.Elapsed)
+            .ThenBy(candidate => candidate.Path, StringComparer.Ordinal)
+            .ToList();
+    }
+
+    private static void TryAddSoundCandidate(SoundData* soundData, List<VoiceSoundCandidate> candidates)
+    {
+        if (soundData == null || !soundData->IsActive)
+            return;
+
+        var fileName = soundData->GetFileName();
+        if (!fileName.HasValue)
+            return;
+
+        var path = fileName.ToString();
+        if (string.IsNullOrWhiteSpace(path))
+            return;
+
+        candidates.Add(new VoiceSoundCandidate(
+            path,
+            soundData->GetSoundNumber(),
+            soundData->GetElapsedTime(),
+            soundData->GetVolume(),
+            soundData->VolumeCategory,
+            soundData->IsPlaying(),
+            soundData->GetIsLoadingSoundResource(),
+            soundData->GetIsPositional(),
+            soundData->GetIsAutoReleaseEnabled(),
+            soundData->GetMidiNote()));
     }
 
     private string BuildTranscriptText()

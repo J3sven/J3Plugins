@@ -2,7 +2,7 @@
   "Author": "J3",
   "Name": "Cutscene Transcripts",
   "Punchline": "Review cutscene dialog while it is happening.",
-  "Description": "Records dialog boxes shown during cutscenes and adds an in-game transcript button so you can review missed lines without leaving the cutscene.",
+  "Description": "Records dialog boxes shown during cutscenes and adds an in-game transcript button so you can review missed lines and replay audio without leaving the cutscene.",
   "InternalName": "CutsceneTranscripts",
   "ApplicableVersion": "any",
   "RepoUrl": "https://github.com/J3sven/J3Plugins",
@@ -10,6 +10,8 @@
     "cutscene",
     "transcript",
     "dialog",
+    "quest",
+    "msq",
     "accessibility",
     "overlay"
   ]
