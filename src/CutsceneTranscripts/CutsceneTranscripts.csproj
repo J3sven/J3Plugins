@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Authors>J3</Authors>
         <Company>J3</Company>
-        <Version>0.1.1.0</Version>
+        <Version>0.1.2.0</Version>
         <Description>Cutscene transcript overlay for Final Fantasy XIV.</Description>
         <AssemblyName>CutsceneTranscripts</AssemblyName>
         <TargetFramework>net10.0-windows</TargetFramework>

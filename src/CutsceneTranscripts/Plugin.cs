@@ -20,6 +20,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
 {
     private const string CommandName = "/cutscenetranscript";
     private const string ShortCommandName = "/cstranscript";
+    private static readonly TimeSpan VisibleAddonGracePeriod = TimeSpan.FromMilliseconds(500);
     private static readonly string[] ChoiceAddonNames =
     [
         "SelectString",
@@ -111,6 +112,7 @@ public sealed unsafe class Plugin : IDalamudPlugin
         public int ListItemIndex { get; set; } = -1;
         public int LastEventParam { get; set; } = -1;
         public bool LastEventParamMayBeChoiceIndex { get; set; } = true;
+        public DateTimeOffset LastSeenAt { get; set; }
         public bool SubmitSeen { get; set; }
         public bool Recorded { get; set; }
     }
@@ -219,9 +221,17 @@ public sealed unsafe class Plugin : IDalamudPlugin
         else if (lastCutsceneActive && !cutsceneActive)
         {
             if (Configuration.OpenTranscriptWhenCutsceneEnds && entries.Count > 0)
+            {
                 transcriptOpen = true;
-            else if (!Configuration.KeepLastTranscriptAfterCutscene)
-                ClearTranscript();
+            }
+            else
+            {
+                if (!Configuration.OpenTranscriptWhenCutsceneEnds)
+                    transcriptOpen = false;
+
+                if (!Configuration.KeepLastTranscriptAfterCutscene)
+                    ClearTranscript();
+            }
         }
 
         if (cutsceneActive)
@@ -229,7 +239,12 @@ public sealed unsafe class Plugin : IDalamudPlugin
 
         lastCutsceneActive = cutsceneActive;
 
-        if (Configuration.Enabled && Configuration.ShowButtonDuringCutscenes && cutsceneActive && entries.Count > 0)
+        if (Configuration.Enabled
+            && Configuration.ShowButtonDuringCutscenes
+            && cutsceneActive
+            && entries.Count > 0
+            && IsTalkWindowVisible()
+            && !IsChoiceAddonVisible())
             DrawTranscriptIconButton();
 
         DrawTranscriptWindow();
@@ -315,7 +330,12 @@ public sealed unsafe class Plugin : IDalamudPlugin
             drawList.AddLine(new Vector2(pageMin.X + 3f * scale, y), new Vector2(pageMax.X - 3f * scale, y),
                              ImGui.GetColorU32(new Vector4(0.24f, 0.18f, 0.10f, 0.70f)), 1f * scale);
         }
+    }
 
+    private bool IsChoiceAddonVisible()
+    {
+        var now = DateTimeOffset.Now;
+        return choiceStates.Values.Any(state => now - state.LastSeenAt <= VisibleAddonGracePeriod);
     }
 
     private void DrawTranscriptWindow()
@@ -640,6 +660,12 @@ public sealed unsafe class Plugin : IDalamudPlugin
         return false;
     }
 
+    private bool IsTalkWindowVisible()
+    {
+        return talkWindowBounds is not null
+            && DateTimeOffset.Now - lastTalkWindowBoundsAt <= VisibleAddonGracePeriod;
+    }
+
     private void OnChoicePostUpdate(AddonEvent eventType, AddonArgs args)
     {
         if (args.Addon.IsNull)
@@ -808,6 +834,8 @@ public sealed unsafe class Plugin : IDalamudPlugin
             state = new ChoiceState { AddonName = args.AddonName };
             choiceStates[address] = state;
         }
+
+        state.LastSeenAt = DateTimeOffset.Now;
 
         var options = ReadChoiceOptions(args);
         if (options.Count > 0)
