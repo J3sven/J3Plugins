@@ -6,6 +6,7 @@
   "InternalName": "CutsceneTranscripts",
   "ApplicableVersion": "any",
   "RepoUrl": "https://github.com/J3sven/J3Plugins",
+  "IconUrl": "https://raw.githubusercontent.com/J3sven/J3Plugins/main/src/CutsceneTranscripts/Assets/icon.png",
   "Tags": [
     "cutscene",
     "transcript",
