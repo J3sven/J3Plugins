@@ -80,6 +80,7 @@
     "Tags": ["cutscene", "transcript", "dialog", "quest", "msq", "accessibility", "overlay"],
     "DalamudApiLevel": 15,
     "LoadPriority": 0,
+    "IconUrl": "https://raw.githubusercontent.com/J3sven/J3Plugins/main/src/CutsceneTranscripts/Assets/icon.png",
     "Punchline": "Review cutscene dialog while it is happening.",
     "IsHide": "False",
     "IsTestingExclusive": "False",
