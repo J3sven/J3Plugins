@@ -15,4 +15,4 @@ https://raw.githubusercontent.com/J3sven/J3Plugins/main/repo.json
 - [Cursor Indicator](src/CursorIndicator/README.md): configurable cursor trails and a cursor ring.
 - [IINACT Native Overlay](src/IINACTNativeOverlay/README.md): a native in-game DPS meter for IINACT combat data.
 - [Chocobot](src/Chocobot/README.md): native IINACT-powered encounter callouts with timeline countdowns, TTS, and in-game alerts.
-- [Cutscene Transcripts](src/CutsceneTranscripts/README.md): records cutscene dialog and shows it in a transcript overlay with the option to replay audio too.
+- [Cutscene Transcripts](https://github.com/J3sven/CutsceneTranscripts): records cutscene dialog and shows it in a transcript overlay with the option to replay audio too.
