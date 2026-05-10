@@ -1,4 +1,3 @@
-using Dalamud.Bindings.ImGui;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
@@ -45,77 +44,6 @@ public sealed unsafe partial class Plugin
                 .Replace('\r', '\n')
                 .Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
             .Trim();
-    }
-
-    /// <summary>
-    /// Wraps transcript text to measured ImGui pixel width for custom speech-bubble rendering.
-    /// </summary>
-    private static List<string> WrapText(string text, float maxWidth)
-    {
-        var lines = new List<string>();
-        foreach (var paragraph in text.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n').Split('\n'))
-            WrapParagraph(paragraph, maxWidth, lines);
-
-        if (lines.Count == 0)
-            lines.Add(string.Empty);
-
-        return lines;
-    }
-
-    private static void WrapParagraph(string paragraph, float maxWidth, List<string> lines)
-    {
-        paragraph = paragraph.Trim();
-        if (string.IsNullOrEmpty(paragraph))
-            return;
-
-        var current = string.Empty;
-        foreach (var word in paragraph.Split(' ', StringSplitOptions.RemoveEmptyEntries))
-        {
-            if (current.Length == 0)
-            {
-                AddWrappedWord(word, maxWidth, lines, ref current);
-                continue;
-            }
-
-            var candidate = $"{current} {word}";
-            if (ImGui.CalcTextSize(candidate).X <= maxWidth)
-            {
-                current = candidate;
-                continue;
-            }
-
-            lines.Add(current);
-            current = string.Empty;
-            AddWrappedWord(word, maxWidth, lines, ref current);
-        }
-
-        if (current.Length > 0)
-            lines.Add(current);
-    }
-
-    private static void AddWrappedWord(string word, float maxWidth, List<string> lines, ref string current)
-    {
-        if (ImGui.CalcTextSize(word).X <= maxWidth)
-        {
-            current = word;
-            return;
-        }
-
-        var segment = string.Empty;
-        foreach (var character in word)
-        {
-            var candidate = segment + character;
-            if (segment.Length > 0 && ImGui.CalcTextSize(candidate).X > maxWidth)
-            {
-                lines.Add(segment);
-                segment = character.ToString();
-                continue;
-            }
-
-            segment = candidate;
-        }
-
-        current = segment;
     }
 
     /// <summary>

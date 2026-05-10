@@ -20,9 +20,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="Assets\speaker-shadow-v2.png">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
+        <ProjectReference Include="..\..\KamiToolKit\KamiToolKit.csproj"/>
         <Content Include="Assets\icon.png">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>

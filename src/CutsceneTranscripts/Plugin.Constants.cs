@@ -36,11 +36,8 @@ public sealed unsafe partial class Plugin
     private static readonly Vector4 DialogueBoxBorder = new(0.34f, 0.29f, 0.21f, 0.95f);
     private static readonly Vector4 DialogueTextColor = new(0.08f, 0.07f, 0.05f, 1.00f);
     private static readonly Vector4 DialogueShadowColor = new(0.00f, 0.00f, 0.00f, 0.28f);
+    private static readonly Vector4 SpeakerLabelPlateColor = new(0.10f, 0.08f, 0.05f, 0.82f);
     private static readonly Vector4 IconFill = new(0.13f, 0.11f, 0.08f, 0.92f);
     private static readonly Vector4 IconFillHover = new(0.23f, 0.18f, 0.11f, 0.96f);
     private static readonly Vector4 IconGold = new(0.77f, 0.58f, 0.28f, 1.00f);
-    private static readonly Vector4 WindowBg = new(0.10f, 0.09f, 0.07f, 0.96f);
-    private static readonly Vector4 WindowBorder = new(0.67f, 0.52f, 0.27f, 0.86f);
-    private static readonly Vector4 WindowBorderDark = new(0.02f, 0.02f, 0.02f, 0.78f);
-    private static readonly Vector4 ToolbarBg = new(0.18f, 0.14f, 0.09f, 0.70f);
 }

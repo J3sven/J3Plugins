@@ -132,10 +132,13 @@ public sealed unsafe partial class Plugin
             return;
 
         lastTranscriptEntryKey = entryKey;
-        var voiceClip = TryCaptureVoiceClip();
+        voiceCaptureProbes.Clear();
+        var voiceCandidates = ReadActiveSoundCandidates();
+        var voiceClip = TryCaptureVoiceClip(voiceCandidates);
         entries.Add(new TranscriptEntry(DateTimeOffset.Now, speaker, body, voiceClip));
         TrimEntries();
-        StartVoiceCaptureProbe(entries.Count - 1);
+        MarkTranscriptChanged();
+        StartVoiceCaptureProbe(entries.Count - 1, voiceCandidates);
     }
 
     /// <summary>
@@ -153,8 +156,10 @@ public sealed unsafe partial class Plugin
             return;
 
         lastTranscriptEntryKey = entryKey;
+        voiceCaptureProbes.Clear();
         entries.Add(new TranscriptEntry(DateTimeOffset.Now, playerName, choiceText, null));
         TrimEntries();
+        MarkTranscriptChanged();
     }
 
     private string GetPlayerName()
@@ -186,6 +191,7 @@ public sealed unsafe partial class Plugin
         lastObservedTalkKey = null;
         lastTranscriptEntryKey = null;
         lastDialogSpeaker = null;
+        MarkTranscriptChanged();
     }
 
     /// <summary>

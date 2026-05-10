@@ -45,37 +45,7 @@ public sealed unsafe partial class Plugin
         public int EntryIndex { get; init; }
         public DateTimeOffset EndsAt { get; init; }
         public DateTimeOffset NextSampleAt { get; set; }
-    }
-
-    /// <summary>
-    /// Dalamud Windowing wrapper for the transcript window that may remain visible during cutscenes.
-    /// </summary>
-    private sealed class TranscriptWindow : Window
-    {
-        private readonly Plugin plugin;
-
-        public TranscriptWindow(Plugin plugin)
-            : base("Cutscene Transcript")
-        {
-            this.plugin = plugin;
-            Size = new Vector2(plugin.Configuration.WindowWidth, plugin.Configuration.WindowHeight);
-            SizeCondition = ImGuiCond.FirstUseEver;
-        }
-
-        public override void PreDraw()
-        {
-            plugin.PreDrawTranscriptWindow();
-        }
-
-        public override void Draw()
-        {
-            plugin.DrawTranscriptWindowContents();
-        }
-
-        public override void PostDraw()
-        {
-            plugin.PostDrawTranscriptWindow();
-        }
+        public HashSet<string> StaleVoiceKeys { get; init; } = [];
     }
 
     /// <summary>

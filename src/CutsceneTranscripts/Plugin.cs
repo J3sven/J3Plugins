@@ -2,10 +2,10 @@ using System.Numerics;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Command;
-using Dalamud.Interface.Textures;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
+using KamiToolKit;
 
 namespace CutsceneTranscripts;
 
@@ -16,16 +16,15 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
     private readonly IAddonLifecycle addonLifecycle;
     private readonly ICondition condition;
     private readonly IObjectTable objectTable;
-    private readonly ITextureProvider textureProvider;
     private readonly IGameGui gameGui;
     private readonly WindowSystem windowSystem = new("CutsceneTranscripts");
     private readonly TranscriptWindow transcriptWindow;
+    private readonly TranscriptOpenButtonAddon transcriptOpenButton;
     private readonly ConfigWindow configWindow;
     private readonly List<TranscriptEntry> entries = [];
     private readonly Dictionary<nint, ChoiceState> choiceStates = [];
     private readonly Dictionary<string, Vector4> speakerColors = [];
     private readonly List<VoiceCaptureProbe> voiceCaptureProbes = [];
-    private readonly ISharedImmediateTexture? speakerShadowTexture;
     private bool lastCutsceneActive;
     private DateTimeOffset lastCutsceneActiveAt;
     private string? lastObservedTalkKey;
@@ -33,7 +32,7 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
     private string? lastDialogSpeaker;
     private TalkWindowBounds? talkWindowBounds;
     private DateTimeOffset lastTalkWindowBoundsAt;
-    private float transcriptWindowScale = 1f;
+    private int transcriptRevision;
 
     internal static IPluginLog Log { get; private set; } = null!;
     internal Configuration Configuration { get; }
@@ -47,7 +46,6 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
         IAddonLifecycle addonLifecycle,
         ICondition condition,
         IObjectTable objectTable,
-        ITextureProvider textureProvider,
         IGameGui gameGui,
         IPluginLog pluginLog)
     {
@@ -56,17 +54,38 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
         this.addonLifecycle = addonLifecycle;
         this.condition = condition;
         this.objectTable = objectTable;
-        this.textureProvider = textureProvider;
         this.gameGui = gameGui;
         Log = pluginLog;
+
+        KamiToolKitLibrary.Initialize(pluginInterface, "CutsceneTranscripts");
 
         Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Configuration.Initialize(pluginInterface);
         ClampConfiguration();
-        speakerShadowTexture = LoadSpeakerShadowTexture();
-        transcriptWindow = new TranscriptWindow(this);
+        transcriptWindow = new TranscriptWindow(this)
+        {
+            InternalName = "CutsceneTranscript",
+            Title = "Cutscene Transcript",
+            Size = new Vector2(Configuration.WindowWidth, Configuration.WindowHeight),
+            ContentPadding = new Vector2(12f, 6f),
+            RespectCloseAll = false,
+            DisableClose = true,
+            DisableCloseTransition = true,
+        };
+        transcriptOpenButton = new TranscriptOpenButtonAddon(this)
+        {
+            InternalName = "CutsceneTranscriptButton",
+            Title = "Cutscene Transcript",
+            Size = TranscriptOpenButtonAddon.ButtonSize,
+            ContentPadding = Vector2.Zero,
+            OpenWindowSoundEffectId = 0,
+            RememberClosePosition = false,
+            RespectCloseAll = false,
+            DisableCloseTransition = true,
+            OpenInBounds = false,
+            CreateWindowNode = TranscriptOpenButtonAddon.CreateInvisibleWindowNode,
+        };
         configWindow = new ConfigWindow(this);
-        windowSystem.AddWindow(transcriptWindow);
         windowSystem.AddWindow(configWindow);
 
         pluginInterface.UiBuilder.DisableCutsceneUiHide = true;
@@ -102,7 +121,10 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
         pluginInterface.UiBuilder.Draw -= Draw;
         pluginInterface.UiBuilder.OpenMainUi -= OpenTranscriptWindow;
         pluginInterface.UiBuilder.OpenConfigUi -= OpenConfigWindow;
+        transcriptOpenButton.Dispose();
+        transcriptWindow.Dispose();
         windowSystem.RemoveAllWindows();
+        KamiToolKitLibrary.Dispose();
         addonLifecycle.UnregisterListener(OnTalkPostUpdate, OnTalkFinalize, OnChoicePostUpdate, OnChoiceReceiveEvent, OnChoiceFinalize);
         commandManager.RemoveHandler(CommandName);
         commandManager.RemoveHandler(ShortCommandName);
@@ -131,14 +153,22 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
                 OpenConfigWindow();
                 break;
             default:
-                transcriptWindow.Toggle();
+                ToggleTranscriptWindow();
                 break;
         }
     }
 
+    private void ToggleTranscriptWindow()
+    {
+        if (transcriptWindow.IsShown)
+            transcriptWindow.RequestSoftHide();
+        else
+            transcriptWindow.RequestOpen();
+    }
+
     private void OpenTranscriptWindow()
     {
-        transcriptWindow.IsOpen = true;
+        transcriptWindow.RequestOpen();
     }
 
     private void OpenConfigWindow()
@@ -161,12 +191,14 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
         {
             if (Configuration.OpenTranscriptWhenCutsceneEnds && entries.Count > 0)
             {
-                transcriptWindow.IsOpen = true;
+                transcriptWindow.RequestOpen();
             }
             else
             {
                 if (!Configuration.OpenTranscriptWhenCutsceneEnds)
-                    transcriptWindow.IsOpen = false;
+                {
+                    transcriptWindow.RequestSoftHide();
+                }
 
                 if (!Configuration.KeepLastTranscriptAfterCutscene)
                     ClearTranscript();
@@ -178,16 +210,18 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
 
         lastCutsceneActive = cutsceneActive;
 
-        if (Configuration.Enabled
+        var showTranscriptOpenButton = Configuration.Enabled
             && Configuration.ShowButtonDuringCutscenes
             && cutsceneActive
             && entries.Count > 0
             && IsTalkWindowVisible()
-            && !IsChoiceAddonVisible())
-            DrawTranscriptIconButton();
+            && !IsChoiceAddonVisible();
+        UpdateTranscriptOpenButton(showTranscriptOpenButton);
 
-        windowSystem.Draw();
         ProcessVoiceCaptureProbes();
+        RefreshActiveVoiceReplayState();
+        transcriptWindow.RefreshIfNeeded();
+        windowSystem.Draw();
     }
 
     /// <summary>
@@ -210,6 +244,15 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
         Configuration.ButtonY = Math.Clamp(Configuration.ButtonY, 0f, 4320f);
         Configuration.WindowWidth = Math.Clamp(Configuration.WindowWidth, 320f, 1200f);
         Configuration.WindowHeight = Math.Clamp(Configuration.WindowHeight, 240f, 900f);
+    }
+
+    /// <summary>
+    /// Marks native transcript UI content stale after capture, replay availability, or clearing changes.
+    /// </summary>
+    private void MarkTranscriptChanged()
+    {
+        transcriptRevision++;
+        transcriptWindow.MarkDirty();
     }
 
 }

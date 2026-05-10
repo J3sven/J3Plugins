@@ -4,31 +4,40 @@ namespace CutsceneTranscripts;
 
 public sealed unsafe partial class Plugin
 {
+    private const float VoiceAttachMaxElapsedSeconds = 0.75f;
+    private SoundData* activeReplaySoundData;
+    private VoiceClipRef? activeReplayVoiceClip;
+
     /// <summary>
     /// Starts a short delayed sampling window for voice audio that may begin just after text appears.
     /// </summary>
-    private void StartVoiceCaptureProbe(int entryIndex)
+    private void StartVoiceCaptureProbe(int entryIndex, IReadOnlyList<VoiceSoundCandidate> initialCandidates)
     {
         var now = DateTimeOffset.Now;
         voiceCaptureProbes.Add(new VoiceCaptureProbe
         {
             EntryIndex = entryIndex,
             EndsAt = now + TimeSpan.FromSeconds(1),
-            NextSampleAt = now
+            NextSampleAt = now,
+            StaleVoiceKeys = initialCandidates
+                .Where(IsVoiceCandidate)
+                .Where(candidate => candidate.Elapsed > VoiceAttachMaxElapsedSeconds)
+                .Select(GetVoiceCandidateKey)
+                .ToHashSet(StringComparer.Ordinal)
         });
     }
 
     /// <summary>
     /// Attempts to identify the active voice line associated with the latest captured dialogue.
     /// </summary>
-    private VoiceClipRef? TryCaptureVoiceClip()
+    private VoiceClipRef? TryCaptureVoiceClip(IReadOnlyList<VoiceSoundCandidate> candidates)
     {
-        var candidates = ReadActiveSoundCandidates();
-        var candidate = TryFindPlayableVoiceClipCandidate(candidates);
+        var currentDialogueCandidates = candidates.Where(IsRecentlyStartedVoiceCandidate);
+        var candidate = TryFindPlayableVoiceClipCandidate(currentDialogueCandidates);
         if (candidate != null)
             return new VoiceClipRef(candidate.Value.Path, candidate.Value.SoundNumber);
 
-        candidate = TryFindAnyVoiceClipCandidate(candidates);
+        candidate = TryFindAnyVoiceClipCandidate(currentDialogueCandidates);
         if (candidate == null)
             return null;
 
@@ -60,13 +69,10 @@ public sealed unsafe partial class Plugin
     }
 
     /// <summary>
-    /// Filters active sounds to likely cutscene voice assets and excludes numbered non-voice sound effects.
+    /// Filters active sounds to likely cutscene voice assets.
     /// </summary>
     private static bool IsVoiceCandidate(VoiceSoundCandidate candidate)
     {
-        if (candidate.SoundNumber != 0)
-            return false;
-
         if (candidate.Volume <= 0.001f)
             return false;
 
@@ -81,8 +87,38 @@ public sealed unsafe partial class Plugin
         return candidate.IsPositional || candidate.IsPlaying;
     }
 
+    private static bool IsRecentlyStartedVoiceCandidate(VoiceSoundCandidate candidate)
+    {
+        return IsVoiceCandidate(candidate) && candidate.Elapsed <= VoiceAttachMaxElapsedSeconds;
+    }
+
+    private static bool IsNewVoiceCandidateForProbe(VoiceCaptureProbe probe, VoiceSoundCandidate candidate)
+    {
+        return IsRecentlyStartedVoiceCandidate(candidate) && !probe.StaleVoiceKeys.Contains(GetVoiceCandidateKey(candidate));
+    }
+
+    private static string GetVoiceCandidateKey(VoiceSoundCandidate candidate)
+    {
+        return $"{candidate.Path}\n{candidate.SoundNumber}";
+    }
+
     /// <summary>
-    /// Replays a captured voice asset through the game sound manager without modifying transcript state.
+    /// Starts replay for a voice clip, or stops it when that same replay is already active.
+    /// </summary>
+    private void ToggleVoiceClipReplay(VoiceClipRef voiceClip)
+    {
+        if (IsVoiceClipReplayActive(voiceClip))
+        {
+            StopActiveVoiceReplay();
+            return;
+        }
+
+        StopActiveVoiceReplay(markChanged: false);
+        ReplayVoiceClip(voiceClip);
+    }
+
+    /// <summary>
+    /// Replays a captured voice asset through the game sound manager and tracks it for abort controls.
     /// </summary>
     private void ReplayVoiceClip(VoiceClipRef voiceClip)
     {
@@ -95,36 +131,130 @@ public sealed unsafe partial class Plugin
 
         try
         {
-            var soundData = soundManager->PlayCutsceneVoSound(voiceClip.Path);
-            if (soundData == null)
+            var soundData = soundManager->PlaySound(
+                voiceClip.Path,
+                1f,
+                0,
+                0f,
+                0f,
+                0f,
+                1f,
+                0,
+                voiceClip.SoundNumber,
+                true,
+                SoundVolumeCategory.BypassVolumeRules,
+                false,
+                -1,
+                false,
+                false,
+                false,
+                false);
+
+            if (soundData == null && voiceClip.SoundNumber == 0)
             {
-                soundData = soundManager->PlaySound(
-                    voiceClip.Path,
-                    1f,
-                    0,
-                    0f,
-                    0f,
-                    0f,
-                    1f,
-                    0,
-                    voiceClip.SoundNumber,
-                    true,
-                    SoundVolumeCategory.BypassVolumeRules,
-                    false,
-                    -1,
-                    false,
-                    false,
-                    false,
-                    false);
+                soundData = soundManager->PlayCutsceneVoSound(voiceClip.Path);
             }
 
             if (soundData == null)
                 return;
+
+            activeReplaySoundData = soundData;
+            activeReplayVoiceClip = voiceClip;
+            MarkTranscriptChanged();
         }
         catch (Exception ex)
         {
             Log.Warning(ex, "Failed to replay voice clip {Path}", voiceClip.Path);
         }
+    }
+
+    /// <summary>
+    /// Stops the plugin-owned replay sound without affecting native cutscene voice playback.
+    /// </summary>
+    private void StopActiveVoiceReplay(bool markChanged = true)
+    {
+        try
+        {
+            if (TryGetActiveReplaySoundData(out var soundData))
+                soundData->Stop(0);
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Failed to stop replayed voice clip.");
+        }
+        finally
+        {
+            activeReplaySoundData = null;
+            activeReplayVoiceClip = null;
+            if (markChanged)
+                MarkTranscriptChanged();
+        }
+    }
+
+    /// <summary>
+    /// Reports whether the requested voice clip is the currently active replay.
+    /// </summary>
+    private bool IsVoiceClipReplayActive(VoiceClipRef voiceClip)
+    {
+        return activeReplayVoiceClip == voiceClip && TryGetActiveReplaySoundData(out var soundData) && soundData->IsPlaying();
+    }
+
+    /// <summary>
+    /// Clears stale replay state after the sound naturally ends or leaves the active sound list.
+    /// </summary>
+    private void RefreshActiveVoiceReplayState()
+    {
+        if (activeReplaySoundData == null)
+            return;
+
+        if (TryGetActiveReplaySoundData(out var soundData) && soundData->IsPlaying())
+            return;
+
+        activeReplaySoundData = null;
+        activeReplayVoiceClip = null;
+        MarkTranscriptChanged();
+    }
+
+    /// <summary>
+    /// Finds the tracked replay sound only if it is still active and still points to the same voice asset.
+    /// </summary>
+    private bool TryGetActiveReplaySoundData(out SoundData* soundData)
+    {
+        soundData = null;
+        if (activeReplaySoundData == null || activeReplayVoiceClip is null)
+            return false;
+
+        var soundManager = SoundManager.Instance();
+        if (soundManager == null)
+            return false;
+
+        var current = soundManager->ActiveSoundDataListHead;
+        var visited = new HashSet<nint>();
+        for (var i = 0; current != null && i < 256; i++)
+        {
+            var address = (nint)current;
+            if (!visited.Add(address))
+                break;
+
+            if (current == activeReplaySoundData && IsSameVoiceClip(current, activeReplayVoiceClip))
+            {
+                soundData = current;
+                return true;
+            }
+
+            current = (SoundData*)current->Next;
+        }
+
+        return false;
+    }
+
+    private static bool IsSameVoiceClip(SoundData* soundData, VoiceClipRef voiceClip)
+    {
+        if (soundData == null || !soundData->IsActive || soundData->GetSoundNumber() != voiceClip.SoundNumber)
+            return false;
+
+        var fileName = soundData->GetFileName();
+        return fileName.HasValue && string.Equals(fileName.ToString(), voiceClip.Path, StringComparison.Ordinal);
     }
 
     /// <summary>
@@ -165,21 +295,24 @@ public sealed unsafe partial class Plugin
         if (entry.VoiceClip?.CanReplay == true)
             return;
 
-        var candidate = TryFindPlayableVoiceClipCandidate(candidates);
+        var currentDialogueCandidates = candidates.Where(candidate => IsNewVoiceCandidateForProbe(probe, candidate));
+        var candidate = TryFindPlayableVoiceClipCandidate(currentDialogueCandidates);
         if (candidate != null)
         {
             entries[probe.EntryIndex] = entry with { VoiceClip = new VoiceClipRef(candidate.Value.Path, candidate.Value.SoundNumber) };
+            MarkTranscriptChanged();
             return;
         }
 
         if (entry.VoiceClip != null)
             return;
 
-        candidate = TryFindAnyVoiceClipCandidate(candidates);
+        candidate = TryFindAnyVoiceClipCandidate(currentDialogueCandidates);
         if (candidate == null)
             return;
 
         entries[probe.EntryIndex] = entry with { VoiceClip = new VoiceClipRef(candidate.Value.Path, candidate.Value.SoundNumber, CanReplay: false) };
+        MarkTranscriptChanged();
     }
 
     /// <summary>
