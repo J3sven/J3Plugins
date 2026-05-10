@@ -20,6 +20,7 @@ public sealed unsafe partial class Plugin
         private const float ToolbarHeight = 34f;
         private const float BubbleSpacing = 10f;
         private readonly Plugin plugin;
+        private readonly List<TranscriptBubbleNode> transcriptBubbleNodes = [];
         private ScrollingAreaNode<VerticalListNode>? scrollingArea;
         private TextNode? emptyTextNode;
         private TextNode? countTextNode;
@@ -49,6 +50,7 @@ public sealed unsafe partial class Plugin
             if (IsOpen)
             {
                 ApplySoftVisibility();
+                FocusWindowHeader();
                 MarkDirty();
                 return;
             }
@@ -100,6 +102,12 @@ public sealed unsafe partial class Plugin
         protected override void OnSetup(AtkUnitBase* addon, Span<AtkValue> atkValueSpan)
         {
             base.OnSetup(addon, atkValueSpan);
+
+            // Matches VanillaPlus' KTK window setup so ESC follows the game's normal close path.
+            addon->Flags1C8 = 0x100001;
+            if (WindowNode is not null)
+                WindowNode.Data->Nodes[5] = WindowNode.WindowHeaderFocusNode.NodeId;
+
             closeRequested = false;
             softVisible = true;
             BuildToolbar();
@@ -115,6 +123,7 @@ public sealed unsafe partial class Plugin
             closeRequested = false;
             softVisible = true;
             ApplySoftVisibility();
+            FocusWindowHeader();
             MarkDirty();
         }
 
@@ -130,6 +139,14 @@ public sealed unsafe partial class Plugin
         {
             base.OnUpdate(addon);
             RefreshIfNeeded();
+        }
+
+        private void FocusWindowHeader()
+        {
+            if (WindowNode is null)
+                return;
+
+            AtkStage.Instance()->AtkInputManager->SetFocus(WindowNode.WindowHeaderFocusNode, this, 0);
         }
 
         private void BuildToolbar()
@@ -191,6 +208,7 @@ public sealed unsafe partial class Plugin
 
         private void BuildScrollingArea()
         {
+            transcriptBubbleNodes.Clear();
             var start = ContentStartPosition + new Vector2(0f, ToolbarHeight);
             scrollingArea = new ScrollingAreaNode<VerticalListNode>
             {
@@ -226,12 +244,28 @@ public sealed unsafe partial class Plugin
             var maxScrollPosition = Math.Max(0, scrollingArea.ContentHeight - scrollingArea.Height);
             var wasNearBottom = scrollingArea.ScrollPosition >= maxScrollPosition - 12;
             var contentWidth = Math.Max(280f, scrollingArea.ContentNode.Width - 4f);
-            scrollingArea.ContentNode.Clear();
-
-            for (var i = 0; i < plugin.entries.Count; i++)
+            while (transcriptBubbleNodes.Count < plugin.entries.Count)
             {
-                scrollingArea.ContentNode.AddNode(new TranscriptBubbleNode(plugin, i, plugin.entries[i], contentWidth));
+                var node = new TranscriptBubbleNode(plugin, transcriptBubbleNodes.Count, plugin.entries[transcriptBubbleNodes.Count], contentWidth);
+                transcriptBubbleNodes.Add(node);
+                scrollingArea.ContentNode.AddNode(node);
             }
+
+            for (var i = 0; i < transcriptBubbleNodes.Count; i++)
+            {
+                var node = transcriptBubbleNodes[i];
+                if (i < plugin.entries.Count)
+                {
+                    node.IsVisible = true;
+                    node.UpdateEntry(i, plugin.entries[i], contentWidth);
+                }
+                else
+                {
+                    node.IsVisible = false;
+                }
+            }
+
+            scrollingArea.ContentNode.RecalculateLayout();
 
             scrollingArea.FitToContentHeight();
             if (wasNearBottom)
@@ -254,6 +288,7 @@ public sealed unsafe partial class Plugin
             scrollingArea = null;
             emptyTextNode = null;
             countTextNode = null;
+            transcriptBubbleNodes.Clear();
             renderedRevision = -1;
         }
 
@@ -276,7 +311,6 @@ public sealed unsafe partial class Plugin
         private const float SpeakerShadowHeight = 22f;
         private const float SpeakerShadowPaddingX = 26f;
         private readonly Plugin plugin;
-        private readonly TranscriptEntry entry;
         private readonly BackgroundImageNode shadowNode;
         private readonly BackgroundImageNode bubbleNode;
         private readonly BackgroundImageNode highlightNode;
@@ -287,7 +321,8 @@ public sealed unsafe partial class Plugin
         private readonly TextNode bodyTextNode;
         private readonly TextNode? speakerTextNode;
         private readonly SimpleNineGridNode? speakerShadowNode;
-        private readonly CircleButtonNode? replayButtonNode;
+        private CircleButtonNode? replayButtonNode;
+        private TranscriptEntry entry;
 
         public TranscriptBubbleNode(Plugin plugin, int index, TranscriptEntry entry, float width)
         {
@@ -349,19 +384,40 @@ public sealed unsafe partial class Plugin
 
             if (entry.VoiceClip is { } voiceClip)
             {
-                var replayActive = voiceClip.CanReplay && plugin.IsVoiceClipReplayActive(voiceClip);
-                replayButtonNode = new CircleButtonNode
-                {
-                    Size = new Vector2(28f, 28f),
-                    Icon = voiceClip.CanReplay ? replayActive ? ButtonIcon.Mute : ButtonIcon.Volume : ButtonIcon.Mute,
-                    TextTooltip = voiceClip.CanReplay ? replayActive ? "Stop replay" : "Replay voiced line" : "Replay unavailable",
-                };
-                if (voiceClip.CanReplay)
-                    replayButtonNode.OnClick = () => this.plugin.ToggleVoiceClipReplay(voiceClip);
-                else
-                    replayButtonNode.Alpha = 0.58f;
-
+                replayButtonNode = CreateReplayButton();
                 replayButtonNode.AttachNode(this);
+                UpdateReplayButton(voiceClip);
+            }
+
+            UpdateLayout(index, width);
+        }
+
+        public long EntryId => entry.Id;
+
+        /// <summary>
+        /// Refreshes mutable line state while keeping the same native node tree alive.
+        /// </summary>
+        public void UpdateEntry(int index, TranscriptEntry newEntry, float width)
+        {
+            entry = newEntry;
+            bodyTextNode.String = newEntry.Text;
+
+            if (speakerTextNode is not null)
+                speakerTextNode.String = newEntry.Speaker ?? string.Empty;
+
+            if (newEntry.VoiceClip is { } voiceClip)
+            {
+                if (replayButtonNode is null)
+                {
+                    replayButtonNode = CreateReplayButton();
+                    replayButtonNode.AttachNode(this);
+                }
+
+                UpdateReplayButton(voiceClip);
+            }
+            else if (replayButtonNode is not null)
+            {
+                replayButtonNode.IsVisible = false;
             }
 
             UpdateLayout(index, width);
@@ -388,6 +444,35 @@ public sealed unsafe partial class Plugin
                 RightOffset = 15,
                 Color = SpeakerLabelPlateColor,
             };
+        }
+
+        private CircleButtonNode CreateReplayButton()
+        {
+            return new CircleButtonNode
+            {
+                Size = new Vector2(28f, 28f),
+                OnClick = () =>
+                {
+                    if (entry.VoiceClip is { } currentVoiceClip && currentVoiceClip.CanReplay)
+                        plugin.ToggleVoiceClipReplay(currentVoiceClip);
+                },
+            };
+        }
+
+        private void UpdateReplayButton(VoiceClipRef voiceClip)
+        {
+            if (replayButtonNode is null)
+                return;
+
+            var replayActive = voiceClip.CanReplay && plugin.IsVoiceClipReplayActive(voiceClip);
+            replayButtonNode.IsVisible = true;
+            replayButtonNode.Icon = voiceClip.CanReplay
+                ? replayActive ? ButtonIcon.Mute : ButtonIcon.Volume
+                : ButtonIcon.Mute;
+            replayButtonNode.TextTooltip = voiceClip.CanReplay
+                ? replayActive ? "Stop replay" : "Replay voiced line"
+                : "Replay unavailable";
+            replayButtonNode.Alpha = voiceClip.CanReplay ? 1f : 0.58f;
         }
 
         private void UpdateLayout(int index, float width)

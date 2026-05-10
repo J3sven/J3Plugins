@@ -10,7 +10,7 @@ public sealed unsafe partial class Plugin
     /// <summary>
     /// One visible transcript row captured from dialogue text or a player choice.
     /// </summary>
-    private sealed record TranscriptEntry(DateTimeOffset Timestamp, string? Speaker, string Text, VoiceClipRef? VoiceClip);
+    private sealed record TranscriptEntry(long Id, DateTimeOffset Timestamp, string? Speaker, string Text, VoiceClipRef? VoiceClip);
 
     /// <summary>
     /// Minimal sound reference needed to replay or explain why a voice line cannot be replayed.

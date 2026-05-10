@@ -1,5 +1,6 @@
 using System.Numerics;
 using Dalamud.Game.Addon.Lifecycle;
+using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
@@ -17,6 +18,7 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
     private readonly ICondition condition;
     private readonly IObjectTable objectTable;
     private readonly IGameGui gameGui;
+    private readonly IKeyState keyState;
     private readonly WindowSystem windowSystem = new("CutsceneTranscripts");
     private readonly TranscriptWindow transcriptWindow;
     private readonly TranscriptOpenButtonAddon transcriptOpenButton;
@@ -32,7 +34,9 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
     private string? lastDialogSpeaker;
     private TalkWindowBounds? talkWindowBounds;
     private DateTimeOffset lastTalkWindowBoundsAt;
+    private long nextTranscriptEntryId;
     private int transcriptRevision;
+    private bool escapeWasPressed;
 
     internal static IPluginLog Log { get; private set; } = null!;
     internal Configuration Configuration { get; }
@@ -47,6 +51,7 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
         ICondition condition,
         IObjectTable objectTable,
         IGameGui gameGui,
+        IKeyState keyState,
         IPluginLog pluginLog)
     {
         this.pluginInterface = pluginInterface;
@@ -55,6 +60,7 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
         this.condition = condition;
         this.objectTable = objectTable;
         this.gameGui = gameGui;
+        this.keyState = keyState;
         Log = pluginLog;
 
         KamiToolKitLibrary.Initialize(pluginInterface, "CutsceneTranscripts");
@@ -68,7 +74,6 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
             Title = "Cutscene Transcript",
             Size = new Vector2(Configuration.WindowWidth, Configuration.WindowHeight),
             ContentPadding = new Vector2(12f, 6f),
-            RespectCloseAll = false,
             DisableClose = true,
             DisableCloseTransition = true,
         };
@@ -220,8 +225,22 @@ public sealed unsafe partial class Plugin : IDalamudPlugin
 
         ProcessVoiceCaptureProbes();
         RefreshActiveVoiceReplayState();
+        HandleTranscriptEscapeClose();
         transcriptWindow.RefreshIfNeeded();
         windowSystem.Draw();
+    }
+
+    private void HandleTranscriptEscapeClose()
+    {
+        var escapePressed = keyState.IsVirtualKeyValid(VirtualKey.ESCAPE) && keyState[(int)VirtualKey.ESCAPE];
+        if (escapePressed && !escapeWasPressed && transcriptWindow.IsShown)
+        {
+            transcriptWindow.RequestClose();
+            keyState[(int)VirtualKey.ESCAPE] = false;
+            escapePressed = false;
+        }
+
+        escapeWasPressed = escapePressed;
     }
 
     /// <summary>

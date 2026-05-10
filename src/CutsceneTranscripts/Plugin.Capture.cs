@@ -135,7 +135,7 @@ public sealed unsafe partial class Plugin
         voiceCaptureProbes.Clear();
         var voiceCandidates = ReadActiveSoundCandidates();
         var voiceClip = TryCaptureVoiceClip(voiceCandidates);
-        entries.Add(new TranscriptEntry(DateTimeOffset.Now, speaker, body, voiceClip));
+        entries.Add(new TranscriptEntry(nextTranscriptEntryId++, DateTimeOffset.Now, speaker, body, voiceClip));
         TrimEntries();
         MarkTranscriptChanged();
         StartVoiceCaptureProbe(entries.Count - 1, voiceCandidates);
@@ -157,7 +157,7 @@ public sealed unsafe partial class Plugin
 
         lastTranscriptEntryKey = entryKey;
         voiceCaptureProbes.Clear();
-        entries.Add(new TranscriptEntry(DateTimeOffset.Now, playerName, choiceText, null));
+        entries.Add(new TranscriptEntry(nextTranscriptEntryId++, DateTimeOffset.Now, playerName, choiceText, null));
         TrimEntries();
         MarkTranscriptChanged();
     }
