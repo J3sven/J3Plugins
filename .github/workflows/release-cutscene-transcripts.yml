@@ -1,0 +1,59 @@
+name: Release Cutscene Transcripts
+
+on:
+  push:
+    tags:
+      - "cutscene-transcripts-v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_PATH: src/CutsceneTranscripts/CutsceneTranscripts.csproj
+      OUTPUT_ZIP: CutsceneTranscripts.zip
+      DALAMUD_HOME: ${{ github.workspace }}/.dalamud
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore "$PROJECT_PATH" --locked-mode
+
+      - name: Install Dalamud dev files
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$DALAMUD_HOME"
+          curl -fsSL https://raw.githubusercontent.com/goatcorp/dalamud-distrib/main/latest.zip -o dalamud.zip
+          unzip -q dalamud.zip -d "$DALAMUD_HOME"
+
+      - name: Build package
+        run: dotnet build "$PROJECT_PATH" --configuration Release --no-restore
+
+      - name: Collect package
+        shell: bash
+        run: |
+          set -euo pipefail
+          package="$(find src/CutsceneTranscripts/bin/Release -name latest.zip -print -quit)"
+          if [ -z "$package" ]; then
+            echo "DalamudPackager did not produce latest.zip"
+            exit 1
+          fi
+          cp "$package" "$OUTPUT_ZIP"
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.OUTPUT_ZIP }}

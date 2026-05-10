@@ -72,8 +72,8 @@
     "Author": "J3",
     "Name": "Cutscene Transcripts",
     "InternalName": "CutsceneTranscripts",
-    "AssemblyVersion": "0.1.2.0",
-    "TestingAssemblyVersion": "0.1.2.0",
+    "AssemblyVersion": "0.1.3.0",
+    "TestingAssemblyVersion": "0.1.3.0",
     "Description": "Records dialog boxes shown during cutscenes and adds an in-game transcript button so you can review missed lines and replay audio without leaving the cutscene.",
     "ApplicableVersion": "any",
     "RepoUrl": "https://github.com/J3sven/CutsceneTranscripts",
@@ -84,8 +84,8 @@
     "Punchline": "Review cutscene dialog while it is happening.",
     "IsHide": "False",
     "IsTestingExclusive": "False",
-    "DownloadLinkInstall": "https://github.com/J3sven/J3Plugins/releases/download/cutscene-transcripts-v0.1.2.0/CutsceneTranscripts.zip",
-    "DownloadLinkTesting": "https://github.com/J3sven/J3Plugins/releases/download/cutscene-transcripts-v0.1.2.0/CutsceneTranscripts.zip",
-    "DownloadLinkUpdate": "https://github.com/J3sven/J3Plugins/releases/download/cutscene-transcripts-v0.1.2.0/CutsceneTranscripts.zip"
+    "DownloadLinkInstall": "https://github.com/J3sven/J3Plugins/releases/download/cutscene-transcripts-v0.1.3.0/CutsceneTranscripts.zip",
+    "DownloadLinkTesting": "https://github.com/J3sven/J3Plugins/releases/download/cutscene-transcripts-v0.1.3.0/CutsceneTranscripts.zip",
+    "DownloadLinkUpdate": "https://github.com/J3sven/J3Plugins/releases/download/cutscene-transcripts-v0.1.3.0/CutsceneTranscripts.zip"
   }
 ]
